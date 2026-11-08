@@ -23835,7 +23835,7 @@ function getExercisePR(exerciseName) {
     }
   }
   function coachFirstName() {
-    return coachProfile && coachProfile.name ? String(coachProfile.name).split(" ")[0] : "coachen";
+    return coachProfile && coachProfile.name ? String(coachProfile.name).split(" ")[0] : "Kjetil";
   }
   function openInboxTasks() {
     return (data.assignedTasks || []).filter(t => t.inbox && !t.removedAt && !(Array.isArray(t.doneDates) && t.doneDates.length));
@@ -23856,7 +23856,7 @@ function getExercisePR(exerciseName) {
       b.addEventListener("click", () => showCoachInbox(true));
       el.appendChild(b);
       el.hidden = false;
-    } else if (coachLink.can_write && false) {
+    } else if (coachLink.can_write) {
       // «Skriv til …»-knappen er fjernet etter ønske (2026-11-07). Notater på øvelser
       // og svar i popuper går fortsatt til coachen. Fjern «&& false» for å få den tilbake.
       const b = document.createElement("button");
