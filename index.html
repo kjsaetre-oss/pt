@@ -2434,6 +2434,13 @@
   .dpp-quick-chips{ display:flex; flex-wrap:wrap; gap:6px; }
   .dpp-quick-chip{ border:1.5px solid #e3dbd2; background:#fff; border-radius:999px; padding:8px 13px; font:inherit; font-weight:800; font-size:.85rem; color:#4b3d5a; cursor:pointer; touch-action:manipulation; }
   .dpp-quick-chip.on{ background:#4b1f78; border-color:#4b1f78; color:#fff; }
+  .vk-sport-time{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  .vk-sport-time label{ display:grid; gap:4px; } .vk-sport-time span{ font-size:12px; font-weight:800; color:#7a6f86; }
+  .vk-sport-time input{ font-size:20px !important; font-weight:800; text-align:center; }
+  .vk-sport-dur{ font-size:13px; font-weight:800; color:#2e7d52; margin:-2px 2px 4px; } .vk-sport-dur.bad{ color:#b0413e; }
+  .vk-sport-note{ font-size:12.5px; color:#7a6f86; margin:-4px 2px 6px; }
+  .vk-sport .dpp-quick-chips{ display:flex; flex-wrap:wrap; gap:6px; margin-bottom:10px; }
+  .dpp-quick-tile small{ display:block; font-size:11px; font-weight:600; opacity:.85; margin-top:2px; }
   .dpp-meal-extra{ display:table; margin-top:8px; padding:4px 10px; border-radius:999px; background:rgba(0,0,0,.22); color:#fff; font-size:.76rem; font-weight:800; }
   .dpp-portion-row{ display:grid; grid-template-columns:repeat(6,1fr); gap:6px; }
   .dpp-portion{ border:1.5px solid #e3dbd2; background:#fff; border-radius:12px; padding:10px 0; font:inherit; font-weight:900; font-size:.95rem; color:#4b3d5a; cursor:pointer; touch-action:manipulation; }
@@ -21711,7 +21718,11 @@ function getExercisePR(exerciseName) {
   // datoer (movedToDates, ingen faste ukedager). Da fungerer avkrysning, kg/reps-logging
   // og rekorder akkurat som i en vanlig økt.
   function favoriteProgramId(fav) { return "favday-" + fav.id; }
-  async function addFavoriteToDay(fav, dayValue) {
+  async function addFavoriteToDay(fav, dayValueOrList) {
+    // Én dato eller en liste med datoer (gjentakende økt) – lagres i én omgang
+    const dates = (Array.isArray(dayValueOrList) ? dayValueOrList : [dayValueOrList]).filter(Boolean).sort();
+    if (!dates.length) return false;
+    const dayValue = dates[0];
     const id = favoriteProgramId(fav);
     const prefix = fav.source === "tpl" ? (fav.icon || "💪") + " " : fav.source === "coach" ? "💪 " : (fav.own ? "⭐ " : "♥ ");
     const ok = await saveAssignedProgramsChange(() => {
@@ -21733,8 +21744,8 @@ function getExercisePR(exerciseName) {
       }
       if (program.startDate && program.startDate > dayValue) program.startDate = dayValue;
       program.movedToDates = Array.isArray(program.movedToDates) ? program.movedToDates : [];
-      if (!program.movedToDates.includes(dayValue)) program.movedToDates.push(dayValue);
-      if (Array.isArray(program.deletedDates)) program.deletedDates = program.deletedDates.filter(d => d !== dayValue);
+      dates.forEach(dv => { if (!program.movedToDates.includes(dv)) program.movedToDates.push(dv); });
+      if (Array.isArray(program.deletedDates)) program.deletedDates = program.deletedDates.filter(d => !dates.includes(d));
     });
     if (!ok) return false;
     rebuildVirtualProgramItemsFromState();
@@ -21879,6 +21890,43 @@ function getExercisePR(exerciseName) {
     });
     actions.appendChild(planBtn);
     actions.appendChild(dayList);
+    // 🔁 Gjenta hver uke: samme økt på faste ukedager i et antall uker
+    const repBtn = document.createElement("button");
+    repBtn.type = "button";
+    repBtn.className = "dpp-fav-plan";
+    repBtn.textContent = "🔁 Gjenta hver uke";
+    const repBox = document.createElement("div");
+    repBox.className = "dpp-own vk-sport";
+    repBox.hidden = true;
+    const WD2 = [["mon", "Ma"], ["tue", "Ti"], ["wed", "On"], ["thu", "To"], ["fri", "Fr"], ["sat", "Lø"], ["sun", "Sø"]];
+    const rep = { days: [getWeekdayKeyFromDate(parseDateValue(dayValue))], weeks: 8 };
+    repBox.innerHTML = `<div class="dpp-own-label">Hvilke dager?</div>
+      <div class="dpp-weekday-row">${WD2.map(([d, l]) => `<button type="button" class="dpp-weekday" data-day="${d}">${l}</button>`).join("")}</div>
+      <div class="dpp-own-label">Hvor lenge?</div>
+      <div class="dpp-quick-chips" data-q="w">${[4, 8, 12].map(n => `<button type="button" class="dpp-quick-chip${n === 8 ? " on" : ""}" data-v="${n}">${n} uker</button>`).join("")}</div>
+      <button type="button" class="dpp-own-save" data-rep-save></button>`;
+    const repPaint = () => {
+      repBox.querySelectorAll(".dpp-weekday").forEach(b => b.classList.toggle("on", rep.days.includes(b.dataset.day)));
+      repBox.querySelectorAll('[data-q="w"] [data-v]').forEach(b => b.classList.toggle("on", Number(b.dataset.v) === rep.weeks));
+      const n = rep.days.length;
+      repBox.querySelector("[data-rep-save]").textContent = n ? `Legg inn ${n} gang${n > 1 ? "er" : ""} i uka i ${rep.weeks} uker` : "Velg minst én dag";
+    };
+    repBox.addEventListener("click", async (e) => {
+      const d = e.target.closest(".dpp-weekday"); if (d) { const k = d.dataset.day; rep.days = rep.days.includes(k) ? rep.days.filter(x => x !== k) : rep.days.concat(k); repPaint(); return; }
+      const w = e.target.closest('[data-q="w"] [data-v]'); if (w) { rep.weeks = Number(w.dataset.v); repPaint(); return; }
+      const sv = e.target.closest("[data-rep-save]"); if (!sv || !rep.days.length) return;
+      const start = parseDateValue(dayValue), dates = [];
+      for (let i = 0; i < rep.weeks * 7; i++) { const dt = addDays(start, i); if (rep.days.includes(getWeekdayKeyFromDate(dt))) dates.push(toDateValue(dt)); }
+      sv.disabled = true; sv.textContent = "Lagrer …";
+      const ok = await addFavoriteToDay(fav, dates);
+      sv.disabled = false;
+      if (!ok) { repPaint(); return; }
+      closeFavoriteWorkoutsModal();
+      showProgressToast("🔁 " + String(fav.title || "Økta") + " er lagt inn " + dates.length + " ganger");
+    });
+    repBtn.addEventListener("click", () => { repBox.hidden = !repBox.hidden; repPaint(); });
+    actions.appendChild(repBtn);
+    actions.appendChild(repBox);
     const back = document.createElement("button");
     back.type = "button";
     back.textContent = "‹ Mine økter";
@@ -21940,6 +21988,8 @@ function getExercisePR(exerciseName) {
   // Treningssiden (bordtennis): + gir bare Bordtennis, Fysisk trening, Annen trening og Turnering
   const VK_SPORT = [
     ["bordtennis", "🏓", "Bordtennis", "bordtennis", "Bordtennistrening"],
+    ["styrkeokt", "🏋️", "Styrkeøkt", "styrke", "Styrkeøkt"],
+    ["utholdenhet", "🏃", "Utholdenhet", "utholdenhet", "Utholdenhetsøkt"],
     ["fysisk", "💪", "Fysisk trening", "styrke", "Fysisk trening"],
     ["annen", "✨", "Annen trening", "utholdenhet", "Annen trening"],
     ["turnering", "🏆", "Turnering", "bordtennis", "Turnering"]
@@ -21947,47 +21997,105 @@ function getExercisePR(exerciseName) {
   function openQuickSport(kind) {
     const k = VK_SPORT.find(x => x[0] === kind) || VK_SPORT[0];
     const sheet = favSheet(k[1] + " " + k[2]);
-    const wrap = document.createElement("div");
-    wrap.className = "dpp-own";
     const tour = kind === "turnering";
+    const WD = [["mon", "Ma"], ["tue", "Ti"], ["wed", "On"], ["thu", "To"], ["fri", "Fr"], ["sat", "Lø"], ["sun", "Sø"]];
+    const startDv = quickDayValue();
+    const st = { repeat: false, days: [getWeekdayKeyFromDate(parseDateValue(startDv))], weeks: 12, tourDays: 1 };
+    const seasonWeeks = () => { const d = parseDateValue(wrap.querySelector("#dppSportDate").value || startDv); const end = new Date(d.getMonth() >= 6 ? d.getFullYear() + 1 : d.getFullYear(), 5, 1); return Math.max(1, Math.min(26, Math.ceil((end - d) / (7 * 864e5)))); };
+    const toMin = v => { const [h, m] = String(v || "").split(":").map(Number); return Number.isFinite(h) ? h * 60 + (m || 0) : null; };
+    const toClock = n => String(Math.floor(n / 60) % 24).padStart(2, "0") + ":" + String(n % 60).padStart(2, "0");
+    const durTxt = n => n >= 60 ? Math.floor(n / 60) + " t" + (n % 60 ? " " + (n % 60) + " min" : "") : n + " min";
+    const wrap = document.createElement("div");
+    wrap.className = "dpp-own vk-sport";
     wrap.innerHTML = `
-      <input class="dpp-own-input" id="dppSportName" type="text" maxlength="80" value="${escapeExHtml(k[4])}" autocomplete="off" />
-      <div class="dpp-own-label">Dato</div>
-      <input class="dpp-own-input" id="dppSportDate" type="date" value="${quickDayValue()}" />
-      ${tour ? `<div class="dpp-own-label">Teller som 5 timer bordtennis per turneringsdag.</div>` : `
-      <div class="dpp-own-label">Hvor lenge?</div>
-      <div class="dpp-quick-chips" data-q="min">${[[60, "1 t"], [90, "1,5 t"], [120, "2 t"], [180, "3 t"]].map(([v, l]) => `<button type="button" class="dpp-quick-chip${v === (kind === "bordtennis" ? 120 : 60) ? " on" : ""}" data-v="${v}">${l}</button>`).join("")}</div>
-      <input type="hidden" id="dppSportMin" value="${kind === "bordtennis" ? 120 : 60}" />
-      <div class="dpp-own-label">Klokkeslett</div>
-      <input class="dpp-own-input" id="dppSportTime" type="time" value="17:00" />`}
+      <input class="dpp-own-input" id="dppSportName" type="text" maxlength="80" value="${escapeExHtml(k[4])}" autocomplete="off" aria-label="Navn" />
+      <div class="dpp-own-label">${tour ? "Første dag" : "Dato"}</div>
+      <input class="dpp-own-input" id="dppSportDate" type="date" value="${startDv}" />
+      ${tour ? `
+      <div class="dpp-own-label">Hvor mange dager?</div>
+      <div class="dpp-quick-chips" data-q="tdays">${[1, 2, 3].map(n => `<button type="button" class="dpp-quick-chip${n === 1 ? " on" : ""}" data-v="${n}">${n} dag${n > 1 ? "er" : ""}</button>`).join("")}</div>
+      <div class="vk-sport-note">Hver turneringsdag teller som 5 timer bordtennis.</div>` : `
+      <div class="dpp-own-label">Tid</div>
+      <div class="vk-sport-time">
+        <label><span>Fra</span><input class="dpp-own-input" id="dppSportFrom" type="time" value="17:00" step="300" /></label>
+        <label><span>Til</span><input class="dpp-own-input" id="dppSportTo" type="time" value="${kind === "bordtennis" ? "19:00" : "18:00"}" step="300" /></label>
+      </div>
+      <div class="dpp-quick-chips" data-q="dur">${[[45, "45 min"], [60, "1 t"], [90, "1,5 t"], [120, "2 t"], [180, "3 t"]].map(([v, l]) => `<button type="button" class="dpp-quick-chip" data-v="${v}">${l}</button>`).join("")}</div>
+      <div class="vk-sport-dur" id="dppSportDur"></div>
+      <div class="dpp-own-label">Gjenta</div>
+      <div class="dpp-quick-chips" data-q="rep"><button type="button" class="dpp-quick-chip on" data-v="once">Bare én gang</button><button type="button" class="dpp-quick-chip" data-v="weekly">Hver uke</button></div>
+      <div id="dppSportRepeat" hidden>
+        <div class="dpp-own-label">Hvilke dager?</div>
+        <div class="dpp-weekday-row">${WD.map(([d, l]) => `<button type="button" class="dpp-weekday" data-day="${d}">${l}</button>`).join("")}</div>
+        <div class="dpp-own-label">Hvor lenge?</div>
+        <div class="dpp-quick-chips" data-q="weeks">${[[4, "4 uker"], [8, "8 uker"], [12, "12 uker"], ["season", "Ut sesongen"]].map(([v, l]) => `<button type="button" class="dpp-quick-chip${v === 12 ? " on" : ""}" data-v="${v}">${l}</button>`).join("")}</div>
+      </div>`}
       <div class="dpp-own-label">Sted (valgfritt)</div>
       <input class="dpp-own-input" id="dppSportPlace" type="text" maxlength="60" placeholder="F.eks. Figgjohallen" />
       <button class="dpp-own-save" type="button" id="dppSportSave">Legg i kalenderen</button>
       <div class="dpp-own-msg" aria-live="polite"></div>`;
     sheet.appendChild(wrap);
     quickBack(sheet);
-    wrap.querySelectorAll('[data-q="min"] [data-v]').forEach(b => b.addEventListener("click", () => {
-      wrap.querySelectorAll('[data-q="min"] [data-v]').forEach(x => x.classList.toggle("on", x === b));
-      wrap.querySelector("#dppSportMin").value = b.dataset.v;
+    const $ = sel => wrap.querySelector(sel);
+    const msg = $(".dpp-own-msg");
+    const chips = (q, fn) => wrap.querySelectorAll(`[data-q="${q}"] [data-v]`).forEach(b => b.addEventListener("click", () => {
+      wrap.querySelectorAll(`[data-q="${q}"] [data-v]`).forEach(x => x.classList.toggle("on", x === b)); fn(b.dataset.v); paint();
     }));
-    wrap.querySelector("#dppSportSave").addEventListener("click", async (e) => {
+    function minutes() { const a = toMin($("#dppSportFrom") && $("#dppSportFrom").value), b = toMin($("#dppSportTo") && $("#dppSportTo").value); return a == null || b == null ? 0 : (b - a + 1440) % 1440; }
+    function paintDays() { wrap.querySelectorAll(".dpp-weekday").forEach(b => b.classList.toggle("on", st.days.includes(b.dataset.day))); }
+    function paint() {
+      const save = $("#dppSportSave");
+      if (tour) { save.textContent = st.tourDays > 1 ? `Legg inn ${st.tourDays} turneringsdager` : "Legg i kalenderen"; return; }
+      const m = minutes(), d = $("#dppSportDur");
+      d.textContent = m ? "Varighet: " + durTxt(m) : "Velg når økta slutter";
+      d.classList.toggle("bad", !m);
+      wrap.querySelectorAll('[data-q="dur"] [data-v]').forEach(b => b.classList.toggle("on", Number(b.dataset.v) === m));
+      if (st.repeat) {
+        const w = st.weeks === "season" ? seasonWeeks() : st.weeks;
+        save.textContent = st.days.length ? `Legg inn ${st.days.length === 7 ? "hver dag" : st.days.length + " dag" + (st.days.length > 1 ? "er" : "") + " i uka"} i ${w} uker` : "Velg minst én dag";
+      } else save.textContent = "Legg i kalenderen";
+    }
+    if (tour) chips("tdays", v => { st.tourDays = Number(v) || 1; });
+    else {
+      chips("dur", v => { const a = toMin($("#dppSportFrom").value); if (a != null) $("#dppSportTo").value = toClock(a + Number(v)); });
+      chips("rep", v => { st.repeat = v === "weekly"; $("#dppSportRepeat").hidden = !st.repeat; paintDays(); });
+      chips("weeks", v => { st.weeks = v === "season" ? "season" : Number(v); });
+      wrap.querySelectorAll(".dpp-weekday").forEach(b => b.addEventListener("click", () => {
+        const d = b.dataset.day; st.days = st.days.includes(d) ? st.days.filter(x => x !== d) : st.days.concat(d); paintDays(); paint();
+      }));
+      // Flytter man starttiden, flyttes sluttiden like mye (varigheten beholdes)
+      let lastFrom = toMin($("#dppSportFrom").value);
+      $("#dppSportFrom").addEventListener("change", () => { const a = toMin($("#dppSportFrom").value), b = toMin($("#dppSportTo").value); if (a != null && b != null && lastFrom != null) $("#dppSportTo").value = toClock((b + (a - lastFrom) + 1440) % 1440); lastFrom = a; paint(); });
+      $("#dppSportTo").addEventListener("change", paint);
+      $("#dppSportDate").addEventListener("change", () => { if (!st.repeat || st.days.length <= 1) st.days = [getWeekdayKeyFromDate(parseDateValue($("#dppSportDate").value || startDv))]; paintDays(); paint(); });
+    }
+    paint();
+    $("#dppSportSave").addEventListener("click", async (e) => {
       const btn = e.currentTarget;
       const m = getMovementMember();
-      const date = wrap.querySelector("#dppSportDate").value || quickDayValue();
-      const title = (wrap.querySelector("#dppSportName").value || k[4]).trim().slice(0, 80);
-      let time = "", endTime = "";
-      if (!tour) {
-        time = wrap.querySelector("#dppSportTime").value || "";
-        const min = Number(wrap.querySelector("#dppSportMin").value) || 60;
-        if (time) { const [h, mm] = time.split(":").map(Number); const t2 = h * 60 + mm + min; endTime = String(Math.floor(t2 / 60) % 24).padStart(2, "0") + ":" + String(t2 % 60).padStart(2, "0"); }
-        else { time = "12:00"; endTime = String(12 + Math.floor(min / 60)).padStart(2, "0") + ":" + String(min % 60).padStart(2, "0"); }
-      }
+      const date = $("#dppSportDate").value || startDv;
+      const today = toDateValue(new Date());
+      const title = ($("#dppSportName").value || k[4]).trim().slice(0, 80);
       const id = "egen-" + Date.now().toString(36);
+      let days = [getWeekdayKeyFromDate(parseDateValue(date))], weeks = 1, time = "", endTime = "", done = [];
+      if (tour) {
+        const dates = Array.from({ length: st.tourDays }, (_, i) => toDateValue(addDays(parseDateValue(date), i)));
+        days = dates.map(d => getWeekdayKeyFromDate(parseDateValue(d)));
+        done = dates.filter(d => d <= today);
+      } else {
+        const mins = minutes();
+        if (!mins) { msg.textContent = "Velg fra og til – når økta starter og slutter."; return; }
+        time = $("#dppSportFrom").value; endTime = $("#dppSportTo").value;
+        if (st.repeat) {
+          if (!st.days.length) { msg.textContent = "Velg minst én dag økta skal gjentas."; return; }
+          days = st.days.slice(); weeks = st.weeks === "season" ? seasonWeeks() : st.weeks;
+        } else if (date <= today) done = [date];
+      }
       const task = { id, fromCoach: true, selfAdded: true, kind: "habit", sportType: kind, title: k[1] + " " + title, note: "",
-        startDate: date, days: [getWeekdayKeyFromDate(parseDateValue(date))], weeks: 1, time, endTime,
-        place: (wrap.querySelector("#dppSportPlace").value || "").trim().slice(0, 60), photo: k[3],
+        startDate: date, days, weeks, time, endTime,
+        place: ($("#dppSportPlace").value || "").trim().slice(0, 60), photo: k[3],
         ...(tour ? { tournament: { id, lenke: "" } } : {}),
-        doneDates: date <= toDateValue(new Date()) ? [date] : [], skipDates: [], createdAt: new Date().toISOString() };
+        doneDates: done, skipDates: [], createdAt: new Date().toISOString() };
       btn.disabled = true; btn.textContent = "Lagrer …";
       data.assignedTasks = (data.assignedTasks || []).concat(task);
       rebuildVirtualTaskItemsFromState(); renderWeekBar(); renderList();
@@ -21999,7 +22107,7 @@ function getExercisePR(exerciseName) {
       } catch (err) {
         data.assignedTasks = (data.assignedTasks || []).filter(t => t.id !== id);
         rebuildVirtualTaskItemsFromState(); renderWeekBar(); renderList();
-        btn.disabled = false; btn.textContent = "Prøv igjen";
+        btn.disabled = false; paint(); msg.textContent = "Fikk ikke lagret – sjekk nettet og prøv igjen.";
       }
     });
   }
@@ -22015,9 +22123,10 @@ function getExercisePR(exerciseName) {
         b.className = "dpp-quick-tile has-photo";
         const url = vkActivityPhotoUrl(photo);
         b.style.setProperty("background", `linear-gradient(180deg, rgba(0,0,0,.12), rgba(0,0,0,.72)), url("${url}") center/cover no-repeat`, "important");
-        b.innerHTML = `<b>${icon} ${label}</b>`;
+        b.innerHTML = `<b>${icon} ${label}</b>${k === "styrkeokt" ? "<small>Ferdige økter med øvelser</small>" : k === "utholdenhet" ? "<small>Løp, intervall, sykkel …</small>" : k === "fysisk" ? "<small>Logg tid for annen fysisk trening</small>" : ""}`;
         if (i === 0) { b.style.gridColumn = "1 / -1"; b.style.minHeight = "120px"; }
-        b.addEventListener("click", () => openQuickSport(k));
+        // Styrke og utholdenhet: ferdige økter med øvelser (samme bibliotek som i appen), egne økter og «Lag din egen økt»
+        b.addEventListener("click", () => k === "styrkeokt" ? openQuickTrainingCategory("styrke") : k === "utholdenhet" ? openQuickTrainingCategory("utholdenhet") : openQuickSport(k));
         grid.appendChild(b);
       });
       sheet.appendChild(grid);
@@ -22271,7 +22380,7 @@ function getExercisePR(exerciseName) {
     back.type = "button";
     back.className = "dpp-meal-save-only";
     back.textContent = "‹ Tilbake";
-    back.addEventListener("click", openQuickTraining);
+    back.addEventListener("click", () => (window.TL_STANDALONE && window.TL_STANDALONE.brand === "figgjo" ? openQuickAdd() : openQuickTraining()));
     sheet.appendChild(back);
   }
 
