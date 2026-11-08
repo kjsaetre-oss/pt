@@ -21925,8 +21925,8 @@ function getExercisePR(exerciseName) {
       showProgressToast("🔁 " + String(fav.title || "Økta") + " er lagt inn " + dates.length + " ganger");
     });
     repBtn.addEventListener("click", () => { repBox.hidden = !repBox.hidden; repPaint(); });
-    actions.appendChild(repBtn);
-    actions.appendChild(repBox);
+    // Bare på treningssidene (figgjobtk.no/trening og PT-appen) – Tro & Livsstil-appen er uendret
+    if (window.TL_STANDALONE) { actions.appendChild(repBtn); actions.appendChild(repBox); }
     const back = document.createElement("button");
     back.type = "button";
     back.textContent = "‹ Mine økter";
