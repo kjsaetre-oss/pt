@@ -1,0 +1,2137 @@
+<!doctype html>
+<html lang="no">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="referrer" content="no-referrer">
+<meta name="theme-color" content="#6f35b5">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="PT Kjetil">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="apple-touch-icon" href="ikon-180.png">
+<link rel="icon" type="image/png" sizes="192x192" href="ikon-192.png">
+<title>Helse – PT Kjetil</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script>
+// Personlig lenke: app.metabolsktesting.no/#<kunde-ID>/<Fornavn>. Koden står etter # og sendes aldri til nettstedet.
+(function () {
+  var ok = function (v) { return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(String(v || "")); };
+  var raw = String(location.hash || "").replace(/^#\/?/, "").trim(), parts = raw.split("/"), id = parts[0], hashName = "";
+  try { hashName = decodeURIComponent(parts[1] || "").trim().slice(0, 40); } catch (e) {}
+  try {
+    if (ok(id)) { localStorage.setItem("tl_pt_member", id); if (hashName) localStorage.setItem("tl_pt_name:" + id, hashName); }
+    else id = localStorage.getItem("tl_pt_member") || "";
+  } catch (e) {}
+  window.TL_STANDALONE = { brand: "pt" };
+  if (ok(id) && !(window.MVT_memberData && window.MVT_memberData.id)) {
+    var name = ""; try { name = localStorage.getItem("tl_pt_name:" + id) || ""; } catch (e) {}
+    window.MVT_memberData = { id: id, name: name || hashName };
+  }
+  window.TL_TP_OK = ok(id) || !!(window.MVT_memberData && window.MVT_memberData.id);
+  window.TL_PT_HASH = ok(id) ? "#" + id + (hashName ? "/" + encodeURIComponent(hashName) : "") : "";
+})();
+</script><style>
+  html, body { margin: 0; background: #f4efe8; }
+  body.tl-standalone { padding: 0 0 calc(76px + env(safe-area-inset-bottom)) !important; -webkit-text-size-adjust: 100%; }
+  .pt-head { position: sticky; top: 0; z-index: 50; display: flex; align-items: center; gap: 10px; padding: calc(env(safe-area-inset-top) + 10px) 14px 10px;
+    background: rgba(244,239,232,.94); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-bottom: 1px solid #ece4d8; color: #2b2235; font-family: Inter, -apple-system, sans-serif; }
+  .pt-logo { width: 32px; height: 32px; border-radius: 10px; background: linear-gradient(140deg, #8c57cb, #6f35b5); color: #fff; display: grid; place-items: center; font: 800 13px "Outfit", sans-serif; flex: none; }
+  .pt-head b { font: 800 17px "Outfit", -apple-system, sans-serif; display: block; line-height: 1.1; } .pt-head small { display: block; font-size: 10.5px; color: #7a6f86; }
+  .pt-refresh { margin-left: auto; flex: none; width: 34px; height: 34px; border-radius: 50%; border: 1px solid #ece4d8; background: #fffdfa; color: #6f35b5; font: 700 18px/1 -apple-system, sans-serif; display: grid; place-items: center; padding: 0; }
+  .pt-refresh.spin { animation: ptSpin .8s linear infinite; } @keyframes ptSpin { to { transform: rotate(360deg); } }
+  .pt-av { width: 34px; height: 34px; border-radius: 50%; background: #ddd url("bilder/kjetil-lindefjell-saetre.jpg") center/cover; border: 2px solid #6f35b5; flex: none; }
+  .pt-nav { position: fixed; left: 0; right: 0; bottom: 0; z-index: 40; display: grid; grid-template-columns: repeat(4, 1fr); background: rgba(255,253,250,.97);
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-top: 1px solid #ece4d8; padding: 6px 4px calc(6px + env(safe-area-inset-bottom)); box-shadow: 0 -8px 24px -16px rgba(43,34,53,.35); }
+  .pt-nav a { display: grid; justify-items: center; gap: 2px; padding: 4px 2px; font: 700 10.5px Inter, -apple-system, sans-serif; color: #7a6f86; text-decoration: none; }
+  .pt-nav a i { font-style: normal; font-size: 20px; line-height: 1.1; filter: grayscale(1); opacity: .65; } .pt-nav a.on { color: #6f35b5; } .pt-nav a.on i { filter: none; opacity: 1; }
+  .pt-nolink { display: none; max-width: 420px; margin: 60px auto; padding: 0 24px; text-align: center; font: 16px/1.5 -apple-system, sans-serif; color: #3b3640; }
+  body.tp-missing .pt-nolink { display: block; } body.tp-missing .tp-app, body.tp-missing .pt-nav { display: none; }
+  .pt-hero { margin: 12px 14px 0; border-radius: 22px; background: #fffdfa; border: 1px solid #ece4d8; padding: 14px 16px; font-family: Inter, -apple-system, sans-serif; color: #2b2235; }
+  .pt-hero h1 { margin: 0; font: 800 26px/1.1 "Outfit", -apple-system, sans-serif; } .pt-hero p { margin: 4px 0 0; font-size: 13px; color: #7a6f86; }
+  /* Fokus og mål (samme kode som bordtennis, lilla farger) */
+  .tp-focus { background: #2b2235 !important; }
+
+</style>
+</head>
+<body class="tl-standalone tl-brand-pt">
+<header class="pt-head"><span class="pt-logo">PT</span><span><b>PT Kjetil</b><small>metabolsktesting.no</small></span><button type="button" class="pt-refresh" id="ptRefresh" aria-label="Oppdater">↻</button><span class="pt-av" aria-hidden="true"></span></header>
+<div class="pt-nolink"><h1 style="font-family:Outfit,sans-serif">PT Kjetil</h1><p>Denne siden åpnes med den personlige lenken du har fått fra Kjetil.<br>Spør ham om å få lenken på nytt.</p></div>
+<script>if (!window.TL_TP_OK) document.body.classList.add("tp-missing");</script>
+
+<div class="tp-app">
+<!-- Hovedfil i bruk for "Min helse" i Movement. -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script data-tl-widget="min-helse-1to1">
+  window.TLX_SUPABASE_URL = window.TLX_SUPABASE_URL || "https://cpqbdorxilssxylkqdkt.supabase.co";
+  window.TLX_SUPABASE_ANON_KEY = window.TLX_SUPABASE_ANON_KEY || "sb_publishable_37LxJJHdYNa8HpqDOVKpVw_0fJlfDmd";
+</script>
+
+<div class="th2-wrap">
+  <div class="th2-app">
+    <section class="th2-hero">
+      <div class="th2-hero-glow th2-hero-glow-1"></div>
+      <div class="th2-hero-glow th2-hero-glow-2"></div>
+
+      <div class="th2-hero-top">
+        <div class="th2-week-nav">
+          <button type="button" class="th2-week-btn" id="th2PrevWeek">‹</button>
+          <div class="th2-week-label" id="th2WeekLabel">Uke</div>
+          <button type="button" class="th2-week-btn" id="th2NextWeek">›</button>
+        </div>
+      </div>
+
+      <div class="th2-weekdays" id="th2Weekdays"></div>
+      <div class="th2-ring" id="th2Ring"></div>
+      <div class="th2-circles" id="th2Circles"></div>
+      <button type="button" class="th2-checkin-btn" id="th2CheckinBtn">☀️ Morgensjekk – registrer alt på én gang</button>
+      <div class="th2-hero-bottom-fade"></div>
+    </section>
+
+    <section class="th2-card">
+      <div class="th2-card-head">
+        <h2 id="th2ActiveTitle">Vekt</h2>
+      </div>
+      <div class="th2-warning" id="th2Warning"></div>
+      <div id="th2DynamicField"></div>
+      <div class="th2-saved" id="th2Saved">Lagret ✔</div>
+    </section>
+
+
+    <section class="th2-card">
+      <div class="th2-card-head th2-history-toggle" id="th2ChartToggle" style="cursor:pointer;">
+        <h3 id="th2ChartTitle">Oversikt</h3>
+        <span class="th2-toggle-icon" id="th2ChartIcon">›</span>
+      </div>
+      <div id="th2ChartBox" style="display:none;">
+        <div class="th2-period" id="th2Period"></div>
+        <div class="th2-chart-wrap">
+          <canvas id="th2Chart"></canvas>
+        </div>
+      </div>
+    </section>
+
+    <section class="th2-card">
+      <div class="th2-card-head th2-history-toggle" id="th2HistoryToggle" style="cursor:pointer;">
+        <h3>Historikk</h3>
+        <span class="th2-toggle-icon" id="th2HistoryIcon">›</span>
+      </div>
+      <div id="th2History" style="display:none;"></div>
+    </section>
+
+  </div>
+
+  <div class="th2-modal" id="th2AddMetricModal" aria-hidden="true">
+    <div class="th2-modal-backdrop" id="th2AddMetricBackdrop"></div>
+    <div class="th2-modal-card">
+      <div class="th2-modal-head">
+        <h3>Legg til måling</h3>
+        <button type="button" class="th2-modal-close" id="th2AddMetricClose">×</button>
+      </div>
+      <p class="th2-helper">Trykk på de målingene du vil ha synlige øverst.</p>
+      <div class="th2-metric-picker" id="th2MetricPicker"></div>
+    </div>
+  </div>
+
+  <div class="th2-modal" id="th2CheckinModal" aria-hidden="true">
+    <div class="th2-modal-backdrop" id="th2CheckinBackdrop"></div>
+    <div class="th2-modal-card">
+      <div class="th2-modal-head">
+        <h3 id="th2CheckinTitle">Morgensjekk</h3>
+        <button type="button" class="th2-modal-close" id="th2CheckinClose">×</button>
+      </div>
+      <p class="th2-helper">Fyll ut det du har målt i dag. Tomme felt hoppes over.</p>
+      <div class="th2-checkin-list" id="th2CheckinList"></div>
+      <div class="th2-modal-actions">
+        <button type="button" class="th2-btn" id="th2CheckinCancel">Avbryt</button>
+        <button type="button" class="th2-inline-btn th2-inline-btn-text" id="th2CheckinSave">Lagre alt</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="th2-modal" id="th2PainModal" aria-hidden="true">
+    <div class="th2-modal-backdrop" id="th2PainBackdrop"></div>
+    <div class="th2-modal-card">
+      <div class="th2-modal-head">
+        <h3>Hvor har du vondt?</h3>
+        <button type="button" class="th2-modal-close" id="th2PainClose">×</button>
+      </div>
+      <div class="th2-modal-grid" id="th2PainOptions"></div>
+      <div class="th2-modal-actions">
+        <button type="button" class="th2-btn" id="th2PainClear">Tøm</button>
+        <button type="button" class="th2-inline-btn th2-inline-btn-text" id="th2PainDone">Ferdig</button>
+      </div>
+    </div>
+  </div>
+
+  <style>
+    .th2-wrap * { box-sizing: border-box; }
+    .th2-wrap{
+      --card:#fcf8f2; --card-2:#fffdf9; --soft:#f5efe6; --soft-2:#f8f2ea; --line:#e7ddd0; --text:#24313d; --muted:#7a837f;
+      --brand-deep:#14081f; --brand-deep-2:#23103a; --brand-purple:#4b1f78; --brand-violet:#6f35b5; --brand-rose:#bb78b8; --brand-gold:#d8c4a0;
+      --mint:#7ca59c; --mint2:#93b5ad; --mint3:#6c9188; --mint-soft:#edf5f1;
+      --blue:#9cb8db; --lav:#c7b2e6; --rose:#e7b2bc; --gold:#e4c79f;
+      --shadow:0 22px 44px rgba(43,31,24,.10); --shadow-soft:0 14px 30px rgba(34,22,16,.08); --shadow-hero:0 20px 40px rgba(90,60,120,.14);
+      width:100%; max-width:100%; padding:12px; margin-top:0; border-radius:34px; overflow:hidden;
+      position:relative;
+      background:
+        radial-gradient(circle at top left, rgba(255,244,234,.85) 0%, transparent 26%),
+        radial-gradient(circle at top right, rgba(236,233,255,.75) 0%, transparent 24%),
+        radial-gradient(circle at 50% 100%, rgba(255,227,199,.28) 0%, transparent 30%),
+        linear-gradient(180deg, #f4efe8, #fcfaf7);
+      color:var(--text); font-family:Inter,Arial,sans-serif;
+    }
+    .th2-app{ display:grid; gap:16px; }
+    .th2-hero,.th2-card,.th2-stat{ border-radius:30px; }
+    .th2-card,.th2-stat{ background:linear-gradient(180deg,var(--card-2),var(--card)); border:1px solid rgba(231,221,208,.9); box-shadow:var(--shadow); transition:transform .18s ease, box-shadow .18s ease, border-color .18s ease; }
+    .th2-hero{
+      padding:22px; color:#3d2456; position:relative; overflow:hidden; border:1px solid #f0ecf3; box-shadow:var(--shadow-hero);
+      background:linear-gradient(180deg,#fffefc,#faf6ff);
+    }
+    .th2-hero::before{ content:""; position:absolute; inset:auto 0 0 0; height:44%; background:linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(245,240,248,.5) 100%); pointer-events:none; z-index:1; }
+    .th2-hero::after{ content:none; }
+    .th2-hero-top::after{ content:none; }
+    /* Samme dekorative fargekule-mønster som appens .shell::before på
+       forsiden (index.html) — gir heroen litt liv i stedet for å være helt
+       flat hvit, uten å konkurrere med innholdet oppå. */
+    .th2-hero-glow{ display:block; position:absolute; border-radius:50%; pointer-events:none; z-index:0; filter:blur(2px); }
+    .th2-hero-glow-1{ top:-60px; right:-50px; width:190px; height:190px; background:radial-gradient(circle, rgba(191,148,224,.38), transparent 70%); }
+    .th2-hero-glow-2{ bottom:-70px; left:-60px; width:210px; height:210px; background:radial-gradient(circle, rgba(216,196,160,.34), transparent 70%); }
+    .th2-hero-top{ position:relative; z-index:2; display:flex; justify-content:flex-end; align-items:flex-start; gap:10px; }
+    .th2-badge{ display:inline-flex; align-items:center; min-height:34px; padding:7px 13px; border-radius:999px; background:rgba(139,92,180,.09); border:1px solid rgba(139,92,180,.18); font-size:11px; font-weight:800; letter-spacing:.10em; text-transform:uppercase; color:#5a3d73; backdrop-filter:blur(10px); box-shadow:inset 0 1px 0 rgba(255,255,255,.6), 0 8px 18px rgba(90,60,120,.06); }
+    .th2-week-nav{ display:flex; align-items:center; gap:8px; padding:7px 9px; border-radius:18px; background:rgba(139,92,180,.07); border:1px solid rgba(139,92,180,.14); backdrop-filter:blur(12px); box-shadow:inset 0 1px 0 rgba(255,255,255,.5), 0 10px 22px rgba(90,60,120,.06); }
+    .th2-week-btn{ border:none; width:34px; height:34px; border-radius:999px; background:linear-gradient(180deg,#f8f3eb,#efe6d7); color:#4a3a55; font-size:17px; font-weight:900; cursor:pointer; line-height:1; box-shadow:0 6px 14px rgba(90,60,120,.14), inset 0 1px 0 rgba(255,255,255,.75); }
+    .th2-week-label{ min-width:100px; text-align:center; font-size:11px; font-weight:800; letter-spacing:.08em; color:#5a4763; }
+    .th2-hero h1{ position:relative; z-index:2; margin:10px 0 10px; padding-left:0; text-align:center; font-size:clamp(1.9rem, 7vw, 3.05rem); line-height:.95; letter-spacing:-.06em; color:#3d2456; text-shadow:none; }
+    .th2-weekdays{ position:relative; z-index:2; display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); gap:9px; margin-bottom:16px; }
+    .th2-day{ border:none; background:rgba(139,92,180,.06); color:#5a4763; border-radius:20px; padding:9px 4px; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:4px; min-height:72px; backdrop-filter:blur(8px); border:1px solid rgba(139,92,180,.12); transition:.15s ease; box-shadow:inset 0 1px 0 rgba(255,255,255,.5); }
+    .th2-day:hover{ transform:translateY(-1px); }
+    .th2-day-name{ font-size:10px; font-weight:800; text-transform:uppercase; opacity:.94; }
+    .th2-day-num{ width:30px; height:30px; border-radius:999px; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:900; }
+    .th2-day.active{ background:linear-gradient(180deg,#f9f4eb,#f1e7d8); color:#44354a; border-color:rgba(139,92,180,.24); box-shadow:0 10px 22px rgba(90,60,120,.10); }
+    .th2-day.active .th2-day-num{ background:linear-gradient(135deg,#8f6bc1,#b38cd5); color:#fff; box-shadow:0 8px 16px rgba(70,34,112,.26); }
+    .th2-day-sub{ font-size:9px; font-weight:700; opacity:.92; line-height:1; }
+    .th2-day.today{ background:rgba(139,92,180,.12); border-color:rgba(139,92,180,.26); }
+    /* Fjernet — "i dag" vises allerede tydelig via egen bakgrunnsfarge på
+       selve dags-cellen (.th2-day.today), så prikken var overflødig. */
+    .th2-today-dot{ display:none; }
+    .th2-circles{ position:relative; z-index:2; display:flex; flex-wrap:wrap; justify-content:center; gap:10px; }
+    .th2-circle{ flex:0 0 calc(25% - 8px); max-width:calc(25% - 8px); }
+    .th2-circle{ border:none; background:transparent; color:#5a4763; cursor:pointer; padding:0; display:flex; flex-direction:column; align-items:center; gap:7px; transition:transform .15s ease; }
+    .th2-circle:hover{ transform:translateY(-1px); }
+    .th2-circle-top{ width:74px; height:74px; border-radius:999px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px; backdrop-filter:blur(12px); border:1.5px solid rgba(255,255,255,.6); transition:.18s ease; box-shadow: inset 0 1px 0 rgba(255,255,255,.5), 0 10px 22px rgba(90,60,120,.10); position:relative; overflow:hidden; padding:6px; text-align:center; }
+    .th2-circle-top::after{ content:""; position:absolute; inset:0; background:linear-gradient(180deg, rgba(255,255,255,.22), transparent 42%); pointer-events:none; }
+    .th2-circle-icon,.th2-circle-number{ color:#3a2c46; }
+    .th2-circle[data-metric="weight"] .th2-circle-top{ background:linear-gradient(180deg, rgba(160,122,214,.42), rgba(92,56,148,.26)); }
+    .th2-circle[data-metric="waist"] .th2-circle-top{ background:linear-gradient(180deg, rgba(126,160,221,.42), rgba(79,110,180,.26)); }
+    .th2-circle[data-metric="hrv"] .th2-circle-top{ background:linear-gradient(180deg, rgba(123,176,170,.42), rgba(70,118,112,.26)); }
+    .th2-circle[data-metric="restingpulse"] .th2-circle-top{ background:linear-gradient(180deg, rgba(219,146,144,.42), rgba(152,86,97,.26)); }
+    .th2-circle[data-metric="energy"] .th2-circle-top{ background:linear-gradient(180deg, rgba(229,189,128,.42), rgba(165,122,67,.26)); }
+    .th2-circle[data-metric="pain"] .th2-circle-top{ background:linear-gradient(180deg, rgba(220,154,180,.42), rgba(165,98,126,.26)); }
+    .th2-circle[data-metric="sleep"] .th2-circle-top{ background:linear-gradient(180deg, rgba(168,149,220,.42), rgba(104,85,164,.26)); }
+    .th2-circle[data-metric="water"] .th2-circle-top{ background:linear-gradient(180deg, rgba(137,181,218,.42), rgba(79,126,168,.26)); }
+    .th2-circle[data-metric="steps"] .th2-circle-top{ background:linear-gradient(180deg, rgba(143,181,148,.42), rgba(89,129,94,.26)); }
+    .th2-circle[data-metric="mood"] .th2-circle-top{ background:linear-gradient(180deg, rgba(225,192,137,.42), rgba(174,133,74,.26)); }
+    .th2-circle[data-metric="vo2max"] .th2-circle-top{ background:linear-gradient(180deg, rgba(144,176,228,.42), rgba(88,122,190,.26)); }
+    .th2-circle[data-metric="bodyfat"] .th2-circle-top{ background:linear-gradient(180deg, rgba(210,166,123,.42), rgba(158,112,63,.26)); }
+    .th2-circle[data-metric="bloodsugar"] .th2-circle-top{ background:linear-gradient(180deg, rgba(217,134,151,.42), rgba(159,78,101,.26)); }
+    .th2-circle[data-metric="hba1c"] .th2-circle-top{ background:linear-gradient(180deg, rgba(181,148,214,.42), rgba(118,89,167,.26)); }
+    .th2-circle[data-metric="recovery"] .th2-circle-top{ background:linear-gradient(180deg, rgba(121,179,160,.42), rgba(65,126,106,.26)); }
+    .th2-circle[data-metric="stress"] .th2-circle-top{ background:linear-gradient(180deg, rgba(223,165,132,.42), rgba(170,105,73,.26)); }
+    .th2-circle[data-metric="bodytemp"] .th2-circle-top{ background:linear-gradient(180deg, rgba(235,176,126,.42), rgba(182,116,60,.26)); }
+    .th2-circle[data-metric="vitamind"] .th2-circle-top{ background:linear-gradient(180deg, rgba(238,196,122,.42), rgba(185,136,56,.26)); }
+    .th2-circle[data-metric="b12"] .th2-circle-top{ background:linear-gradient(180deg, rgba(147,171,222,.42), rgba(92,117,179,.26)); }
+    .th2-circle[data-metric="calcium"] .th2-circle-top{ background:linear-gradient(180deg, rgba(153,191,170,.42), rgba(88,135,113,.26)); }
+    .th2-circle.active .th2-circle-top{ background:linear-gradient(180deg,#f8f2ea,#eee1d1) !important; color:#5a3d73; border-color:rgba(139,92,180,.34); box-shadow:0 14px 28px rgba(90,60,120,.16), inset 0 1px 0 rgba(255,255,255,.78); transform:translateY(-1px) scale(1.04); }
+    .th2-circle-icon{ font-size:15px; line-height:1; position:relative; z-index:1; }
+    .th2-circle-number{ font-size:13px; font-weight:900; line-height:1.05; position:relative; z-index:1; max-width:100%; word-break:break-word; }
+    .th2-circle-label{ font-size:11px; font-weight:800; line-height:1.1; text-align:center; color:#5a4763; }
+    .th2-card{ padding:14px 16px; backdrop-filter:blur(6px); }
+    .th2-card-head{ display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:14px; }
+    .th2-card-head h2,.th2-card-head h3{ margin:0; font-size:1.14rem; letter-spacing:-.03em; color:#25313a; }
+    .th2-helper{ margin:0 0 12px; color:var(--muted); font-size:13px; line-height:1.5; }
+    .th2-warning{ display:none; margin:0 0 12px; padding:12px 14px; border-radius:18px; background:#fff4df; border:1px solid #edd7ac; color:#7d6224; font-size:13px; font-weight:700; line-height:1.5; }
+    .th2-warning.show{ display:block; }
+    /* Mål-boksen er BEVISST nøytral/lys for ALLE målinger (ingen per-metrikk
+       farge lenger) — den skal se tydelig annerledes ut enn dagens-tall-
+       boksen (.th2-dynamic, som fortsatt har sin egen metrikkfarge), ellers
+       glir de to sammen visuelt selv om de er separate elementer. Mål =
+       rolig referanseinfo, dagens tall = det aktive, fargerike stedet du
+       faktisk skal trykke/skrive. */
+    .th2-goal-display{ display:flex; align-items:center; gap:10px; margin-bottom:12px; padding:12px 14px; border-radius:20px; border:1px solid rgba(255,255,255,.8); box-shadow:0 8px 18px rgba(58,39,26,.05); background:rgba(255,255,255,.55); backdrop-filter:blur(10px); }
+    .th2-goal-icon{ width:38px; height:38px; border-radius:999px; display:flex; align-items:center; justify-content:center; font-size:17px; background:rgba(255,255,255,.72); box-shadow:inset 0 1px 0 rgba(255,255,255,.85); flex:0 0 auto; }
+    .th2-goal-copy{ display:grid; gap:4px; width:100%; }
+    .th2-goal-display-label{ font-size:11px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:#7f7468; }
+    .th2-goal-display-value{ font-size:20px; font-weight:900; line-height:1.1; color:#4f3a67; }
+    .th2-goal-distance{ font-size:13px; font-weight:800; color:#7b6f63; }
+    .th2-goal-progress{ width:100%; height:10px; border-radius:999px; background:rgba(255,255,255,.6); overflow:hidden; margin-top:4px; border:1px solid rgba(255,255,255,.54); }
+    .th2-goal-progress-fill{ height:100%; width:0%; border-radius:999px; background:linear-gradient(135deg,#8360b8,#b08fd0); }
+    .th2-dynamic{ display:grid; gap:8px; margin-bottom:10px; padding:12px 14px; border-radius:20px; border:1px solid #e7ddd2; background:linear-gradient(180deg,#faf5ee,#f5eee5); box-shadow:inset 0 1px 0 rgba(255,255,255,.5); }
+    .th2-dynamic[data-metric="weight"]{ background:linear-gradient(180deg,#f8f3fb,#f4edf9); border-color:#eadcf1; }
+    .th2-dynamic[data-metric="waist"]{ background:linear-gradient(180deg,#f5f7fc,#eff2f9); border-color:#dee5f1; }
+    .th2-dynamic[data-metric="hrv"]{ background:linear-gradient(180deg,#f4f8f6,#eef3f1); border-color:#dfe9e5; }
+    .th2-dynamic[data-metric="restingpulse"]{ background:linear-gradient(180deg,#fcf4f2,#f8efeb); border-color:#efddd7; }
+    .th2-dynamic[data-metric="energy"]{ background:linear-gradient(180deg,#fcf7ef,#f8f1e4); border-color:#eee0c7; }
+    .th2-dynamic[data-metric="pain"]{ background:linear-gradient(180deg,#fbf1f4,#f8ebef); border-color:#ecd9df; }
+    .th2-dynamic[data-metric="sleep"]{ background:linear-gradient(180deg,#f7f3fb,#f1ecf8); border-color:#e4daef; }
+    .th2-dynamic[data-metric="vo2max"]{ background:linear-gradient(180deg,#f4f7fd,#edf2fb); border-color:#dce5f4; }
+    .th2-dynamic[data-metric="bodyfat"]{ background:linear-gradient(180deg,#fcf6ef,#f7eee2); border-color:#eee0cf; }
+    .th2-dynamic[data-metric="water"]{ background:linear-gradient(180deg,#f3f8fb,#edf3f8); border-color:#dde8ef; }
+    .th2-dynamic[data-metric="steps"]{ background:linear-gradient(180deg,#f4f7f3,#eef2ed); border-color:#dfe7db; }
+    .th2-dynamic[data-metric="mood"]{ background:linear-gradient(180deg,#fcf7ef,#f7f0e3); border-color:#eee1ca; }
+    .th2-dynamic[data-metric="bloodsugar"]{ background:linear-gradient(180deg,#fcf3f5,#f8ecef); border-color:#eedcdf; }
+    .th2-dynamic[data-metric="hba1c"]{ background:linear-gradient(180deg,#f7f3fb,#f1ecf8); border-color:#e2d9ef; }
+    .th2-dynamic[data-metric="recovery"]{ background:linear-gradient(180deg,#f3f8f6,#edf3f0); border-color:#dce7e2; }
+    .th2-dynamic[data-metric="stress"]{ background:linear-gradient(180deg,#fcf5f1,#f8ede7); border-color:#efdfd7; }
+    .th2-dynamic[data-metric="bodytemp"]{ background:linear-gradient(180deg,#fcf6f0,#f8eee6); border-color:#efdfd4; }
+    .th2-dynamic label{ font-size:11px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:#80776d; }
+    .th2-dynamic[data-metric="sleep"] .th2-slider{ background:linear-gradient(90deg,#ddd4f2,#bea8e8); }
+    .th2-dynamic[data-metric="energy"] .th2-score-btn.active,
+    .th2-dynamic[data-metric="mood"] .th2-score-btn.active{ background:linear-gradient(180deg,#f8efde,#ecd9b9); color:#7a5a24; border-color:#e2c998; }
+    .th2-dynamic[data-metric="stress"] .th2-score-btn.active,
+    .th2-dynamic[data-metric="pain"] .th2-score-btn.active{ background:linear-gradient(180deg,#f8e8e8,#edd2d2); color:#7b4141; border-color:#deb7b7; }
+    .th2-dynamic[data-metric="recovery"] .th2-score-btn.active,
+    .th2-dynamic[data-metric="hrv"] .th2-score-btn.active{ background:linear-gradient(180deg,#e8f3ef,#d5e8e1); color:#2f645b; border-color:#b9d7cd; }
+    .th2-dynamic[data-metric="water"] .th2-inline-save input,
+    .th2-dynamic[data-metric="bloodsugar"] .th2-inline-save input,
+    .th2-dynamic[data-metric="bodytemp"] .th2-inline-save input{ background:rgba(255,255,255,.78); }
+    .th2-inline-save{ display:grid; grid-template-columns:1fr auto; gap:10px; align-items:center; }
+    .th2-inline-save input{ width:100%; border:none; outline:none; background:#fffdfa; border:1px solid #eadfd3; border-radius:18px; padding:13px 16px; min-height:50px; font-size:20px; font-weight:700; color:var(--text); font-family:Inter,Arial,sans-serif; box-shadow:inset 0 1px 0 rgba(255,255,255,.7), 0 8px 18px rgba(42,65,80,.04); }
+    .th2-inline-btn{ border:none; border-radius:18px; width:64px; min-width:64px; height:50px; background:linear-gradient(135deg,#6f35b5,#8c57cb); color:#fff; font-weight:900; font-size:22px; cursor:pointer; box-shadow:0 8px 18px rgba(79,34,138,.26), inset 0 1px 0 rgba(255,255,255,.16); transition:.15s ease; display:flex; align-items:center; justify-content:center; line-height:1; }
+    .th2-inline-btn:hover{ transform:translateY(-1px) scale(1.02); }
+    .th2-inline-btn[disabled]{ opacity:.45; cursor:not-allowed; transform:none; }
+    .th2-inline-btn-text{ width:auto; min-width:96px; padding:0 18px; font-size:15px; font-weight:800; }
+    .th2-goal-row{ display:grid; grid-template-columns:1fr auto; gap:10px; align-items:center; margin-top:6px; }
+    .th2-goal-input{ width:100%; border:none; outline:none; background:#fffdfa; border:1px solid #eadfd3; border-radius:14px; padding:11px 14px; min-height:44px; font-size:15px; font-weight:700; color:var(--text); font-family:Inter,Arial,sans-serif; box-shadow:inset 0 1px 0 rgba(255,255,255,.7); }
+    .th2-goal-btn{ border:none; border-radius:14px; min-width:84px; height:44px; padding:0 14px; background:linear-gradient(135deg,#f3ece3,#eadfcf); color:#4f3f52; font-weight:800; font-size:13px; cursor:pointer; border:1px solid #e4d7c6; box-shadow:0 4px 10px rgba(53,35,24,.04); }
+    .th2-goal-btn[disabled]{ opacity:.45; cursor:not-allowed; }
+    .th2-score-row{ display:flex; flex-wrap:wrap; gap:8px; }
+    .th2-score-btn{ border:none; background:#fffdfa; border:1px solid #e8ddd2; color:#4d5864; font-family:Inter,Arial,sans-serif; font-weight:800; cursor:pointer; box-shadow:0 4px 10px rgba(42,65,80,.03); transition:.15s ease; width:56px; height:56px; border-radius:999px; display:grid; place-items:center; font-size:17px; }
+    .th2-score-btn:hover{ transform:translateY(-1px); }
+    .th2-score-btn.active{ background:linear-gradient(180deg,#f5efe9,#ebdfd2); border-color:#dfcfbf; color:#5d4776; box-shadow:0 8px 16px rgba(65,40,28,.08); }
+    .th2-score-save{ display:flex; justify-content:flex-end; margin-top:8px; }
+    .th2-slider-wrap{ display:grid; gap:12px; }
+    .th2-slider-top{ display:grid; grid-template-columns:1fr auto; align-items:center; gap:10px; }
+    .th2-slider-value{ min-width:88px; text-align:right; font-size:22px; font-weight:900; color:#5d4776; }
+    .th2-slider{ -webkit-appearance:none; appearance:none; width:100%; height:14px; border-radius:999px; background:linear-gradient(90deg,#e6ddd3,#d8c6ea); outline:none; }
+    .th2-slider::-webkit-slider-thumb{ -webkit-appearance:none; appearance:none; width:28px; height:28px; border-radius:999px; background:linear-gradient(135deg,#6f35b5,#a374d4); border:3px solid #fff8ef; box-shadow:0 8px 16px rgba(79,34,138,.24); cursor:pointer; }
+    .th2-slider::-moz-range-thumb{ width:28px; height:28px; border-radius:999px; background:linear-gradient(135deg,#6f35b5,#a374d4); border:3px solid #fff8ef; box-shadow:0 8px 16px rgba(79,34,138,.24); cursor:pointer; }
+    .th2-slider-labels{ display:flex; justify-content:space-between; font-size:11px; font-weight:700; color:var(--muted); margin-top:-4px; }
+    .th2-pain-row{ display:grid; gap:10px; }
+    .th2-pain-top{ display:grid; grid-template-columns:1fr auto; gap:10px; align-items:center; }
+    .th2-pain-note{ width:100%; border:none; outline:none; background:#fffdfa; border:1px solid #eadfd3; border-radius:16px; padding:14px 14px; min-height:56px; font-size:15px; color:var(--text); font-family:Inter,Arial,sans-serif; box-shadow:inset 0 1px 0 rgba(255,255,255,.7); }
+    .th2-pain-popup-btn{ border:none; border-radius:16px; padding:0 16px; height:52px; background:linear-gradient(180deg,#fffdfa,#f6efe6); border:1px solid #e8ddd2; color:#4a5661; font-weight:800; cursor:pointer; box-shadow:0 4px 10px rgba(42,65,80,.03); }
+    .th2-saved{ display:none; margin-top:10px; padding:10px 12px; border-radius:14px; background:#efe7f8; color:#5f4191; border:1px solid #ddcdef; font-weight:800; }
+    .th2-saved.show{ display:block; }
+    .th2-saved.info{ background:#eef4fb; color:#49637c; border-color:#d7e4f1; }
+    .th2-saved.error{ background:#fff1f1; color:#9a5d5d; border-color:#f0d4d4; }
+    .th2-stats{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+    .th2-stat{ padding:12px 14px; background:linear-gradient(180deg,#fbf6ee,#f4ebdf); box-shadow:var(--shadow-soft); }
+    .th2-stat-label{ color:#8a8075; font-size:11px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; margin-bottom:8px; }
+    .th2-stat-value{ font-size:1.4rem; font-weight:900; line-height:1; letter-spacing:-.03em; color:#2f3941; }
+    .th2-stat-value.th2-small{ font-size:1rem; line-height:1.2; }
+    .th2-chart-wrap{ position:relative; width:100%; height:236px; border-radius:22px; padding:12px; background:linear-gradient(180deg,#fffdfa,#f8f1e9); border:1px solid #ece2d6; box-shadow:inset 0 1px 0 rgba(255,255,255,.72); }
+    .th2-chart-wrap::before{ content:""; position:absolute; inset:0; border-radius:inherit; pointer-events:none; background:linear-gradient(180deg, rgba(255,255,255,.26), rgba(255,255,255,0) 38%); }
+    canvas{ max-width:100% !important; }
+    #th2History{ display:grid; gap:10px; }
+    .th2-history-item{ background:linear-gradient(180deg,#fffdfa,#f8f1e9); border:1px solid #eadfd3; border-radius:24px; padding:14px; box-shadow:0 10px 22px rgba(53,35,24,.06); }
+    .th2-history-item:hover{ transform:translateY(-1px); box-shadow:0 14px 26px rgba(53,35,24,.09); }
+    .th2-history-top{ display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:10px; }
+    .th2-history-date{ font-weight:800; color:var(--text); }
+    .th2-history-main{ font-weight:900; color:#5d4776; }
+    .th2-history-chips{ display:flex; flex-wrap:wrap; gap:8px; }
+    .th2-history-chip{ display:inline-flex; align-items:center; gap:6px; padding:8px 10px; border-radius:999px; background:#fffdfa; border:1px solid #eadfd3; font-size:12px; font-weight:800; color:#495560; }
+    .th2-history-chip.th2-history-more{ background:#f5eee6; color:#74685e; border-style:dashed; }
+    .th2-history-item[data-metric="sleep"]{ background:linear-gradient(180deg,#fbf9fe,#f2ecfb); border-color:#e8def5; }
+    .th2-history-item[data-metric="energy"],
+    .th2-history-item[data-metric="mood"]{ background:linear-gradient(180deg,#fffaf1,#f8efdd); border-color:#efdfbf; }
+    .th2-history-item[data-metric="stress"],
+    .th2-history-item[data-metric="pain"]{ background:linear-gradient(180deg,#fff6f4,#f9ebe8); border-color:#efd9d3; }
+    .th2-history-item[data-metric="recovery"],
+    .th2-history-item[data-metric="hrv"]{ background:linear-gradient(180deg,#f6fbf8,#edf5f1); border-color:#dbe9e1; }
+    .th2-history-item[data-metric="water"]{ background:linear-gradient(180deg,#f5fbff,#edf6fb); border-color:#d8e8f2; }
+    .th2-history-item[data-metric="bodyfat"],
+    .th2-history-item[data-metric="weight"]{ background:linear-gradient(180deg,#fcf8f2,#f6eee4); border-color:#eaded0; }
+    .th2-chip-delete{ border:none; width:20px; height:20px; border-radius:999px; background:#f7ecec; color:#b36565; font-size:12px; font-weight:900; line-height:1; cursor:pointer; display:flex; align-items:center; justify-content:center; padding:0; }
+    .th2-empty{ color:var(--muted); line-height:1.6; padding:6px 0; }
+    .th2-subtle-note{ margin:2px 0 0; color:#8a8176; font-size:12px; line-height:1.5; }
+    .th2-metric-picker{ display:flex; flex-wrap:wrap; gap:10px; }
+    .th2-pick{ border:none; border-radius:20px; padding:11px 15px; background:linear-gradient(180deg,#fffdfa,#f7f0e7); border:1px solid #eadfd3; box-shadow:0 8px 16px rgba(42,65,80,.04); color:#48545f; font-weight:800; font-size:13px; cursor:pointer; display:flex; align-items:center; gap:8px; }
+    .th2-pick.active{ background:linear-gradient(180deg,#f2ebfb,#eadff7); border-color:#dac9ef; color:#5a3f82; }
+    .th2-modal{ display:none; position:fixed; inset:0; z-index:9999; }
+    .th2-modal.show{ display:block; }
+    .th2-modal-backdrop{ position:absolute; inset:0; background:rgba(18,12,24,.46); backdrop-filter:blur(5px); }
+    .th2-modal-card{ position:relative; z-index:1; width:min(92vw, 440px); margin:10vh auto 0; background:linear-gradient(180deg,#fffdfa,#f7efe6); border:1px solid #eadfd3; border-radius:28px; box-shadow:0 28px 58px rgba(22,14,28,.28); padding:18px; }
+    .th2-modal-head{ display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:12px; }
+    .th2-modal-head h3{ margin:0; font-size:1.05rem; letter-spacing:-.02em; color:#2b3440; }
+    .th2-modal-close{ border:none; width:34px; height:34px; border-radius:999px; background:#f7f0e8; border:1px solid #eadfd3; font-size:20px; cursor:pointer; color:#6d6769; }
+    .th2-modal-grid{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; }
+    .th2-pain-option{ border:none; background:#fffdfa; border:1px solid #eadfd3; color:#48545f; border-radius:16px; min-height:48px; padding:10px 12px; font-weight:800; cursor:pointer; text-align:left; }
+    .th2-pain-option.active{ background:linear-gradient(180deg,#f2ebfb,#eadff7); border-color:#dac9ef; color:#5a3f82; }
+    .th2-modal-actions{ display:flex; justify-content:space-between; gap:10px; margin-top:12px; }
+    .th2-ref-box{ margin-bottom:12px; padding:14px 16px; border-radius:20px; background:linear-gradient(180deg,#f8f4fe,#f2ecfa); border:1px solid #e2d5f0; }
+    .th2-ref-title{ font-size:11px; font-weight:800; letter-spacing:.07em; text-transform:uppercase; color:#7a6a8a; margin-bottom:10px; }
+    .th2-ref-bar-wrap{ position:relative; height:14px; border-radius:999px; overflow:hidden; display:flex; margin-bottom:8px; }
+    .th2-ref-segment{ height:100%; transition:flex .3s ease; }
+    .th2-ref-marker-wrap{ position:absolute; top:-3px; bottom:-3px; width:4px; margin-left:-2px; pointer-events:none; transition:left .3s ease; }
+    .th2-ref-marker{ width:4px; height:20px; border-radius:999px; background:#fff; box-shadow:0 2px 8px rgba(0,0,0,.28); }
+    .th2-ref-labels{ display:flex; justify-content:space-between; }
+    .th2-ref-label{ font-size:10px; font-weight:700; color:#8a7a9a; text-align:center; flex:1; }
+    .th2-ref-status{ margin-top:8px; font-size:13px; font-weight:800; padding:8px 12px; border-radius:12px; text-align:center; }
+    .th2-ref-status.optimal{ background:#e6f4ec; color:#2e7d52; border:1px solid #c3e6cf; }
+    .th2-ref-status.warning{ background:#fef8e6; color:#8a6800; border:1px solid #f0dfa0; }
+    .th2-ref-status.danger{ background:#fceaea; color:#9a3333; border:1px solid #f0c0c0; }
+    .th2-ref-status.info{ background:#e8f0fa; color:#2c5282; border:1px solid #bee3f8; }
+    .th2-circle.empty .th2-circle-top{ background:rgba(139,92,180,.05) !important; border:1.5px dashed rgba(139,92,180,.22) !important; box-shadow:none !important; }
+    .th2-circle.empty .th2-circle-number{ font-size:18px; opacity:.45; }
+    .th2-circle.empty .th2-circle-icon{ opacity:.45; }
+    /* "Legg til"-ringen — SAMME klasse (.th2-circle) og dermed nøyaktig
+       samme størrelse som Vekt/HRV/osv., og siste element i #th2Circles slik
+       at den alltid havner ytterst til høyre i raden (låst posisjon), i
+       stedet for det gamle "Velg ringene øverst"-kortet nederst på siden. */
+    .th2-add-metric-top{
+      background:linear-gradient(180deg, rgba(160,122,214,.55), rgba(92,56,148,.40)) !important;
+      color:#fff; font-size:26px; font-weight:900; line-height:1;
+    }
+    .th2-hero-bottom-fade{ position:absolute; bottom:0; left:0; right:0; height:56px; background:linear-gradient(to bottom, transparent, rgba(220,196,234,.20)); pointer-events:none; z-index:1; border-radius:0 0 30px 30px; }
+    .th2-app{ gap:12px; }
+    .th2-card:first-of-type{ margin-top:-4px; }
+
+    @media (max-width:560px){
+      .th2-wrap{ padding:8px; border-radius:26px; margin-top:0; }
+      .th2-hero,.th2-card,.th2-stat{ border-radius:24px; }
+      .th2-hero{ padding:28px 16px 20px; }
+      .th2-hero h1{ font-size:2rem; margin:14px 0 10px; }
+      .th2-circle-top{ width:60px; height:60px; }
+      .th2-circle-icon{ font-size:13px; }
+      .th2-circle-number{ font-size:11px; }
+      .th2-circle-label{ font-size:10px; }
+      .th2-score-btn{ width:50px; height:50px; font-size:15px; }
+      .th2-week-label{ min-width:72px; font-size:10px; }
+      .th2-week-btn{ width:30px; height:30px; font-size:15px; }
+      .th2-inline-btn{ width:64px; min-width:64px; height:52px; }
+      .th2-inline-save input{ font-size:18px; }
+      .th2-circles{ grid-template-columns:repeat(4,minmax(0,1fr)); gap:8px; }
+      .th2-weekdays{ gap:5px; }
+      .th2-day{ border-radius:16px; padding:7px 2px; min-height:64px; }
+      .th2-day-name{ font-size:9px; }
+      .th2-day-num{ width:26px; height:26px; font-size:11px; }
+      .th2-modal-grid{ grid-template-columns:1fr 1fr; }
+      .th2-pain-top{ grid-template-columns:1fr; }
+      .th2-stats{ gap:8px; }
+      .th2-stat{ padding:12px; border-radius:20px; }
+      .th2-stat-value{ font-size:1.2rem; }
+    }
+    /* ── Varmt tema, matcher appens .shell-mønster på forsiden (varmt
+       gradient-bakteppe + halvtransparente "glass"-kort) i stedet for et
+       flatt hvitt skall som skilte seg ut fra resten av appen. ── */
+    .th2-app{ gap:8px; }
+    .th2-hero{ border-bottom-left-radius:0 !important; border-bottom-right-radius:0 !important; margin-bottom:0 !important; }
+    .th2-card:first-of-type{ border-top-left-radius:0 !important; border-top-right-radius:0 !important; border-top:none !important; }
+    .th2-card{
+      background:rgba(255,255,255,.6) !important;
+      backdrop-filter:blur(14px);
+      border-color:rgba(255,255,255,.85) !important;
+      box-shadow:0 14px 30px rgba(34,22,16,.06) !important;
+    }
+    .th2-card-head h2,.th2-card-head h3{ color:#25313a !important; }
+    .th2-helper{ color:#7a837f !important; }
+    .th2-stat{
+      background:linear-gradient(180deg,#fbf6ee,#f4ebdf) !important;
+      border:1px solid rgba(231,221,208,.9) !important;
+      box-shadow:0 14px 30px rgba(34,22,16,.06) !important;
+    }
+    .th2-stat-label{ color:#8a8075 !important; }
+    .th2-stat-value{ color:#2f3941 !important; }
+    .th2-dynamic{
+      background:linear-gradient(180deg,#faf5ee,#f5eee5) !important;
+      border-color:#e7ddd2 !important;
+    }
+    .th2-dynamic label{ color:#80776d !important; }
+    .th2-inline-save input,.th2-goal-input,.th2-pain-note{
+      background:#fffdfa !important;
+      border-color:#eadfd3 !important;
+      color:#24313d !important;
+    }
+    .th2-inline-save input::placeholder{ color:#a89f92 !important; }
+    .th2-goal-display{
+      background:linear-gradient(180deg,#fdfaf5,#f7efe4) !important;
+      border-color:#e6ddd2 !important;
+    }
+    .th2-goal-display-label{ color:#7f7468 !important; }
+    .th2-goal-display-value{ color:#4f3a67 !important; }
+    .th2-goal-distance{ color:#7b6f63 !important; }
+    .th2-goal-progress{ background:rgba(139,92,180,.10) !important; border-color:rgba(139,92,180,.14) !important; }
+    .th2-goal-btn{
+      background:linear-gradient(135deg,#f3ece3,#eadfcf) !important;
+      border-color:#e4d7c6 !important;
+      color:#4f3f52 !important;
+    }
+    .th2-score-btn{
+      background:#fffdfa !important;
+      border-color:#e8ddd2 !important;
+      color:#4d5864 !important;
+    }
+    .th2-score-btn.active{
+      background:linear-gradient(180deg,#f5efe9,#ebdfd2) !important;
+      border-color:#dfcfbf !important;
+      color:#5d4776 !important;
+      box-shadow:0 8px 16px rgba(65,40,28,.08) !important;
+    }
+    .th2-chart-wrap{
+      background:rgba(255,255,255,.55) !important;
+      backdrop-filter:blur(12px);
+      border-color:rgba(255,255,255,.8) !important;
+    }
+    .th2-history-item{
+      background:rgba(255,255,255,.6) !important;
+      backdrop-filter:blur(10px);
+      border-color:rgba(255,255,255,.8) !important;
+      box-shadow:0 10px 22px rgba(53,35,24,.05) !important;
+    }
+    .th2-history-date{ color:#24313d !important; }
+    .th2-history-main{ color:#5d4776 !important; }
+    .th2-history-chip{
+      background:#fffdfa !important;
+      border-color:#eadfd3 !important;
+      color:#495560 !important;
+    }
+    .th2-empty,.th2-subtle-note{ color:#8a8176 !important; }
+    .th2-ref-box{
+      background:linear-gradient(180deg,#f8f4fe,#f2ecfa) !important;
+      border-color:#e2d5f0 !important;
+    }
+    .th2-ref-title,.th2-ref-label{ color:#7a6a8a !important; }
+    .th2-pick{
+      background:rgba(255,255,255,.55) !important;
+      backdrop-filter:blur(10px);
+      border-color:rgba(255,255,255,.8) !important;
+      color:#48545f !important;
+      box-shadow:0 6px 14px rgba(42,65,80,.04) !important;
+    }
+    .th2-pick.active{
+      background:linear-gradient(180deg,#f2ebfb,#eadff7) !important;
+      border-color:#dac9ef !important;
+      color:#5a3f82 !important;
+      box-shadow:0 8px 16px rgba(90,60,120,.10) !important;
+    }
+    .th2-saved{
+      background:#efe7f8 !important;
+      border-color:#ddcdef !important;
+      color:#5f4191 !important;
+    }
+    .th2-saved.error{ background:#fff1f1 !important; border-color:#f0d4d4 !important; color:#9a5d5d !important; }
+    .th2-warning{ background:#fff4df !important; border-color:#edd7ac !important; color:#7d6224 !important; }
+    .th2-modal-card{
+      background:linear-gradient(180deg,#fffdfa,#f7efe6) !important;
+      border-color:#eadfd3 !important;
+    }
+    .th2-modal-head h3{ color:#2b3440 !important; }
+    .th2-modal-close{ background:#f7f0e8 !important; border-color:#eadfd3 !important; color:#6d6769 !important; }
+    .th2-pain-option{ background:#fffdfa !important; border-color:#eadfd3 !important; color:#48545f !important; }
+    .th2-pain-option.active{ background:#f2ebfb !important; border-color:#dac9ef !important; color:#5a3f82 !important; }
+    .th2-pain-popup-btn{ background:#fffdfa !important; border-color:#e8ddd2 !important; color:#4a5661 !important; }
+    .th2-metric-picker .th2-pick{ font-size:13px; }
+    .th2-insight-row{ display:flex; flex-wrap:wrap; gap:7px; margin-bottom:10px; }
+    .th2-insight{ display:inline-flex; align-items:center; gap:5px; padding:7px 12px; border-radius:999px; font-size:12px; font-weight:800; line-height:1.2; }
+    .th2-insight-good{ background:rgba(122,184,154,.16); color:#2f7a54; border:1px solid rgba(122,184,154,.40); }
+    .th2-insight-warn{ background:rgba(232,196,114,.18); color:#8a6800; border:1px solid rgba(232,196,114,.42); }
+    .th2-insight-best{ background:rgba(255,210,80,.20); color:#8a6a00; border:1px solid rgba(255,210,80,.42); }
+    .th2-toggle-icon{ font-size:20px; font-weight:900; color:rgba(60,50,70,.45); transition:transform .22s ease; line-height:1; }
+    .th2-toggle-icon.open{ transform:rotate(90deg); }
+    .th2-yesterday-btn{ width:100%; padding:11px 14px; border:1.5px dashed rgba(139,92,180,.26); border-radius:16px; background:rgba(139,92,180,.05); color:#6b5f78; font-size:13px; font-weight:700; cursor:pointer; text-align:center; margin-bottom:8px; font-family:Inter,Arial,sans-serif; transition:.15s ease; }
+    .th2-yesterday-btn:hover{ background:rgba(139,92,180,.10); border-color:rgba(139,92,180,.40); }
+    .th2-yesterday-btn strong{ color:#5a3f82; }
+    .th2-history-main.ref-optimal{ color:#2f7a54 !important; }
+    .th2-history-main.ref-warning{ color:#8a6800 !important; }
+    .th2-history-main.ref-danger{ color:#9a3333 !important; }
+    .th2-history-item.ref-optimal{ border-color:rgba(122,184,154,.36) !important; }
+    .th2-history-item.ref-warning{ border-color:rgba(232,196,114,.36) !important; }
+    .th2-history-item.ref-danger{ border-color:rgba(217,128,128,.36) !important; }
+    .th2-day-logged{ display:block; width:5px; height:5px; border-radius:999px; background:#8f6bc1; margin:2px auto 0; }
+    /* ---- Rike, dype metrikkfarger (samme dype-gradient-behandling som
+       resten av appens siste fargeoppdatering) i stedet for lyse pasteller.
+       Beholder hver metrikks egen fargeidentitet (samme grunnfarge som i
+       JS-objektet "colors" over, brukt til diagram-linjen), bare betydelig
+       dypere/rikere. ---- */
+    .th2-circle[data-metric="weight"]:not(.active):not(.empty) .th2-circle-top{ background:linear-gradient(155deg,rgba(142,101,196,.68) 0%,rgba(90,48,145,.74) 100%) !important; backdrop-filter:blur(8px); border-color:rgba(255,255,255,.34) !important; }
+    .th2-circle[data-metric="waist"]:not(.active):not(.empty) .th2-circle-top{ background:linear-gradient(155deg,#3b6291 0%,#284567 55%,#17273b 100%) !important; border-color:rgba(255,255,255,.14) !important; }
+    .th2-circle[data-metric="hrv"]:not(.active):not(.empty) .th2-circle-top{ background:linear-gradient(155deg,#507c72 0%,#385750 55%,#20322e 100%) !important; border-color:rgba(255,255,255,.14) !important; }
+    .th2-circle[data-metric="restingpulse"]:not(.active):not(.empty) .th2-circle-top{ background:linear-gradient(155deg,#983734 0%,#6c2523 55%,#3e1514 100%) !important; border-color:rgba(255,255,255,.14) !important; }
+    .th2-circle[data-metric="energy"]:not(.active):not(.empty) .th2-circle-top{ background:linear-gradient(155deg,#a46e28 0%,#754d1a 55%,#432c0f 100%) !important; border-color:rgba(255,255,255,.14) !important; }
+    .th2-circle[data-metric="pain"]:not(.active):not(.empty) .th2-circle-top{ background:linear-gradient(155deg,#8f3d57 0%,#65293d 55%,#3a1823 100%) !important; border-color:rgba(255,255,255,.14) !important; }
+    .th2-circle[data-metric="sleep"]:not(.active):not(.empty) .th2-circle-top{ background:linear-gradient(155deg,#5f3d8f 0%,#422966 55%,#26173a 100%) !important; border-color:rgba(255,255,255,.14) !important; }
+    .th2-circle[data-metric="vo2max"]:not(.active):not(.empty) .th2-circle-top{ background:linear-gradient(155deg,#2b5ba1 0%,#1c3f73 55%,#102441 100%) !important; border-color:rgba(255,255,255,.14) !important; }
+    .th2-circle[data-metric="bodyfat"]:not(.active):not(.empty) .th2-circle-top{ background:linear-gradient(155deg,#a2682a 0%,#73491b 55%,#422a10 100%) !important; border-color:rgba(255,255,255,.14) !important; }
+    .th2-circle[data-metric="water"]:not(.active):not(.empty) .th2-circle-top{ background:linear-gradient(155deg,#386a94 0%,#264a69 55%,#162b3c 100%) !important; border-color:rgba(255,255,255,.14) !important; }
+    .th2-circle[data-metric="steps"]:not(.active):not(.empty) .th2-circle-top{ background:linear-gradient(155deg,#547858 0%,#3a543d 55%,#213023 100%) !important; border-color:rgba(255,255,255,.14) !important; }
+    .th2-circle[data-metric="mood"]:not(.active):not(.empty) .th2-circle-top{ background:linear-gradient(155deg,#9f732d 0%,#71511e 55%,#412e11 100%) !important; border-color:rgba(255,255,255,.14) !important; }
+    .th2-circle[data-metric="bloodsugar"]:not(.active):not(.empty) .th2-circle-top{ background:linear-gradient(155deg,#983448 0%,#6c2332 55%,#3e141c 100%) !important; border-color:rgba(255,255,255,.14) !important; }
+    .th2-circle[data-metric="hba1c"]:not(.active):not(.empty) .th2-circle-top{ background:linear-gradient(155deg,#633a92 0%,#452768 55%,#28163b 100%) !important; border-color:rgba(255,255,255,.14) !important; }
+    .th2-circle[data-metric="recovery"]:not(.active):not(.empty) .th2-circle-top{ background:linear-gradient(155deg,#4e7e75 0%,#365952 55%,#1f332f 100%) !important; border-color:rgba(255,255,255,.14) !important; }
+    .th2-circle[data-metric="stress"]:not(.active):not(.empty) .th2-circle-top{ background:linear-gradient(155deg,#a55a27 0%,#753f19 55%,#43240e 100%) !important; border-color:rgba(255,255,255,.14) !important; }
+    .th2-circle[data-metric="bodytemp"]:not(.active):not(.empty) .th2-circle-top{ background:linear-gradient(155deg,#b56617 0%,#81470e 55%,#4a2908 100%) !important; border-color:rgba(255,255,255,.14) !important; }
+    .th2-circle[data-metric="vitamind"]:not(.active):not(.empty) .th2-circle-top{ background:linear-gradient(155deg,#ab7921 0%,#7a5515 55%,#45310c 100%) !important; border-color:rgba(255,255,255,.14) !important; }
+    .th2-circle[data-metric="b12"]:not(.active):not(.empty) .th2-circle-top{ background:linear-gradient(155deg,#2e559e 0%,#1e3b70 55%,#112240 100%) !important; border-color:rgba(255,255,255,.14) !important; }
+    .th2-circle[data-metric="calcium"]:not(.active):not(.empty) .th2-circle-top{ background:linear-gradient(155deg,#4f7d62 0%,#365945 55%,#1f3327 100%) !important; border-color:rgba(255,255,255,.14) !important; }
+    .th2-circle[data-metric="weight"]:not(.active):not(.empty) .th2-circle-icon,
+    .th2-circle[data-metric="weight"]:not(.active):not(.empty) .th2-circle-number{ color:#f8f2ea !important; }
+    .th2-circle[data-metric="waist"]:not(.active):not(.empty) .th2-circle-icon,
+    .th2-circle[data-metric="waist"]:not(.active):not(.empty) .th2-circle-number{ color:#f8f2ea !important; }
+    .th2-circle[data-metric="hrv"]:not(.active):not(.empty) .th2-circle-icon,
+    .th2-circle[data-metric="hrv"]:not(.active):not(.empty) .th2-circle-number{ color:#f8f2ea !important; }
+    .th2-circle[data-metric="restingpulse"]:not(.active):not(.empty) .th2-circle-icon,
+    .th2-circle[data-metric="restingpulse"]:not(.active):not(.empty) .th2-circle-number{ color:#f8f2ea !important; }
+    .th2-circle[data-metric="energy"]:not(.active):not(.empty) .th2-circle-icon,
+    .th2-circle[data-metric="energy"]:not(.active):not(.empty) .th2-circle-number{ color:#f8f2ea !important; }
+    .th2-circle[data-metric="pain"]:not(.active):not(.empty) .th2-circle-icon,
+    .th2-circle[data-metric="pain"]:not(.active):not(.empty) .th2-circle-number{ color:#f8f2ea !important; }
+    .th2-circle[data-metric="sleep"]:not(.active):not(.empty) .th2-circle-icon,
+    .th2-circle[data-metric="sleep"]:not(.active):not(.empty) .th2-circle-number{ color:#f8f2ea !important; }
+    .th2-circle[data-metric="vo2max"]:not(.active):not(.empty) .th2-circle-icon,
+    .th2-circle[data-metric="vo2max"]:not(.active):not(.empty) .th2-circle-number{ color:#f8f2ea !important; }
+    .th2-circle[data-metric="bodyfat"]:not(.active):not(.empty) .th2-circle-icon,
+    .th2-circle[data-metric="bodyfat"]:not(.active):not(.empty) .th2-circle-number{ color:#f8f2ea !important; }
+    .th2-circle[data-metric="water"]:not(.active):not(.empty) .th2-circle-icon,
+    .th2-circle[data-metric="water"]:not(.active):not(.empty) .th2-circle-number{ color:#f8f2ea !important; }
+    .th2-circle[data-metric="steps"]:not(.active):not(.empty) .th2-circle-icon,
+    .th2-circle[data-metric="steps"]:not(.active):not(.empty) .th2-circle-number{ color:#f8f2ea !important; }
+    .th2-circle[data-metric="mood"]:not(.active):not(.empty) .th2-circle-icon,
+    .th2-circle[data-metric="mood"]:not(.active):not(.empty) .th2-circle-number{ color:#f8f2ea !important; }
+    .th2-circle[data-metric="bloodsugar"]:not(.active):not(.empty) .th2-circle-icon,
+    .th2-circle[data-metric="bloodsugar"]:not(.active):not(.empty) .th2-circle-number{ color:#f8f2ea !important; }
+    .th2-circle[data-metric="hba1c"]:not(.active):not(.empty) .th2-circle-icon,
+    .th2-circle[data-metric="hba1c"]:not(.active):not(.empty) .th2-circle-number{ color:#f8f2ea !important; }
+    .th2-circle[data-metric="recovery"]:not(.active):not(.empty) .th2-circle-icon,
+    .th2-circle[data-metric="recovery"]:not(.active):not(.empty) .th2-circle-number{ color:#f8f2ea !important; }
+    .th2-circle[data-metric="stress"]:not(.active):not(.empty) .th2-circle-icon,
+    .th2-circle[data-metric="stress"]:not(.active):not(.empty) .th2-circle-number{ color:#f8f2ea !important; }
+    .th2-circle[data-metric="bodytemp"]:not(.active):not(.empty) .th2-circle-icon,
+    .th2-circle[data-metric="bodytemp"]:not(.active):not(.empty) .th2-circle-number{ color:#f8f2ea !important; }
+    .th2-circle[data-metric="vitamind"]:not(.active):not(.empty) .th2-circle-icon,
+    .th2-circle[data-metric="vitamind"]:not(.active):not(.empty) .th2-circle-number{ color:#f8f2ea !important; }
+    .th2-circle[data-metric="b12"]:not(.active):not(.empty) .th2-circle-icon,
+    .th2-circle[data-metric="b12"]:not(.active):not(.empty) .th2-circle-number{ color:#f8f2ea !important; }
+    .th2-circle[data-metric="calcium"]:not(.active):not(.empty) .th2-circle-icon,
+    .th2-circle[data-metric="calcium"]:not(.active):not(.empty) .th2-circle-number{ color:#f8f2ea !important; }
+
+    .th2-dynamic[data-metric="weight"]{ background:linear-gradient(155deg,rgba(142,101,196,.68) 0%,rgba(90,48,145,.74) 100%) !important; backdrop-filter:blur(8px); border-color:rgba(255,255,255,.34) !important; }
+    .th2-dynamic[data-metric="waist"]{ background:linear-gradient(155deg,#3b6291 0%,#284567 55%,#17273b 100%) !important; border-color:rgba(255,255,255,.14) !important; }
+    .th2-dynamic[data-metric="hrv"]{ background:linear-gradient(155deg,#507c72 0%,#385750 55%,#20322e 100%) !important; border-color:rgba(255,255,255,.14) !important; }
+    .th2-dynamic[data-metric="restingpulse"]{ background:linear-gradient(155deg,#983734 0%,#6c2523 55%,#3e1514 100%) !important; border-color:rgba(255,255,255,.14) !important; }
+    .th2-dynamic[data-metric="energy"]{ background:linear-gradient(155deg,#a46e28 0%,#754d1a 55%,#432c0f 100%) !important; border-color:rgba(255,255,255,.14) !important; }
+    .th2-dynamic[data-metric="pain"]{ background:linear-gradient(155deg,#8f3d57 0%,#65293d 55%,#3a1823 100%) !important; border-color:rgba(255,255,255,.14) !important; }
+    .th2-dynamic[data-metric="sleep"]{ background:linear-gradient(155deg,#5f3d8f 0%,#422966 55%,#26173a 100%) !important; border-color:rgba(255,255,255,.14) !important; }
+    .th2-dynamic[data-metric="vo2max"]{ background:linear-gradient(155deg,#2b5ba1 0%,#1c3f73 55%,#102441 100%) !important; border-color:rgba(255,255,255,.14) !important; }
+    .th2-dynamic[data-metric="bodyfat"]{ background:linear-gradient(155deg,#a2682a 0%,#73491b 55%,#422a10 100%) !important; border-color:rgba(255,255,255,.14) !important; }
+    .th2-dynamic[data-metric="water"]{ background:linear-gradient(155deg,#386a94 0%,#264a69 55%,#162b3c 100%) !important; border-color:rgba(255,255,255,.14) !important; }
+    .th2-dynamic[data-metric="steps"]{ background:linear-gradient(155deg,#547858 0%,#3a543d 55%,#213023 100%) !important; border-color:rgba(255,255,255,.14) !important; }
+    .th2-dynamic[data-metric="mood"]{ background:linear-gradient(155deg,#9f732d 0%,#71511e 55%,#412e11 100%) !important; border-color:rgba(255,255,255,.14) !important; }
+    .th2-dynamic[data-metric="bloodsugar"]{ background:linear-gradient(155deg,#983448 0%,#6c2332 55%,#3e141c 100%) !important; border-color:rgba(255,255,255,.14) !important; }
+    .th2-dynamic[data-metric="hba1c"]{ background:linear-gradient(155deg,#633a92 0%,#452768 55%,#28163b 100%) !important; border-color:rgba(255,255,255,.14) !important; }
+    .th2-dynamic[data-metric="recovery"]{ background:linear-gradient(155deg,#4e7e75 0%,#365952 55%,#1f332f 100%) !important; border-color:rgba(255,255,255,.14) !important; }
+    .th2-dynamic[data-metric="stress"]{ background:linear-gradient(155deg,#a55a27 0%,#753f19 55%,#43240e 100%) !important; border-color:rgba(255,255,255,.14) !important; }
+    .th2-dynamic[data-metric="bodytemp"]{ background:linear-gradient(155deg,#b56617 0%,#81470e 55%,#4a2908 100%) !important; border-color:rgba(255,255,255,.14) !important; }
+    .th2-dynamic[data-metric="vitamind"]{ background:linear-gradient(155deg,#ab7921 0%,#7a5515 55%,#45310c 100%) !important; border-color:rgba(255,255,255,.14) !important; }
+    .th2-dynamic[data-metric="b12"]{ background:linear-gradient(155deg,#2e559e 0%,#1e3b70 55%,#112240 100%) !important; border-color:rgba(255,255,255,.14) !important; }
+    .th2-dynamic[data-metric="calcium"]{ background:linear-gradient(155deg,#4f7d62 0%,#365945 55%,#1f3327 100%) !important; border-color:rgba(255,255,255,.14) !important; }
+
+    .th2-history-item[data-metric="weight"]{ background:linear-gradient(155deg,rgba(142,101,196,.68) 0%,rgba(90,48,145,.74) 100%) !important; backdrop-filter:blur(8px); border-color:rgba(255,255,255,.34) !important; }
+    .th2-history-item[data-metric="waist"]{ background:linear-gradient(155deg,#3b6291 0%,#284567 55%,#17273b 100%) !important; border-color:rgba(255,255,255,.14) !important; }
+    .th2-history-item[data-metric="hrv"]{ background:linear-gradient(155deg,#507c72 0%,#385750 55%,#20322e 100%) !important; border-color:rgba(255,255,255,.14) !important; }
+    .th2-history-item[data-metric="restingpulse"]{ background:linear-gradient(155deg,#983734 0%,#6c2523 55%,#3e1514 100%) !important; border-color:rgba(255,255,255,.14) !important; }
+    .th2-history-item[data-metric="energy"]{ background:linear-gradient(155deg,#a46e28 0%,#754d1a 55%,#432c0f 100%) !important; border-color:rgba(255,255,255,.14) !important; }
+    .th2-history-item[data-metric="pain"]{ background:linear-gradient(155deg,#8f3d57 0%,#65293d 55%,#3a1823 100%) !important; border-color:rgba(255,255,255,.14) !important; }
+    .th2-history-item[data-metric="sleep"]{ background:linear-gradient(155deg,#5f3d8f 0%,#422966 55%,#26173a 100%) !important; border-color:rgba(255,255,255,.14) !important; }
+    .th2-history-item[data-metric="vo2max"]{ background:linear-gradient(155deg,#2b5ba1 0%,#1c3f73 55%,#102441 100%) !important; border-color:rgba(255,255,255,.14) !important; }
+    .th2-history-item[data-metric="bodyfat"]{ background:linear-gradient(155deg,#a2682a 0%,#73491b 55%,#422a10 100%) !important; border-color:rgba(255,255,255,.14) !important; }
+    .th2-history-item[data-metric="water"]{ background:linear-gradient(155deg,#386a94 0%,#264a69 55%,#162b3c 100%) !important; border-color:rgba(255,255,255,.14) !important; }
+    .th2-history-item[data-metric="steps"]{ background:linear-gradient(155deg,#547858 0%,#3a543d 55%,#213023 100%) !important; border-color:rgba(255,255,255,.14) !important; }
+    .th2-history-item[data-metric="mood"]{ background:linear-gradient(155deg,#9f732d 0%,#71511e 55%,#412e11 100%) !important; border-color:rgba(255,255,255,.14) !important; }
+    .th2-history-item[data-metric="bloodsugar"]{ background:linear-gradient(155deg,#983448 0%,#6c2332 55%,#3e141c 100%) !important; border-color:rgba(255,255,255,.14) !important; }
+    .th2-history-item[data-metric="hba1c"]{ background:linear-gradient(155deg,#633a92 0%,#452768 55%,#28163b 100%) !important; border-color:rgba(255,255,255,.14) !important; }
+    .th2-history-item[data-metric="recovery"]{ background:linear-gradient(155deg,#4e7e75 0%,#365952 55%,#1f332f 100%) !important; border-color:rgba(255,255,255,.14) !important; }
+    .th2-history-item[data-metric="stress"]{ background:linear-gradient(155deg,#a55a27 0%,#753f19 55%,#43240e 100%) !important; border-color:rgba(255,255,255,.14) !important; }
+    .th2-history-item[data-metric="bodytemp"]{ background:linear-gradient(155deg,#b56617 0%,#81470e 55%,#4a2908 100%) !important; border-color:rgba(255,255,255,.14) !important; }
+    .th2-history-item[data-metric="vitamind"]{ background:linear-gradient(155deg,#ab7921 0%,#7a5515 55%,#45310c 100%) !important; border-color:rgba(255,255,255,.14) !important; }
+    .th2-history-item[data-metric="b12"]{ background:linear-gradient(155deg,#2e559e 0%,#1e3b70 55%,#112240 100%) !important; border-color:rgba(255,255,255,.14) !important; }
+    .th2-history-item[data-metric="calcium"]{ background:linear-gradient(155deg,#4f7d62 0%,#365945 55%,#1f3327 100%) !important; border-color:rgba(255,255,255,.14) !important; }
+
+    /* Felles lys tekst inni de mørke/fargede metrikk-kortene — gjelder nå
+       KUN dagens-tall-boksen (.th2-dynamic) og historikk-radene, siden
+       mål-boksen (.th2-goal-display) ikke lenger har mørk/farget bakgrunn
+       (se egen kommentar ved .th2-goal-display over) og derfor beholder sin
+       mørke, lesbare tekst fra "Lyst hvitt tema"-blokken lenger oppe. */
+    .th2-goal-progress-fill{ background:linear-gradient(135deg,#e8cd9a,#c9a876) !important; }
+    .th2-dynamic label{ color:rgba(248,242,234,.68) !important; }
+    .th2-dynamic .th2-subtle-note{ color:rgba(248,242,234,.55) !important; }
+    /* Selve inntastingsfeltet skal ALLTID være lyst og godt lesbart, uansett
+       hvor farget/mørkt metrikk-kortet rundt er — et gjennomsiktig felt med
+       lys tekst (slik det var før) mister kontrast når kortet bak er
+       middels lyst i stedet for nesten svart. */
+    .th2-inline-save input,.th2-goal-input,.th2-pain-note{ background:rgba(255,255,255,.92) !important; border-color:rgba(255,255,255,.6) !important; color:#24313d !important; }
+    .th2-inline-save input::placeholder,.th2-pain-note::placeholder{ color:#9a8f84 !important; }
+    .th2-goal-btn{ background:rgba(255,255,255,.12) !important; border-color:rgba(255,255,255,.22) !important; color:#f8f2ea !important; }
+    .th2-score-btn{ background:rgba(255,255,255,.08) !important; border-color:rgba(255,255,255,.18) !important; color:rgba(248,242,234,.75) !important; }
+    .th2-score-btn.active{ background:linear-gradient(180deg,#e8cd9a,#c9a876) !important; border-color:transparent !important; color:#2a1810 !important; }
+    .th2-pain-popup-btn{ background:rgba(255,255,255,.10) !important; border-color:rgba(255,255,255,.20) !important; color:#f8f2ea !important; }
+    .th2-yesterday-btn{ background:rgba(255,255,255,.08) !important; border-color:rgba(255,255,255,.24) !important; color:rgba(248,242,234,.75) !important; }
+    .th2-yesterday-btn strong{ color:#e8cd9a !important; }
+
+    .th2-history-item .th2-history-date{ color:#f8f2ea !important; }
+    .th2-history-item .th2-history-main{ color:#e8cd9a !important; }
+    .th2-history-item .th2-history-chip{ background:rgba(255,255,255,.12) !important; border-color:rgba(255,255,255,.20) !important; color:#f8f2ea !important; }
+    .th2-history-item .th2-history-chip.th2-history-more{ background:rgba(255,255,255,.06) !important; color:rgba(248,242,234,.65) !important; }
+    .th2-history-item .th2-chip-delete{ background:rgba(255,255,255,.16) !important; color:#f8f2ea !important; }
+    .th2-history-item:hover{ box-shadow:0 14px 30px rgba(10,6,16,.28) !important; }
+
+    /* ══════════════════════════════════════════════════════════════════
+       MØRKT PREMIUM-TEMA (alternativ B, valgt 2026-10-02): dyp lilla
+       (#14081f / #1c0d2e / #23103a) med gull (#d8c4a0), som logofargene.
+       Ligger sist og med høyere spesifisitet, så det overstyrer de lyse og
+       fargede blokkene over uten at de må slettes.
+       ══════════════════════════════════════════════════════════════════ */
+    .th2-wrap.th2-wrap{ --gold:#d8c4a0; --ink:#14081f; --panel:#1c0d2e; --panel-2:#23103a; --edge:#2f1a4a; --lilac:#9c8bb3; --pale:#f3ecfb;
+      background:var(--ink) !important; color:var(--pale) !important; min-height:100vh; padding-bottom:48px !important; }
+    .th2-wrap .th2-app .th2-hero{ background:var(--panel) !important; border:1px solid var(--edge) !important; box-shadow:none !important; color:var(--pale) !important; }
+    .th2-wrap .th2-hero::before,.th2-wrap .th2-hero-glow,.th2-wrap .th2-hero-bottom-fade{ display:none !important; }
+    .th2-wrap .th2-hero h1{ color:var(--pale) !important; text-align:left; font-size:clamp(1.6rem,6vw,2.2rem); letter-spacing:-.03em; margin:4px 0 14px; }
+    .th2-wrap .th2-hero-top{ justify-content:flex-end; margin-bottom:14px; padding-top:14px; }
+    .th2-wrap .th2-week-nav{ background:var(--panel-2) !important; border-color:var(--edge) !important; box-shadow:none !important; }
+    .th2-wrap .th2-week-btn{ background:transparent !important; color:var(--gold) !important; box-shadow:none !important; }
+    .th2-wrap .th2-week-label{ color:var(--gold) !important; text-transform:uppercase; }
+    .th2-wrap .th2-weekdays .th2-day{ background:var(--panel-2) !important; border:1px solid transparent !important; color:var(--lilac) !important; box-shadow:none !important; }
+    .th2-wrap .th2-weekdays .th2-day .th2-day-num{ color:var(--pale) !important; background:transparent !important; box-shadow:none !important; }
+    .th2-wrap .th2-weekdays .th2-day.today{ border-color:rgba(216,196,160,.45) !important; }
+    .th2-wrap .th2-weekdays .th2-day.active{ background:var(--gold) !important; color:#4a3818 !important; }
+    .th2-wrap .th2-weekdays .th2-day.active .th2-day-num{ color:#2a1d10 !important; }
+    .th2-wrap .th2-day-logged{ background:var(--gold) !important; }
+
+    /* Siden i movement.os har hvit bakgrunn under blokken – gjør hele siden
+       lilla når «Min helse» ligger på den (gjelder bare sider med .th2-wrap). */
+    html:has(.th2-wrap), body:has(.th2-wrap){ background:#14081f !important; }
+    .th2-ring{ position:relative; z-index:2; display:flex; justify-content:center; margin:4px 0 18px; }
+    .th2-ring-box{ position:relative; width:190px; height:190px; }
+    .th2-ring-box svg{ width:100%; height:100%; transform:rotate(-90deg); }
+    .th2-ring-track{ fill:none; stroke:#2c1647; stroke-width:14; }
+    .th2-ring-fill{ fill:none; stroke:#d8c4a0; stroke-width:14; stroke-linecap:round; transition:stroke-dashoffset .5s ease; }
+    .th2-ring-in{ position:absolute; inset:18px; display:grid; place-content:center; text-align:center; gap:2px; }
+    .th2-ring-in small{ font-size:11px; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:#bba6d6; }
+    .th2-ring-in div{ font-size:2.6rem; font-weight:900; line-height:1.05; color:#f3ecfb; letter-spacing:-.03em; }
+    .th2-ring-in div span{ font-size:.95rem; font-weight:700; color:#bba6d6; margin-left:3px; letter-spacing:0; }
+    .th2-ring-in em{ font-style:normal; font-size:12px; font-weight:700; color:#d8c4a0; line-height:1.3; }
+
+    .th2-wrap .th2-app .th2-circles .th2-circle[data-metric] .th2-circle-top,
+    .th2-wrap .th2-app .th2-circles .th2-circle .th2-add-metric-top{ background:transparent !important; border:2px solid #3a2357 !important; box-shadow:none !important; backdrop-filter:none !important; transform:none; }
+    .th2-wrap .th2-app .th2-circles .th2-circle .th2-circle-top::after{ display:none; }
+    .th2-wrap .th2-app .th2-circles .th2-circle[data-metric] .th2-circle-number{ color:var(--pale) !important; }
+    .th2-wrap .th2-app .th2-circles .th2-circle[data-metric] .th2-circle-icon{ font-size:12px; opacity:.75; }
+    .th2-wrap .th2-app .th2-circles .th2-circle.active[data-metric] .th2-circle-top{ border-color:var(--gold) !important; background:rgba(216,196,160,.08) !important; }
+    .th2-wrap .th2-app .th2-circles .th2-circle.active[data-metric] .th2-circle-number{ color:var(--gold) !important; }
+    .th2-wrap .th2-app .th2-circles .th2-circle.empty[data-metric] .th2-circle-top{ border-style:dashed !important; }
+    .th2-wrap .th2-app .th2-circles .th2-circle .th2-add-metric-top{ border-style:dashed !important; border-color:rgba(216,196,160,.5) !important; color:var(--gold) !important; }
+    .th2-wrap .th2-circle-label{ color:var(--lilac) !important; }
+    .th2-wrap .th2-circle.active .th2-circle-label{ color:var(--gold) !important; }
+
+    .th2-wrap .th2-app .th2-card{ background:var(--panel) !important; border:1px solid var(--edge) !important; box-shadow:none !important; backdrop-filter:none !important; }
+    .th2-wrap .th2-app .th2-card-head h2,.th2-wrap .th2-app .th2-card-head h3{ color:var(--pale) !important; }
+    .th2-wrap .th2-toggle-icon{ color:var(--gold) !important; }
+    .th2-wrap .th2-helper,.th2-wrap .th2-empty,.th2-wrap .th2-subtle-note{ color:var(--lilac) !important; }
+
+    .th2-wrap .th2-app .th2-dynamic[data-metric]{ background:var(--panel-2) !important; border:1px solid var(--edge) !important; box-shadow:none !important; backdrop-filter:none !important; }
+    .th2-wrap .th2-dynamic label{ color:#bba6d6 !important; }
+    .th2-wrap .th2-app .th2-goal-display{ background:var(--panel-2) !important; border:1px solid var(--edge) !important; box-shadow:none !important; }
+    .th2-wrap .th2-goal-icon{ background:#2c1647 !important; box-shadow:none !important; }
+    .th2-wrap .th2-goal-display-label{ color:#bba6d6 !important; }
+    .th2-wrap .th2-goal-display-value{ color:var(--pale) !important; }
+    .th2-wrap .th2-goal-distance{ color:var(--gold) !important; }
+    .th2-wrap .th2-goal-progress{ background:#2c1647 !important; border-color:transparent !important; }
+    .th2-wrap .th2-goal-progress-fill{ background:var(--gold) !important; }
+
+    .th2-wrap .th2-app .th2-inline-save input,.th2-wrap .th2-app .th2-goal-input,.th2-wrap .th2-app .th2-pain-note{ background:#2c1647 !important; border:1px solid #3a2357 !important; color:var(--pale) !important; box-shadow:none !important; }
+    .th2-wrap .th2-app .th2-inline-save input::placeholder,.th2-wrap .th2-app .th2-goal-input::placeholder,.th2-wrap .th2-app .th2-pain-note::placeholder{ color:#7e6a99 !important; }
+    .th2-wrap .th2-inline-btn{ background:var(--gold) !important; color:#2a1d10 !important; box-shadow:none !important; }
+    .th2-wrap .th2-app .th2-goal-btn{ background:transparent !important; border:1px solid rgba(216,196,160,.45) !important; color:var(--gold) !important; box-shadow:none !important; }
+    .th2-wrap .th2-app .th2-score-btn{ background:#2c1647 !important; border:1px solid #3a2357 !important; color:#cbb8e4 !important; box-shadow:none !important; }
+    .th2-wrap .th2-app .th2-score-btn.active{ background:var(--gold) !important; border-color:var(--gold) !important; color:#2a1d10 !important; }
+    .th2-wrap .th2-slider{ background:#2c1647 !important; }
+    .th2-wrap .th2-slider::-webkit-slider-thumb{ background:var(--gold) !important; border-color:var(--ink) !important; box-shadow:none !important; }
+    .th2-wrap .th2-slider::-moz-range-thumb{ background:var(--gold) !important; border-color:var(--ink) !important; box-shadow:none !important; }
+    .th2-wrap .th2-slider-value{ color:var(--gold) !important; }
+    .th2-wrap .th2-slider-labels{ color:var(--lilac) !important; }
+    .th2-wrap .th2-app .th2-pain-popup-btn,.th2-wrap .th2-app .th2-yesterday-btn{ background:transparent !important; border:1px dashed #3a2357 !important; color:#cbb8e4 !important; }
+    .th2-wrap .th2-yesterday-btn strong{ color:var(--gold) !important; }
+
+    .th2-wrap .th2-insight-good{ background:rgba(122,184,154,.12) !important; color:#9fd4b8 !important; border-color:rgba(122,184,154,.3) !important; }
+    .th2-wrap .th2-insight-warn{ background:rgba(232,196,114,.10) !important; color:#e8cd9a !important; border-color:rgba(232,196,114,.3) !important; }
+    .th2-wrap .th2-insight-best{ background:rgba(216,196,160,.16) !important; color:var(--gold) !important; border-color:rgba(216,196,160,.4) !important; }
+    .th2-wrap .th2-app .th2-ref-box{ background:var(--panel-2) !important; border-color:var(--edge) !important; }
+    .th2-wrap .th2-ref-title,.th2-wrap .th2-ref-label{ color:#bba6d6 !important; }
+
+    .th2-wrap .th2-app .th2-chart-wrap{ background:var(--panel-2) !important; border-color:var(--edge) !important; box-shadow:none !important; backdrop-filter:none !important; }
+    .th2-wrap .th2-chart-wrap::before{ display:none; }
+    .th2-wrap .th2-app .th2-history-item,.th2-wrap .th2-app .th2-history-item[data-metric]{ background:var(--panel-2) !important; border:1px solid var(--edge) !important; box-shadow:none !important; backdrop-filter:none !important; }
+    .th2-wrap .th2-app .th2-history-item .th2-history-date{ color:var(--pale) !important; }
+    .th2-wrap .th2-app .th2-history-item .th2-history-main{ color:var(--gold) !important; }
+    .th2-wrap .th2-app .th2-history-item .th2-history-chip{ background:#2c1647 !important; border-color:#3a2357 !important; color:#cbb8e4 !important; }
+
+    .th2-wrap .th2-saved{ background:rgba(216,196,160,.14) !important; border-color:rgba(216,196,160,.4) !important; color:var(--gold) !important; }
+    .th2-wrap .th2-saved.error{ background:rgba(217,128,128,.14) !important; border-color:rgba(217,128,128,.4) !important; color:#f0b4b4 !important; }
+    .th2-wrap .th2-saved.info{ background:rgba(156,139,179,.14) !important; border-color:rgba(156,139,179,.4) !important; color:#cbb8e4 !important; }
+    .th2-wrap .th2-warning{ background:rgba(232,196,114,.10) !important; border-color:rgba(232,196,114,.35) !important; color:#e8cd9a !important; }
+
+    .th2-wrap .th2-modal-card{ background:var(--panel) !important; border-color:var(--edge) !important; }
+    .th2-wrap .th2-modal-head h3{ color:var(--pale) !important; }
+    .th2-wrap .th2-modal-close{ background:#2c1647 !important; border-color:#3a2357 !important; color:var(--pale) !important; }
+    .th2-wrap .th2-app ~ .th2-modal .th2-pick,.th2-wrap .th2-modal .th2-pick{ background:#2c1647 !important; border-color:#3a2357 !important; color:#cbb8e4 !important; box-shadow:none !important; }
+    .th2-wrap .th2-modal .th2-pick.active{ background:rgba(216,196,160,.14) !important; border-color:var(--gold) !important; color:var(--gold) !important; }
+    .th2-wrap .th2-modal .th2-pain-option{ background:#2c1647 !important; border-color:#3a2357 !important; color:#cbb8e4 !important; }
+    .th2-wrap .th2-modal .th2-pain-option.active{ background:rgba(216,196,160,.14) !important; border-color:var(--gold) !important; color:var(--gold) !important; }
+    .th2-wrap .th2-modal .th2-btn{ background:transparent; border:1px solid #3a2357; color:#cbb8e4; border-radius:14px; padding:0 16px; font-weight:800; }
+    .th2-wrap .th2-ref-status.optimal{ background:rgba(122,184,154,.14); color:#9fd4b8; border-color:rgba(122,184,154,.35); }
+    .th2-wrap .th2-ref-status.warning{ background:rgba(232,196,114,.12); color:#e8cd9a; border-color:rgba(232,196,114,.35); }
+    .th2-wrap .th2-ref-status.danger{ background:rgba(217,128,128,.14); color:#f0b4b4; border-color:rgba(217,128,128,.35); }
+    .th2-wrap .th2-ref-status.info{ background:rgba(136,180,214,.14); color:#b5d4ee; border-color:rgba(136,180,214,.35); }
+    .th2-wrap .th2-metric-picker{ display:grid; gap:14px; }
+    .th2-pick-head{ font-size:11px; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:#d8c4a0; margin-bottom:8px; }
+    .th2-pick-row{ display:flex; flex-wrap:wrap; gap:8px; }
+    .th2-wrap .th2-modal-card{ max-height:82vh; overflow:auto; margin-top:7vh; }
+    .th2-wrap .th2-circle.stale .th2-circle-top::before{ content:""; position:absolute; top:5px; right:9px; width:9px; height:9px; border-radius:50%; background:#d8c4a0; box-shadow:0 0 0 2px #1c0d2e; z-index:2; }
+    .th2-stale-note{ margin:0 0 6px; font-size:13px; font-weight:700; color:#d8c4a0; }
+    .th2-checkin-btn{ position:relative; z-index:2; display:block; width:100%; margin:16px 0 0; min-height:46px; border-radius:16px; border:1px solid rgba(216,196,160,.45); background:rgba(216,196,160,.08); color:#d8c4a0; font:inherit; font-weight:800; font-size:14px; cursor:pointer; }
+    .th2-wrap .th2-inline-btn-text{ white-space:nowrap; }
+    .th2-checkin-list{ display:grid; gap:8px; margin-bottom:6px; }
+    .th2-checkin-row{ display:grid; grid-template-columns:1fr 110px; align-items:center; gap:10px; padding:8px 10px; border-radius:14px; background:#23103a; border:1px solid #2f1a4a; }
+    .th2-checkin-row span{ font-size:14px; font-weight:800; color:#f3ecfb; }
+    .th2-checkin-row small{ font-weight:600; color:#9c8bb3; }
+    .th2-checkin-row input{ width:100%; min-height:42px; border-radius:12px; border:1px solid #3a2357; background:#2c1647; color:#f3ecfb; font:inherit; font-size:16px; font-weight:700; padding:0 10px; text-align:right; }
+    .th2-checkin-row input::placeholder{ color:#7e6a99; }
+    .th2-period{ display:flex; gap:6px; margin:0 0 10px; }
+    .th2-period button{ flex:1; min-height:34px; border-radius:12px; border:1px solid #3a2357; background:transparent; color:#cbb8e4; font:inherit; font-size:12px; font-weight:800; cursor:pointer; }
+    .th2-period button.active{ background:#d8c4a0; border-color:#d8c4a0; color:#2a1d10; }
+    .th2-how{ margin:2px 0 4px; border-radius:14px; background:rgba(216,196,160,.07); border:1px solid rgba(216,196,160,.22); padding:0 12px; }
+    .th2-how summary{ cursor:pointer; list-style:none; padding:10px 0; font-size:13px; font-weight:800; color:#d8c4a0; }
+    .th2-how summary::-webkit-details-marker{ display:none; }
+    .th2-how p{ margin:0 0 10px; font-size:13px; line-height:1.55; color:#e6dcf2; }
+    .th2-how p.th2-how-tips{ color:#9c8bb3; font-size:12px; }
+    @media (max-width:560px){ .th2-ring-box{ width:170px; height:170px; } .th2-ring-in div{ font-size:2.2rem; } }
+  </style>
+
+  <script data-tl-widget="min-helse-1to1">
+    (async function(){
+      const STORAGE_KEY = "th2_metrics_v15_supabase";
+      const ACTIVE_KEY = "th2_active_metric_v15_supabase";
+      const WEEK_KEY = "th2_week_anchor_v15_supabase";
+      const SELECTED_DATE_KEY = "th2_selected_date_v15_supabase";
+      const GOALS_KEY = "th2_goals_v15_supabase";
+      const VISIBLE_KEY = "th2_visible_metrics_v15_supabase";
+      const ENTRIES_TABLE = "tro_livsstil_health_entries";
+      const SETTINGS_TABLE = "tro_livsstil_health_settings";
+
+      const metrics = {
+        weight:{ label:"Vekt", unit:"kg", shortUnit:"kg", icon:"⚖️", type:"number", step:"0.1", placeholder:"78.4", goalPlaceholder:"Målvekt, f.eks. 75", allowGoal:true, direction:"down", visibleDefault:true },
+        waist:{ label:"Midje", how:"Stå rett med føttene samlet og pust rolig ut. Finn midtpunktet mellom nederste ribbein og toppen av hoftebeinet (hoftekammen) på siden av kroppen. Legg målebåndet vannrett rundt der, tett inntil huden uten å stramme.", unit:"cm", shortUnit:"cm", icon:"📏", type:"number", step:"0.1", placeholder:"88", goalPlaceholder:"Mål midje, f.eks. 80", allowGoal:true, direction:"down", visibleDefault:true },
+        hrv:{ label:"HRV", unit:"", shortUnit:"", icon:"🫀", type:"number", step:"1", placeholder:"58", goalPlaceholder:"Mål HRV, f.eks. 65", allowGoal:true, direction:"up", visibleDefault:true },
+        restingpulse:{ label:"Hvilepuls", unit:"bpm", shortUnit:"bpm", icon:"❤️", type:"number", step:"1", placeholder:"58", goalPlaceholder:"Mål hvilepuls, f.eks. 55", allowGoal:true, direction:"down", visibleDefault:true },
+        energy:{ label:"Energi", unit:"/10", shortUnit:"/10", icon:"⚡", type:"score", values:[1,2,3,4,5,6,7,8,9,10], goalPlaceholder:"Mål energi, f.eks. 8", allowGoal:true, direction:"up", visibleDefault:true },
+        pain:{ label:"Smerte", unit:"/10", shortUnit:"/10", icon:"🩹", type:"pain", values:[0,1,2,3,4,5,6,7,8,9,10], allowGoal:false, visibleDefault:true },
+        sleep:{ label:"Søvn", unit:"t", shortUnit:"t", icon:"🌙", type:"slider", min:0, max:12, step:0.5, goalPlaceholder:"Mål søvn, f.eks. 8", allowGoal:true, direction:"up", visibleDefault:true },
+        vo2max:{ label:"VO2 maks", unit:"ml/kg/min", shortUnit:"", icon:"🏃", type:"number", step:"0.1", placeholder:"42", goalPlaceholder:"Mål VO2 maks, f.eks. 48", allowGoal:true, direction:"up", visibleDefault:true },
+        bodyfat:{ label:"Fettprosent", unit:"%", shortUnit:"%", icon:"📉", type:"number", step:"0.1", placeholder:"24.5", goalPlaceholder:"Mål fettprosent, f.eks. 20", allowGoal:true, direction:"down", visibleDefault:true },
+        water:{ label:"Vann", unit:"L", shortUnit:"L", icon:"💧", type:"number", step:"0.1", placeholder:"2.2", goalPlaceholder:"Mål vann, f.eks. 2.5", allowGoal:true, direction:"up", visibleDefault:false },
+        steps:{ label:"Skritt", unit:"", shortUnit:"", icon:"👣", type:"number", step:"1", placeholder:"8500", goalPlaceholder:"Mål skritt, f.eks. 10000", allowGoal:true, direction:"up", visibleDefault:false },
+        mood:{ label:"Humør", unit:"/10", shortUnit:"/10", icon:"☀️", type:"score", values:[1,2,3,4,5,6,7,8,9,10], goalPlaceholder:"Mål humør, f.eks. 8", allowGoal:true, direction:"up", visibleDefault:false },
+        bloodsugar:{ label:"Blodsukker", unit:"mmol/L", shortUnit:"", icon:"🩸", type:"number", step:"0.1", placeholder:"5.4", goalPlaceholder:"Mål blodsukker, f.eks. 5.2", allowGoal:true, direction:"down", visibleDefault:false, refs:[{label:"Lavt",max:4.0,color:"#88b4d6"},{label:"Optimalt",max:5.6,color:"#7ab89a"},{label:"Grense",max:7.0,color:"#e8c472"},{label:"Høyt",max:15,color:"#d98080"}] },
+        hba1c:{ label:"Langtidsblodsukker", unit:"mmol/mol", shortUnit:"", icon:"🧪", type:"number", step:"1", placeholder:"34", goalPlaceholder:"Mål HbA1c, f.eks. 32", allowGoal:true, direction:"down", visibleDefault:false, refs:[{label:"Optimalt",max:42,color:"#7ab89a"},{label:"Prediabetes",max:47,color:"#e8c472"},{label:"Diabetes",max:120,color:"#d98080"}] },
+        recovery:{ label:"Restitusjon", unit:"/10", shortUnit:"/10", icon:"🌿", type:"score", values:[1,2,3,4,5,6,7,8,9,10], goalPlaceholder:"Mål restitusjon, f.eks. 8", allowGoal:true, direction:"up", visibleDefault:false },
+        stress:{ label:"Stress", unit:"/10", shortUnit:"/10", icon:"🧠", type:"score", values:[1,2,3,4,5,6,7,8,9,10], goalPlaceholder:"Mål stress, f.eks. 3", allowGoal:true, direction:"down", visibleDefault:false },
+        bodytemp:{ label:"Kroppstemp", unit:"°C", shortUnit:"°", icon:"🌡️", type:"number", step:"0.1", placeholder:"36.8", goalPlaceholder:"Mål kroppstemp, f.eks. 36.8", allowGoal:true, direction:"down", visibleDefault:false },
+        vitamind:{ label:"D-vitamin", unit:"nmol/L", shortUnit:"nmol/L", icon:"☀️", type:"number", step:"1", placeholder:"75", goalPlaceholder:"Målnivå, f.eks. 100 nmol/L", allowGoal:true, direction:"up", goalMode:"lab", visibleDefault:false, refs:[{label:"Mangel",max:50,color:"#d98080"},{label:"Lavt",max:75,color:"#e8c472"},{label:"Optimalt",max:150,color:"#7ab89a"},{label:"For høyt",max:300,color:"#d98080"}] },
+        b12:{ label:"B12", unit:"pmol/L", shortUnit:"pmol/L", icon:"🟣", type:"number", step:"1", placeholder:"450", goalPlaceholder:"Målnivå, f.eks. 500 pmol/L", allowGoal:true, direction:"up", goalMode:"lab", visibleDefault:false, refs:[{label:"Lavt",max:200,color:"#d98080"},{label:"Grense",max:300,color:"#e8c472"},{label:"Normalt",max:500,color:"#a8c87a"},{label:"Optimalt",max:800,color:"#7ab89a"},{label:"Høyt",max:2000,color:"#e8c472"}] },
+        calcium:{ label:"Kalsium", unit:"mmol/L", shortUnit:"mmol/L", icon:"🦴", type:"number", step:"0.01", placeholder:"2.35", goalPlaceholder:"Målnivå, f.eks. 2.40 mmol/L", allowGoal:true, direction:"up", goalMode:"lab", visibleDefault:false, refs:[{label:"Lavt",max:2.15,color:"#88b4d6"},{label:"Normalt",max:2.55,color:"#7ab89a"},{label:"Høyt",max:4.0,color:"#d98080"}] },
+        // ── Omkretsmål ──
+        hip:{ label:"Hofte", how:"Stå rett med føttene samlet. Mål rundt det bredeste av setet og hoftene. Sjekk i speilet at målebåndet ligger vannrett hele veien rundt.", unit:"cm", shortUnit:"cm", icon:"📏", type:"number", step:"0.1", placeholder:"102", goalPlaceholder:"Mål hofte, f.eks. 98", allowGoal:true, direction:"down", visibleDefault:false },
+        belly:{ label:"Mage", how:"Stå rett og pust rolig ut. Legg målebåndet rundt magen i høyde med navlen, vannrett og tett inntil uten å stramme. Ikke trekk inn magen.", unit:"cm", shortUnit:"cm", icon:"📏", type:"number", step:"0.1", placeholder:"94", goalPlaceholder:"Mål mage (ved navlen), f.eks. 88", allowGoal:true, direction:"down", visibleDefault:false },
+        thigh:{ label:"Lår", how:"Stå med vekten likt fordelt på begge bein. Mål rundt det tykkeste av låret, rett under setefolden. Bruk samme bein hver gang.", unit:"cm", shortUnit:"cm", icon:"📏", type:"number", step:"0.1", placeholder:"58", goalPlaceholder:"Mål lår, f.eks. 56", allowGoal:true, visibleDefault:false },
+        arm:{ label:"Overarm", how:"La armen henge avslappet ned langs siden. Mål rundt midt mellom skulderspissen og albuen. Bruk samme arm hver gang.", unit:"cm", shortUnit:"cm", icon:"💪", type:"number", step:"0.1", placeholder:"32", goalPlaceholder:"Mål overarm, f.eks. 34", allowGoal:true, visibleDefault:false },
+        chest:{ label:"Bryst", how:"Stå rett med armene ned og pust rolig ut. Legg målebåndet rundt brystkassen i høyde med brystvortene (rett under armhulene), vannrett hele veien.", unit:"cm", shortUnit:"cm", icon:"📏", type:"number", step:"0.1", placeholder:"104", goalPlaceholder:"Mål bryst, f.eks. 106", allowGoal:true, visibleDefault:false },
+        height:{ label:"Høyde", unit:"cm", shortUnit:"cm", icon:"📐", type:"number", step:"0.5", placeholder:"178", allowGoal:false, visibleDefault:false, hint:"Holder å registrere én gang – brukes til midje/høyde." },
+        whr:{ label:"Midje/hofte", unit:"", shortUnit:"", icon:"⚖️", type:"computed", allowGoal:false, visibleDefault:false, from:"Midje ÷ hofte", needs:"midje og hofte", inputs:["waist","hip"], refs:[{label:"Gunstig",max:0.85,color:"#7ab89a"},{label:"Moderat",max:0.95,color:"#e8c472"},{label:"Høy",max:1.5,color:"#d98080"}] },
+        whtr:{ label:"Midje/høyde", unit:"", shortUnit:"", icon:"📐", type:"computed", allowGoal:false, visibleDefault:false, from:"Midje ÷ høyde", needs:"midje og høyde", inputs:["waist","height"], refs:[{label:"Gunstig",max:0.5,color:"#7ab89a"},{label:"Forhøyet",max:0.6,color:"#e8c472"},{label:"Høy",max:1,color:"#d98080"}] },
+        // ── Blodtrykk og kropp ──
+        bpsys:{ label:"Blodtrykk øvre", unit:"mmHg", shortUnit:"", icon:"🩺", type:"number", step:"1", placeholder:"125", goalPlaceholder:"Mål, f.eks. 120", allowGoal:true, direction:"down", visibleDefault:false, refs:[{label:"Optimalt",max:120,color:"#7ab89a"},{label:"Normalt",max:130,color:"#a8c87a"},{label:"Høyt normalt",max:140,color:"#e8c472"},{label:"Høyt",max:220,color:"#d98080"}] },
+        bpdia:{ label:"Blodtrykk nedre", unit:"mmHg", shortUnit:"", icon:"🩺", type:"number", step:"1", placeholder:"80", goalPlaceholder:"Mål, f.eks. 80", allowGoal:true, direction:"down", visibleDefault:false, refs:[{label:"Optimalt",max:80,color:"#7ab89a"},{label:"Normalt",max:85,color:"#a8c87a"},{label:"Høyt normalt",max:90,color:"#e8c472"},{label:"Høyt",max:140,color:"#d98080"}] },
+        musclemass:{ label:"Muskelmasse", unit:"kg", shortUnit:"kg", icon:"💪", type:"number", step:"0.1", placeholder:"34.5", goalPlaceholder:"Mål muskelmasse, f.eks. 36", allowGoal:true, direction:"up", visibleDefault:false },
+        visceral:{ label:"Visceralt fett", unit:"nivå", shortUnit:"", icon:"🎯", type:"number", step:"1", placeholder:"9", goalPlaceholder:"Mål, f.eks. 8", allowGoal:true, direction:"down", visibleDefault:false, refs:[{label:"Sunt",max:9,color:"#7ab89a"},{label:"Høyt",max:14,color:"#e8c472"},{label:"Svært høyt",max:30,color:"#d98080"}] },
+        // ── Blodprøver ──
+        cholesterol:{ label:"Totalkolesterol", unit:"mmol/L", shortUnit:"", icon:"🧪", type:"number", step:"0.1", placeholder:"5.0", goalPlaceholder:"Målnivå, f.eks. 4.5", allowGoal:true, direction:"down", visibleDefault:false, refs:[{label:"Ønsket",max:5,color:"#7ab89a"},{label:"Forhøyet",max:6.5,color:"#e8c472"},{label:"Høyt",max:12,color:"#d98080"}] },
+        ldl:{ label:"LDL", unit:"mmol/L", shortUnit:"", icon:"🧪", type:"number", step:"0.1", placeholder:"3.0", goalPlaceholder:"Målnivå, f.eks. 2.6", allowGoal:true, direction:"down", visibleDefault:false, refs:[{label:"Ønsket",max:3,color:"#7ab89a"},{label:"Forhøyet",max:4.9,color:"#e8c472"},{label:"Høyt",max:10,color:"#d98080"}] },
+        hdl:{ label:"HDL", unit:"mmol/L", shortUnit:"", icon:"🧪", type:"number", step:"0.1", placeholder:"1.4", goalPlaceholder:"Målnivå, f.eks. 1.5", allowGoal:true, direction:"up", visibleDefault:false, refs:[{label:"Lavt",max:1.0,color:"#d98080"},{label:"Greit",max:1.2,color:"#e8c472"},{label:"Bra",max:4,color:"#7ab89a"}] },
+        triglycerides:{ label:"Triglyserider", unit:"mmol/L", shortUnit:"", icon:"🧪", type:"number", step:"0.1", placeholder:"1.2", goalPlaceholder:"Målnivå, f.eks. 1.0", allowGoal:true, direction:"down", visibleDefault:false, refs:[{label:"Ønsket",max:1.7,color:"#7ab89a"},{label:"Forhøyet",max:2.3,color:"#e8c472"},{label:"Høyt",max:10,color:"#d98080"}] },
+        ferritin:{ label:"Ferritin", unit:"µg/L", shortUnit:"", icon:"🩸", type:"number", step:"1", placeholder:"80", goalPlaceholder:"Målnivå, f.eks. 70", allowGoal:true, direction:"up", goalMode:"lab", visibleDefault:false, refs:[{label:"Lavt",max:30,color:"#d98080"},{label:"Normalt",max:300,color:"#7ab89a"},{label:"Høyt",max:1000,color:"#e8c472"}] },
+        // ── Styrke og funksjon ──
+        grip:{ label:"Gripestyrke", unit:"kg", shortUnit:"kg", icon:"✊", type:"number", step:"0.5", placeholder:"38", goalPlaceholder:"Mål, f.eks. 42", allowGoal:true, direction:"up", visibleDefault:false, hint:"Beste av tre forsøk, sterkeste hånd." },
+        sitstand:{ label:"Sitte-stå", unit:"ganger", shortUnit:"", icon:"🪑", type:"number", step:"1", placeholder:"14", goalPlaceholder:"Mål, f.eks. 18", allowGoal:true, direction:"up", visibleDefault:false, hint:"Antall ganger du reiser deg fra stol på 30 sekunder." },
+        sleepquality:{ label:"Søvnkvalitet", unit:"/10", shortUnit:"/10", icon:"😴", type:"score", values:[1,2,3,4,5,6,7,8,9,10], goalPlaceholder:"Mål søvnkvalitet, f.eks. 8", allowGoal:true, direction:"up", visibleDefault:false }
+      };
+
+      const painAreas = ["Hode","Nakke","Skuldre","Rygg","Korsrygg","Hofte","Kne","Føtter","Mage","Bryst","Armer","Annet"];
+      const colors = {
+        weight:"#8f6bc1", waist:"#94aecd", hrv:"#7ea69d", restingpulse:"#cf8a88", energy:"#d4aa74", pain:"#c88da0", sleep:"#a890ca",
+        vo2max:"#86a7d7", bodyfat:"#d0a06d", water:"#8aaecc", steps:"#8aa98d", mood:"#d2b17d", bloodsugar:"#cc8190", hba1c:"#a88aca",
+        recovery:"#76a59c", stress:"#d7a07a", bodytemp:"#e0a162", vitamind:"#d8b06a", b12:"#88a3d5", calcium:"#8db39d"
+        // nye målinger bruker gull-linjen i grafen (mørkt tema)
+      };
+
+      const ids = {
+        weekLabel: document.getElementById("th2WeekLabel"),
+        weekdays: document.getElementById("th2Weekdays"),
+        prevWeek: document.getElementById("th2PrevWeek"),
+        nextWeek: document.getElementById("th2NextWeek"),
+        painModal: document.getElementById("th2PainModal"),
+        painBackdrop: document.getElementById("th2PainBackdrop"),
+        painClose: document.getElementById("th2PainClose"),
+        painOptions: document.getElementById("th2PainOptions"),
+        painClear: document.getElementById("th2PainClear"),
+        painDone: document.getElementById("th2PainDone"),
+        metricPicker: document.getElementById("th2MetricPicker"),
+        addMetricModal: document.getElementById("th2AddMetricModal"),
+        addMetricBackdrop: document.getElementById("th2AddMetricBackdrop"),
+        addMetricClose: document.getElementById("th2AddMetricClose"),
+        warning: document.getElementById("th2Warning"),
+        checkinModal: document.getElementById("th2CheckinModal")
+      };
+
+      let entries = [];
+      let goals = {};
+      let visibleMetrics = [];
+      let activeMetric = "weight";
+      let selectedDate = null;
+      let weekAnchor = null;
+      let chart = null;
+      let selectedPainAreas = [];
+      let supabaseClient = null;
+      let memberIdentity = null;
+      let canPersist = false;
+
+      function load(key, fallback){ try{ const raw = localStorage.getItem(key); if(!raw) return fallback; return JSON.parse(raw); }catch{ return fallback; } }
+      function save(key, value){ localStorage.setItem(key, JSON.stringify(value)); }
+      function defaultVisibleMetrics(){ return Object.keys(metrics).filter(k => metrics[k].visibleDefault).slice(0, 6); }
+      function parseNum(v){ if(v === "" || v == null) return null; const n = Number(v); return Number.isFinite(n) ? n : null; }
+      function iso(d){ const y = d.getFullYear(); const m = String(d.getMonth()+1).padStart(2,"0"); const day = String(d.getDate()).padStart(2,"0"); return `${y}-${m}-${day}`; }
+      function parseIso(str){ if(!str) return new Date(); const [y,m,d] = String(str).split("-").map(Number); return new Date(y, (m || 1)-1, d || 1); }
+      function startOfWeek(date){ const d = new Date(date); const day = d.getDay(); const diff = day === 0 ? -6 : 1 - day; d.setDate(d.getDate() + diff); d.setHours(0,0,0,0); return d; }
+      function addDays(date, n){ const d = new Date(date); d.setDate(d.getDate() + n); return d; }
+      function weekNumber(date){ const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate())); const dayNum = d.getUTCDay() || 7; d.setUTCDate(d.getUTCDate() + 4 - dayNum); const yearStart = new Date(Date.UTC(d.getUTCFullYear(),0,1)); return Math.ceil((((d - yearStart) / 86400000) + 1) / 7); }
+      function sortedEntries(){ return [...entries].sort((a,b) => new Date(a.date) - new Date(b.date)); }
+      function shortDate(dateStr){ const d = parseIso(dateStr); return d.toLocaleDateString("no-NO",{day:"2-digit",month:"2-digit"}); }
+      function formatDate(dateStr){ const d = parseIso(dateStr); return d.toLocaleDateString("no-NO",{day:"2-digit",month:"2-digit",year:"numeric"}); }
+      function latestMetricValue(metric){ const arr = sortedEntries().filter(e => e[metric] != null); if(!arr.length) return null; return arr[arr.length - 1][metric]; }
+      function selectedDayMetricValue(metric){ const row = entries.find(e => e.date === selectedDate); return row ? row[metric] : null; }
+      function circleMetricValueText(metric){ const todayValue = selectedDayMetricValue(metric); const fallbackValue = latestMetricValue(metric); const value = todayValue != null ? todayValue : fallbackValue; if(value == null) return "–"; const shortUnit = metrics[metric].shortUnit ?? metrics[metric].unit ?? ""; if(shortUnit){ return `${String(value).replace(".", ",")} ${shortUnit}`; } return String(value).replace(".", ","); }
+      function selectedDayPainAreas(){ const row = entries.find(e => e.date === selectedDate); return row && Array.isArray(row.painAreas) ? row.painAreas : []; }
+      function selectedDayPainNote(){ const row = entries.find(e => e.date === selectedDate); return row && row.painNote ? row.painNote : ""; }
+      function currentGoal(metric){ return goals[metric] ?? ""; }
+      function normalizeText(value){ return String(value ?? "").trim(); }
+      function normalizeName(value){ return normalizeText(value).toLowerCase().replace(/\s+/g, " "); }
+      function normalizeEmail(value){ return normalizeText(value).toLowerCase(); }
+      function firstFilled(...values){ for(const value of values){ const str = normalizeText(value); if(str) return str; } return ""; }
+      function getParam(...names){ const params = new URLSearchParams(window.location.search); for(const name of names){ const value = params.get(name); if(normalizeText(value)) return normalizeText(value); } return ""; }
+      function showBanner(text, type = "success"){ const el = document.getElementById("th2Saved"); el.textContent = text; el.classList.remove("error","info"); if(type === "error") el.classList.add("error"); if(type === "info") el.classList.add("info"); el.classList.add("show"); clearTimeout(showBanner.t); showBanner.t = setTimeout(() => el.classList.remove("show"), 1800); }
+      function setWarning(text){ ids.warning.textContent = text || ""; ids.warning.classList.toggle("show", !!text); }
+      function emptyEntry(date){ const row = { date, painAreas: [], painNote: "" }; Object.keys(metrics).forEach(key => row[key] = null); return row; }
+      function normalizeEntry(entry){ const row = emptyEntry(entry.date || entry.entry_date); Object.keys(metrics).forEach(key => { const value = entry[key]; row[key] = parseNum(value); }); row.painAreas = Array.isArray(entry.painAreas) ? [...entry.painAreas] : Array.isArray(entry.pain_areas) ? [...entry.pain_areas] : []; row.painNote = normalizeText(entry.painNote || entry.pain_note || ""); return row; }
+      // «Legg til»-menyen er delt i grupper; målinger som ikke står her havner under «Annet».
+      const METRIC_GROUPS = [
+        { label:"Kropp og omkrets", keys:["weight","bodyfat","musclemass","visceral","waist","belly","hip","thigh","arm","chest","height","whr","whtr"] },
+        { label:"Hjerte og blodtrykk", keys:["restingpulse","hrv","bpsys","bpdia","vo2max"] },
+        { label:"Søvn og overskudd", keys:["sleep","sleepquality","energy","mood","stress","recovery","pain"] },
+        { label:"Blodprøver", keys:["bloodsugar","hba1c","cholesterol","ldl","hdl","triglycerides","ferritin","vitamind","b12","calcium"] },
+        { label:"Styrke og funksjon", keys:["grip","sitstand","steps"] }
+      ];
+      // Hvor ofte en måling bør tas (dager). Eldre enn dette → «på tide»-markering.
+      const STALE_DAYS = { weight:14, waist:14, belly:30, hip:30, thigh:30, arm:30, chest:30, bodyfat:30, musclemass:30, visceral:30,
+        restingpulse:14, hrv:14, bpsys:30, bpdia:30, vo2max:90, grip:60, sitstand:60,
+        bloodsugar:180, hba1c:180, cholesterol:180, ldl:180, hdl:180, triglycerides:180, ferritin:180, vitamind:180, b12:180, calcium:180 };
+      function lastMetricDate(metric){ const arr = sortedEntries().filter(e => e[metric] != null); return arr.length ? arr[arr.length - 1].date : null; }
+      function daysSince(dateStr){ return Math.floor((new Date().setHours(0,0,0,0) - parseIso(dateStr).getTime()) / 86400000); }
+      function staleDays(metric){ const limit = STALE_DAYS[metric]; const last = lastMetricDate(metric); if(!limit || !last) return 0; const d = daysSince(last); return d >= limit ? d : 0; }
+      function firstMetricValue(metric){ const arr = sortedEntries().filter(e => e[metric] != null); return arr.length ? arr[0][metric] : null; }
+
+      // Verdier i rød sone (refs) → 1:1-kunden får spørsmål om å si fra til coachen
+      // (send_to_coach, havner i coachens vanekalender med push-varsel).
+      let coachLinkCache = null;
+      async function loadCoachLink(){
+        if(coachLinkCache) return coachLinkCache;
+        coachLinkCache = { can_write:false, name:"coachen" };
+        try{
+          const sb = await waitForSupabaseClient(4000);
+          const mid = memberIdentity && (window.MVT_memberData?.id || memberIdentity.movement_customer_id);
+          if(!sb || !mid) return coachLinkCache;
+          const [{ data:link }, { data:prof }] = await Promise.all([sb.rpc("coach_link", { p_member_id: String(mid) }), sb.rpc("get_coach_profile")]);
+          coachLinkCache = { can_write: !!(link && link.can_write), name: (prof && prof.name ? String(prof.name).split(" ")[0] : "coachen"), memberId: String(mid) };
+        }catch(e){}
+        return coachLinkCache;
+      }
+      function dangerZone(metricKey, value){
+        const metric = metrics[metricKey];
+        if(!metric.refs || value == null) return null;
+        const zone = metric.refs.find(z => value <= z.max) || metric.refs[metric.refs.length - 1];
+        return zone.color === "#d98080" ? zone : null;
+      }
+      async function offerTellCoach(list){
+        // list: [{ key, value }] – bare verdier i rød sone tas med
+        const bad = list.map(x => ({ ...x, zone: dangerZone(x.key, x.value) })).filter(x => x.zone);
+        if(!bad.length) return;
+        const link = await loadCoachLink();
+        if(!link.can_write) return;
+        const fmt = x => `${metrics[x.key].label} ${String(x.value).replace(".", ",")}${metrics[x.key].unit && metrics[x.key].unit.length < 7 ? " " + metrics[x.key].unit : ""} (${x.zone.label.toLowerCase()})`;
+        const text = bad.map(fmt).join(", ");
+        if(!confirm(`${text} er utenfor normalområdet.\n\nVil du si fra til ${link.name}?`)) return;
+        try{
+          const sb = await waitForSupabaseClient(4000);
+          const { error } = await sb.rpc("send_to_coach", {
+            p_member_id: link.memberId, p_member_name: memberIdentity.customer_name || "", p_kind: "message",
+            p_title: bad.length === 1 ? `målte ${metrics[bad[0].key].label.toLowerCase()} utenfor normalen` : "målte verdier utenfor normalen",
+            p_text: `${formatDate(selectedDate)}: ${text}`, p_ref: `helse-${selectedDate}-${bad.map(x => x.key).join("-")}`
+          });
+          showBanner(error ? "Fikk ikke sagt fra – prøv igjen" : `Sendt til ${link.name}`, error ? "error" : "success");
+        }catch(e){ showBanner("Fikk ikke sagt fra – prøv igjen", "error"); }
+      }
+
+      // Vekt skal aldri komme først når kunden følger flere målinger:
+      // den legges sist i raden, og siden åpner på en annen måling.
+      function weightLast(list){ return list.length > 1 && list.includes("weight") ? [...list.filter(k => k !== "weight"), "weight"] : list; }
+      function startMetric(){ if(activeMetric === "weight" && visibleMetrics.length > 1) activeMetric = weightLast(visibleMetrics)[0]; }
+      function hasAnyMetricValue(row){ return Object.keys(metrics).some(key => metrics[key].type !== "computed" && row[key] != null); }
+      // Midje/hofte og midje/høyde regnes ut fra registrerte tall (lagres ikke).
+      // Høyde trengs bare én gang – siste registrerte høyde brukes.
+      function deriveComputed(){
+        let height = null;
+        sortedEntries().forEach(e => {
+          if(e.height != null) height = e.height;
+          e.whr = e.waist != null && e.hip ? Math.round(e.waist / e.hip * 100) / 100 : null;
+          e.whtr = e.waist != null && height ? Math.round(e.waist / height * 100) / 100 : null;
+        });
+      }
+      // Målinger uten egen kolonne i tro_livsstil_health_entries lagres i extra_metrics (jsonb).
+      const HOW_TIPS = "Mål om morgenen før frokost, direkte på huden, med samme målebånd hver gang. Mål to ganger og bruk snittet.";
+      const DB_COLUMNS = ["weight","waist","hrv","restingpulse","energy","pain","sleep","vo2max","bodyfat","water","steps","mood","bloodsugar","hba1c","recovery","stress","bodytemp","vitamind","b12","calcium"];
+      function extraMetricsOf(entry){
+        const out = {};
+        Object.keys(metrics).forEach(k => { if(!DB_COLUMNS.includes(k) && metrics[k].type !== "computed" && entry[k] != null) out[k] = entry[k]; });
+        return out;
+      }
+      let extraColumnMissing = false;
+
+      // Helsedata går via databasefunksjoner som bare gir ut/lagrer ÉN kundes data
+      // (sikkerhet-1a-helse-funksjoner.sql). Mangler funksjonene, eller noe feiler,
+      // brukes den gamle direkte måten – så siden aldri slutter å virke.
+      const MEMBER_ID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+      function rpcMemberId(){ const id = String(memberIdentity?.movement_customer_id || "").trim(); return MEMBER_ID_RE.test(id) ? id : ""; }
+      async function healthRpc(name, args){
+        const mid = rpcMemberId();
+        if(!mid) return { ok:false };
+        try{
+          const sb = await waitForSupabaseClient();
+          if(!sb) return { ok:false };
+          const { data, error } = await sb.rpc(name, { p_member_id: mid, ...args });
+          if(error){ console.warn(`${name} feilet – bruker gammel måte:`, error.message || error); return { ok:false }; }
+          return { ok:true, data };
+        }catch(e){ console.warn(`${name} feilet – bruker gammel måte:`, e); return { ok:false }; }
+      }
+      function syncLocalCache(){ deriveComputed(); save(STORAGE_KEY, entries); save(GOALS_KEY, goals); save(VISIBLE_KEY, visibleMetrics); save(ACTIVE_KEY, activeMetric); save(SELECTED_DATE_KEY, selectedDate); save(WEEK_KEY, iso(weekAnchor)); }
+      function metricUsageCount(metric){ return entries.reduce((sum, entry) => sum + (entry[metric] != null ? 1 : 0), 0); }
+      function sortMetricsByUsage(list){ return [...list].sort((a, b) => { const diff = metricUsageCount(b) - metricUsageCount(a); if(diff) return diff; return metrics[a].label.localeCompare(metrics[b].label, "no"); }); }
+
+      function buildCustomerIdentity(){
+        const explicit = window.TLX_HEALTH_CUSTOMER || {};
+        const mvt = window.MVT_memberData || {};
+        const member = window.member || {};
+
+        const nameFromPieces = [
+          firstFilled(mvt.first_name, member.first_name, explicit.first_name),
+          firstFilled(mvt.last_name, member.last_name, explicit.last_name)
+        ].filter(Boolean).join(" ");
+
+        const customerName = firstFilled(explicit.customer_name, explicit.full_name, explicit.name, getParam("customer_name","full_name","name"), mvt.full_name, member.full_name, mvt.name, member.name, nameFromPieces);
+        const customerEmail = firstFilled(explicit.customer_email, explicit.email, getParam("customer_email","email"), mvt.email, member.email);
+        const customerId = firstFilled(explicit.customer_id, explicit.tl_customer_id, getParam("customer_id","tl_customer_id"), mvt.customer_id, member.customer_id);
+        const movementCustomerId = firstFilled(explicit.movement_customer_id, explicit.movementCustomerId, getParam("movement_customer_id","movementCustomerId"), mvt.movement_customer_id, mvt.movementCustomerId, mvt.id, member.movement_customer_id, member.movementCustomerId, member.id);
+        const customerNameNormalized = normalizeName(customerName);
+        const customerEmailNormalized = normalizeEmail(customerEmail);
+        const hasStrongId = !!(customerId || movementCustomerId);
+
+        let customerKey = null;
+        if(customerId) customerKey = `customer_id:${customerId}`;
+        else if(movementCustomerId) customerKey = `movement_customer_id:${movementCustomerId}`;
+
+        return {
+          customer_key: customerKey,
+          customer_id: customerId || null,
+          movement_customer_id: movementCustomerId || null,
+          customer_name: customerName || null,
+          customer_name_normalized: customerNameNormalized || null,
+          customer_email: customerEmail || null,
+          customer_email_normalized: customerEmailNormalized || null,
+          hasStrongId
+        };
+      }
+
+      function getSupabaseClient(){
+        if(supabaseClient) return supabaseClient;
+        if(window.tlxSupabaseClient){ supabaseClient = window.tlxSupabaseClient; return supabaseClient; }
+        if(window.supabase && window.TLX_SUPABASE_URL && window.TLX_SUPABASE_ANON_KEY && window.TLX_SUPABASE_URL !== "LIM_INN_SUPABASE_URL" && window.TLX_SUPABASE_ANON_KEY !== "LIM_INN_SUPABASE_ANON_KEY"){
+          supabaseClient = window.supabase.createClient(window.TLX_SUPABASE_URL, window.TLX_SUPABASE_ANON_KEY);
+          window.tlxSupabaseClient = supabaseClient;
+          return supabaseClient;
+        }
+        return null;
+      }
+
+      async function waitForSupabaseClient(timeoutMs = 6000){
+        const started = Date.now();
+        let client = getSupabaseClient();
+        while(!client && (Date.now() - started) < timeoutMs){
+          await new Promise(resolve => setTimeout(resolve, 200));
+          client = getSupabaseClient();
+        }
+        return client;
+      }
+
+      function getRestBaseUrl(){
+        if(!window.TLX_SUPABASE_URL) return "";
+        return `${String(window.TLX_SUPABASE_URL).replace(/\/$/, "")}/rest/v1`;
+      }
+
+      function getRestHeaders(extra = {}){
+        return {
+          apikey: window.TLX_SUPABASE_ANON_KEY,
+          Authorization: `Bearer ${window.TLX_SUPABASE_ANON_KEY}`,
+          ...extra
+        };
+      }
+
+      function buildRestQuery(params = {}){
+        const search = new URLSearchParams();
+        Object.entries(params).forEach(([key, value]) => {
+          if(value == null || value === "") return;
+          search.set(key, value);
+        });
+        const query = search.toString();
+        return query ? `?${query}` : "";
+      }
+
+      async function fetchRemoteRowsRest(table, identity, options = {}){
+        const base = getRestBaseUrl();
+        if(!base || !window.TLX_SUPABASE_ANON_KEY) return options.single ? null : [];
+        const candidates = buildLookupCandidates(identity);
+
+        for(const candidate of candidates){
+          const params = {
+            select: "*",
+            [candidate.column]: `eq.${candidate.value}`
+          };
+          if(options.orderBy){
+            params.order = `${options.orderBy}.${options.ascending ? "asc" : "desc"}`;
+          }
+          if(options.limit){
+            params.limit = String(options.limit);
+          }
+
+          const response = await fetch(`${base}/${table}${buildRestQuery(params)}`, {
+            method: "GET",
+            headers: getRestHeaders()
+          });
+
+          if(!response.ok){
+            const text = await response.text();
+            throw new Error(text || `REST feil ${response.status}`);
+          }
+
+          const data = await response.json();
+          if(options.single){
+            if(Array.isArray(data) && data.length) return data[0];
+          } else if(Array.isArray(data) && data.length){
+            return data;
+          }
+        }
+
+        return options.single ? null : [];
+      }
+
+      async function upsertRemoteRowRest(table, payload, onConflict){
+        const base = getRestBaseUrl();
+        if(!base || !window.TLX_SUPABASE_ANON_KEY) return false;
+        const response = await fetch(`${base}/${table}${buildRestQuery({ on_conflict: onConflict })}`, {
+          method: "POST",
+          headers: getRestHeaders({
+            "Content-Type": "application/json",
+            Prefer: "resolution=merge-duplicates,return=minimal"
+          }),
+          body: JSON.stringify(payload)
+        });
+        if(!response.ok){
+          const text = await response.text();
+          throw new Error(text || `REST feil ${response.status}`);
+        }
+        return true;
+      }
+
+      async function deleteRemoteRowRest(table, filters = {}){
+        const base = getRestBaseUrl();
+        if(!base || !window.TLX_SUPABASE_ANON_KEY) return false;
+        const params = {};
+        Object.entries(filters).forEach(([key, value]) => {
+          if(value == null || value === "") return;
+          params[key] = `eq.${value}`;
+        });
+        const response = await fetch(`${base}/${table}${buildRestQuery(params)}`, {
+          method: "DELETE",
+          headers: getRestHeaders({ Prefer: "return=minimal" })
+        });
+        if(!response.ok){
+          const text = await response.text();
+          throw new Error(text || `REST feil ${response.status}`);
+        }
+        return true;
+      }
+
+      function buildLookupCandidates(identity){
+        const list = [];
+        const seen = new Set();
+        [
+          ["customer_key", identity.customer_key],
+          ["customer_id", identity.customer_id],
+          ["movement_customer_id", identity.movement_customer_id],
+          ["customer_name_normalized", identity.customer_name_normalized],
+          ["customer_email_normalized", identity.customer_email_normalized]
+        ].forEach(([column, value]) => {
+          if(!value) return;
+          const key = `${column}:${value}`;
+          if(seen.has(key)) return;
+          seen.add(key);
+          list.push({ column, value });
+        });
+        return list;
+      }
+
+      function mapLocalEntryToDb(entry){
+        return {
+          source:"min_helse",
+          customer_key: memberIdentity.customer_key,
+          customer_id: memberIdentity.customer_id,
+          movement_customer_id: memberIdentity.movement_customer_id,
+          customer_name: memberIdentity.customer_name,
+          customer_name_normalized: memberIdentity.customer_name_normalized,
+          customer_email: memberIdentity.customer_email,
+          customer_email_normalized: memberIdentity.customer_email_normalized,
+          entry_date: entry.date,
+          weight: entry.weight,
+          waist: entry.waist,
+          hrv: entry.hrv,
+          restingpulse: entry.restingpulse,
+          energy: entry.energy,
+          pain: entry.pain,
+          sleep: entry.sleep,
+          vo2max: entry.vo2max,
+          bodyfat: entry.bodyfat,
+          water: entry.water,
+          steps: entry.steps,
+          mood: entry.mood,
+          bloodsugar: entry.bloodsugar,
+          hba1c: entry.hba1c,
+          recovery: entry.recovery,
+          stress: entry.stress,
+          bodytemp: entry.bodytemp,
+          vitamind: entry.vitamind,
+          b12: entry.b12,
+          calcium: entry.calcium,
+          pain_areas: Array.isArray(entry.painAreas) ? entry.painAreas : [],
+          pain_note: entry.painNote || "",
+          ...(extraColumnMissing ? {} : { extra_metrics: extraMetricsOf(entry) }),
+          meta:{ widget:"min_helse", version:"th2_1to1_strict_v1" }
+        };
+      }
+
+      function mapDbEntryToLocal(row){
+        // Kolonnene vinner, men en tom kolonne overskriver aldri en verdi i extra_metrics.
+        const merged = { ...(row.extra_metrics && typeof row.extra_metrics === "object" ? row.extra_metrics : {}) };
+        DB_COLUMNS.forEach(k => { if(row[k] != null) merged[k] = row[k]; });
+        return normalizeEntry({ ...merged, date: row.entry_date, pain_areas: row.pain_areas, pain_note: row.pain_note });
+      }
+
+      async function fetchRemoteRows(table, identity, options = {}){
+        const supabase = getSupabaseClient();
+        if(!supabase){
+          return fetchRemoteRowsRest(table, identity, options);
+        }
+        const candidates = buildLookupCandidates(identity);
+        for(const candidate of candidates){
+          let query = supabase.from(table).select("*").eq(candidate.column, candidate.value);
+          if(options.orderBy) query = query.order(options.orderBy, { ascending: !!options.ascending });
+          if(options.limit) query = query.limit(options.limit);
+          const { data, error } = await query;
+          if(error) throw error;
+          if(options.single){ if(data && data.length) return data[0]; }
+          else if(data && data.length){ return data; }
+        }
+        return options.single ? null : [];
+      }
+
+      function updateActiveChoice(box, value){ box.querySelectorAll("[data-value]").forEach(btn => { btn.classList.toggle("active", String(btn.getAttribute("data-value")) === String(value)); }); }
+      function renderScoreButtons(containerId, targetInput, values, initialValue){
+        const box = document.getElementById(containerId);
+        box.innerHTML = values.map(v => `<button class="th2-score-btn" type="button" data-value="${v}">${v}</button>`).join("");
+        box.querySelectorAll("[data-value]").forEach(btn => { btn.addEventListener("click", () => { targetInput.value = btn.getAttribute("data-value"); updateActiveChoice(box, targetInput.value); }); });
+        if(initialValue != null){ targetInput.value = initialValue; updateActiveChoice(box, initialValue); }
+      }
+
+      function renderWeekCalendar(){
+        const names = ["man","tir","ons","tor","fre","lør","søn"];
+        const start = startOfWeek(weekAnchor);
+        const todayIso = iso(new Date());
+        ids.weekLabel.textContent = `Uke ${weekNumber(start)}`;
+        ids.weekdays.innerHTML = names.map((name, i) => {
+          const d = addDays(start, i);
+          const dIso = iso(d);
+          const isToday = dIso === todayIso;
+          const isActive = selectedDate === dIso;
+          const hasData = entries.some(e => e.date === dIso);
+          const dot = isToday ? '<span class="th2-today-dot"></span>' : (hasData && !isActive ? '<span class="th2-day-logged"></span>' : "");
+          return `<button class="th2-day ${isActive ? "active" : ""} ${isToday && !isActive ? "today" : ""}" type="button" data-date="${dIso}"><div class="th2-day-name">${name}</div><div class="th2-day-num">${String(d.getDate()).padStart(2,"0")}${dot}</div><div class="th2-day-sub">${d.toLocaleDateString("no-NO",{month:"short"})}</div></button>`;
+        }).join("");
+        ids.weekdays.querySelectorAll("[data-date]").forEach(btn => {
+          btn.addEventListener("click", async () => {
+            selectedDate = btn.getAttribute("data-date");
+            save(SELECTED_DATE_KEY, selectedDate);
+            renderWeekCalendar(); renderHeroAndStats(); renderDynamicField(); renderCircles();
+            if(canPersist) await persistSettingsRemote({ quiet:true });
+          });
+        });
+      }
+
+      function renderCircles(){
+        const box = document.getElementById("th2Circles");
+        const metricsHtml = weightLast(visibleMetrics).map(key => {
+          const hasValue = selectedDayMetricValue(key) != null || latestMetricValue(key) != null;
+          const isEmpty = !hasValue;
+          const valueText = isEmpty ? "+" : circleMetricValueText(key);
+          const stale = staleDays(key);
+          return `<button class="th2-circle ${activeMetric === key ? "active" : ""} ${isEmpty ? "empty" : ""} ${stale ? "stale" : ""}" data-metric="${key}" type="button" ${stale ? `title="Sist målt for ${stale} dager siden"` : ""}><div class="th2-circle-top"><div class="th2-circle-icon">${metrics[key].icon}</div><div class="th2-circle-number">${valueText}</div></div><div class="th2-circle-label">${metrics[key].label}</div></button>`;
+        }).join("");
+        const addTileHtml = `<button class="th2-circle" type="button" id="th2AddMetricBtn"><div class="th2-circle-top th2-add-metric-top">+</div><div class="th2-circle-label">Legg til</div></button>`;
+        box.innerHTML = metricsHtml + addTileHtml;
+        box.querySelectorAll("[data-metric]").forEach(btn => btn.addEventListener("click", async () => {
+          activeMetric = btn.getAttribute("data-metric");
+          save(ACTIVE_KEY, activeMetric);
+          renderCircles(); renderDynamicField(); renderChart();
+          if(canPersist) await persistSettingsRemote({ quiet:true });
+        }));
+        document.getElementById("th2AddMetricBtn").addEventListener("click", openAddMetricModal);
+      }
+
+      function renderMetricPicker(){
+        const grouped = new Set(METRIC_GROUPS.flatMap(g => g.keys));
+        const groups = [...METRIC_GROUPS, { label:"Annet", keys:Object.keys(metrics).filter(k => !grouped.has(k)) }].map(g => ({ ...g, keys:g.keys.filter(k => metrics[k]) })).filter(g => g.keys.length);
+        const pick = key => `<button class="th2-pick ${visibleMetrics.includes(key) ? "active" : ""}" type="button" data-metric="${key}"><span>${metrics[key].icon}</span><span>${metrics[key].label}</span></button>`;
+        ids.metricPicker.innerHTML = groups.map(g => `<div class="th2-pick-group"><div class="th2-pick-head">${g.label}</div><div class="th2-pick-row">${g.keys.map(pick).join("")}</div></div>`).join("");
+        ids.metricPicker.querySelectorAll("[data-metric]").forEach(btn => btn.addEventListener("click", async () => {
+          const key = btn.getAttribute("data-metric");
+          if(visibleMetrics.includes(key)){
+            if(visibleMetrics.length === 1) return;
+            visibleMetrics = visibleMetrics.filter(m => m !== key);
+            if(activeMetric === key){ activeMetric = weightLast(visibleMetrics)[0]; save(ACTIVE_KEY, activeMetric); }
+          } else {
+            visibleMetrics.push(key);
+          }
+          save(VISIBLE_KEY, visibleMetrics);
+          renderMetricPicker(); renderCircles(); renderDynamicField(); renderChart();
+          if(canPersist) await persistSettingsRemote({ quiet:true });
+        }));
+      }
+
+      function openPainModal(){ ids.painModal.classList.add("show"); ids.painModal.setAttribute("aria-hidden","false"); }
+      function closePainModal(){ ids.painModal.classList.remove("show"); ids.painModal.setAttribute("aria-hidden","true"); }
+      function openAddMetricModal(){ renderMetricPicker(); ids.addMetricModal.classList.add("show"); ids.addMetricModal.setAttribute("aria-hidden","false"); }
+      function closeAddMetricModal(){ ids.addMetricModal.classList.remove("show"); ids.addMetricModal.setAttribute("aria-hidden","true"); }
+      function renderPainOptions(){
+        ids.painOptions.innerHTML = painAreas.map(area => `<button type="button" class="th2-pain-option ${selectedPainAreas.includes(area) ? "active" : ""}" data-area="${area}">${area}</button>`).join("");
+        ids.painOptions.querySelectorAll("[data-area]").forEach(btn => btn.addEventListener("click", () => {
+          const area = btn.getAttribute("data-area");
+          if(selectedPainAreas.includes(area)) selectedPainAreas = selectedPainAreas.filter(x => x !== area);
+          else selectedPainAreas.push(area);
+          renderPainOptions();
+        }));
+      }
+
+      function goalDistanceText(metricKey, goalRaw){
+        const metric = metrics[metricKey];
+        const goal = parseNum(goalRaw);
+        const current = selectedDayMetricValue(metricKey) ?? latestMetricValue(metricKey);
+        if(goal == null || current == null) return "Registrer en verdi for å se avstand til målet";
+        const unit = metric.unit ? ` ${metric.unit}` : "";
+        const diff = Math.abs(current - goal);
+        const rounded = metricKey === "steps" ? Math.round(diff) : Number(diff.toFixed(1));
+        const pretty = `${String(rounded).replace(".", ",")}${unit}`;
+        if(metric.goalMode === "lab"){
+          if(current === goal) return "På målnivå";
+          if(current < goal) return `${pretty} opp til målet`;
+          return `${pretty} over målet`;
+        }
+        if(metric.direction === "down"){ if(current <= goal) return "Mål nådd"; return `${pretty} igjen`; }
+        if(metric.direction === "up"){ if(current >= goal) return "Mål nådd"; return `${pretty} til målet`; }
+        return `${pretty} unna målet`;
+      }
+
+      function goalProgress(metricKey, goalRaw){
+        const metric = metrics[metricKey];
+        const goal = parseNum(goalRaw);
+        const current = selectedDayMetricValue(metricKey) ?? latestMetricValue(metricKey);
+        if(goal == null || current == null) return 0;
+        if(current === goal) return 100;
+        if(metric.direction === "down" && metric.goalMode !== "lab" && current <= goal) return 100;
+        if(metric.direction === "up" && metric.goalMode !== "lab" && current >= goal) return 100;
+        // Veien fra første registrerte verdi til målet (f.eks. 82 → 75 kg).
+        const start = firstMetricValue(metricKey);
+        if(start != null && start !== goal && Math.sign(goal - start) === Math.sign(goal - current)){
+          return Math.max(0, Math.min(100, (start - current) / (start - goal) * 100));
+        }
+        if(metric.goalMode === "lab"){ if(goal <= 0) return 0; return Math.max(0, Math.min(100, (Math.min(current, goal) / goal) * 100)); }
+        if(metric.direction === "up"){ if(goal <= 0) return 0; return Math.max(0, Math.min(100, (current / goal) * 100)); }
+        if(metric.direction === "down"){ if(current <= 0) return 100; return Math.max(0, Math.min(100, (goal / current) * 100)); }
+        if(goal > 0 && current > 0) return Math.min(current, goal) / Math.max(current, goal) * 100;
+        return 0;
+      }
+
+      function renderGoalDisplay(metric){
+        if(!metric.allowGoal) return "";
+        const goal = goals[activeMetric] ?? "";
+        if(goal === "") return "";
+        const progress = goalProgress(activeMetric, goal);
+        return `<div class="th2-goal-display" data-metric="${activeMetric}"><div class="th2-goal-icon">${metric.icon}</div><div class="th2-goal-copy"><div class="th2-goal-display-label">${metric.goalMode === "lab" ? "Målnivå" : "Resultatmål"}</div><div class="th2-goal-display-value">${goal}${metric.unit ? " " + metric.unit : ""}</div><div class="th2-goal-distance">${goalDistanceText(activeMetric, goal)}</div><div class="th2-goal-progress"><div class="th2-goal-progress-fill" style="width:${progress}%"></div></div></div></div>`;
+      }
+
+      function renderGoalInput(metric){
+        if(!metric.allowGoal) return "";
+        const goal = goals[activeMetric] ?? "";
+        // Egen, selvstendig boks (samme .th2-dynamic-stil/farge som boksen
+        // for dagens tall, men et EGET element) — ikke lenger nøstet inni
+        // dagens-tall-boksen. Gir tre tydelig atskilte bokser totalt:
+        // resultatmål (renderGoalDisplay) / dagens tall / sett nytt mål.
+        return `<div class="th2-dynamic" data-metric="${activeMetric}"><label for="th2GoalInput">Sett mål${metric.unit ? ` (${metric.unit})` : ""}</label><div class="th2-goal-row"><input class="th2-goal-input" id="th2GoalInput" type="number" step="${metric.step || '0.1'}" placeholder="${metric.goalPlaceholder || "Sett mål"}" value="${goal}"><button class="th2-goal-btn" id="th2GoalSave" type="button" ${canPersist ? "" : "disabled"}>Lagre mål</button></div></div>`;
+      }
+
+      function attachGoalHandler(){
+        const btn = document.getElementById("th2GoalSave");
+        if(!btn) return;
+        btn.addEventListener("click", async () => {
+          if(!refreshIdentity()) return showBanner("Kan ikke lagre ennå", "error");
+          const raw = document.getElementById("th2GoalInput").value;
+          if(raw === "") delete goals[activeMetric];
+          else goals[activeMetric] = raw;
+          save(GOALS_KEY, goals);
+          renderDynamicField();
+          const ok = await persistSettingsRemote({ quiet:true });
+          showBanner(ok ? "Mål lagret" : "Mål lagret lokalt", ok ? "success" : "info");
+        });
+      }
+
+      function renderInsight(metricKey){
+        const metric = metrics[metricKey];
+        const arr = sortedEntries().filter(e => e[metricKey] != null);
+        if(arr.length < 2) return "";
+        const latest = arr[arr.length-1][metricKey];
+        const prev = arr[arr.length-2][metricKey];
+        const diff = Number((latest - prev).toFixed(2));
+        const insights = [];
+        const best = metric.direction === "up" ? Math.max(...arr.map(e=>e[metricKey])) : Math.min(...arr.map(e=>e[metricKey]));
+        if(latest === best && arr.length >= 3){
+          insights.push({ icon:"🏆", text:"Ny personlig rekord!", cls:"best" });
+        } else if(diff !== 0){
+          const isGood = (metric.direction==="up" && diff>0) || (metric.direction==="down" && diff<0);
+          const absDiff = Math.abs(Number(diff.toFixed(metric.step>=1?0:1)));
+          const unit = metric.unit && metric.unit.length<6 ? ` ${metric.unit}` : "";
+          insights.push({ icon: isGood?"↑":"↓", text:`${String(absDiff).replace(".",",")}${unit} ${isGood?"bedre":"endret"} siden sist`, cls: isGood?"good":"warn" });
+        }
+        const thisWeekStart = startOfWeek(new Date());
+        const lastWeekStart = addDays(thisWeekStart,-7);
+        const thisVals = arr.filter(e=>parseIso(e.date)>=thisWeekStart).map(e=>e[metricKey]);
+        const lastVals = arr.filter(e=>{ const d=parseIso(e.date); return d>=lastWeekStart && d<thisWeekStart; }).map(e=>e[metricKey]);
+        if(thisVals.length>0 && lastVals.length>0){
+          const thisAvg = thisVals.reduce((a,b)=>a+b,0)/thisVals.length;
+          const lastAvg = lastVals.reduce((a,b)=>a+b,0)/lastVals.length;
+          const pct = Math.round(Math.abs((thisAvg-lastAvg)/lastAvg)*100);
+          if(pct>=2){
+            const isGood = (metric.direction==="up" && thisAvg>lastAvg)||(metric.direction==="down" && thisAvg<lastAvg);
+            insights.push({ icon: isGood?"📈":"📉", text:`${pct}% ${isGood?"bedre":"svakere"} enn forrige uke`, cls: isGood?"good":"warn" });
+          }
+        }
+        if(!insights.length) return "";
+        return `<div class="th2-insight-row">${insights.slice(0,2).map(i=>`<span class="th2-insight th2-insight-${i.cls}">${i.icon} ${i.text}</span>`).join("")}</div>`;
+      }
+
+      function renderLogYesterdayBtn(metricKey){
+        const yIso = iso(addDays(new Date(),-1));
+        if(selectedDate === yIso) return "";
+        const yEntry = entries.find(e=>e.date===yIso);
+        const yVal = yEntry ? yEntry[metricKey] : null;
+        if(yVal==null) return "";
+        const metric = metrics[metricKey];
+        const valStr = `${String(yVal).replace(".",",")}${metric.unit&&metric.unit.length<6?" "+metric.unit:""}`;
+        return `<button class="th2-yesterday-btn" id="th2YesterdayBtn" type="button">Bruk gårsdagens: <strong>${valStr}</strong></button>`;
+      }
+
+      function attachYesterdayHandler(){
+        const btn = document.getElementById("th2YesterdayBtn");
+        if(!btn) return;
+        btn.addEventListener("click", ()=>{
+          const yIso = iso(addDays(new Date(),-1));
+          const yEntry = entries.find(e=>e.date===yIso);
+          if(!yEntry) return;
+          const val = yEntry[activeMetric];
+          if(val==null) return;
+          const metric = metrics[activeMetric];
+          const input = document.getElementById("th2MetricInput");
+          if(!input) return;
+          input.value = val;
+          input.dispatchEvent(new Event("input"));
+          if(metric.type==="score"||metric.type==="pain"){
+            const box = document.getElementById("th2MetricScores");
+            if(box) updateActiveChoice(box, val);
+          }
+          if(metric.type==="slider"){
+            const sliderVal = document.getElementById("th2SliderValue");
+            if(sliderVal) sliderVal.textContent = `${String(val).replace(".",",")} t`;
+          }
+        });
+      }
+
+      function getRefClass(metricKey, value){
+        const metric = metrics[metricKey];
+        if(!metric.refs||value==null) return "";
+        const zone = metric.refs.find(z=>value<=z.max)||metric.refs[metric.refs.length-1];
+        if(zone.color==="#7ab89a"||zone.color==="#a8c87a") return "ref-optimal";
+        if(zone.color==="#e8c472") return "ref-warning";
+        if(zone.color==="#d98080") return "ref-danger";
+        return "";
+      }
+
+      function renderReferenceBar(metricKey){
+        const metric = metrics[metricKey];
+        if(!metric.refs) return "";
+        const refs = metric.refs;
+        const value = selectedDayMetricValue(metricKey) ?? latestMetricValue(metricKey);
+        const total = refs[refs.length - 1].max - (refs[0].max === refs[0].max ? 0 : 0);
+        const minVal = 0;
+        const maxVal = refs[refs.length - 1].max;
+
+        const segments = refs.map((zone, i) => {
+          const from = i === 0 ? minVal : refs[i-1].max;
+          const width = ((zone.max - from) / maxVal) * 100;
+          return `<div class="th2-ref-segment" style="flex:${width};background:${zone.color};opacity:.82;"></div>`;
+        }).join("");
+
+        const labels = refs.map(z => `<span class="th2-ref-label">${z.label}</span>`).join("");
+
+        let markerHtml = "";
+        let statusHtml = "";
+        if(value != null){
+          const clampedVal = Math.max(minVal, Math.min(value, maxVal));
+          const pct = (clampedVal / maxVal) * 100;
+          markerHtml = `<div class="th2-ref-marker-wrap" style="left:${pct}%"><div class="th2-ref-marker"></div></div>`;
+
+          const activeZone = refs.find(z => value <= z.max) || refs[refs.length - 1];
+          const zoneColor = activeZone.color;
+          let statusClass = "info";
+          if(zoneColor === "#7ab89a" || zoneColor === "#a8c87a") statusClass = "optimal";
+          else if(zoneColor === "#e8c472") statusClass = "warning";
+          else if(zoneColor === "#d98080") statusClass = "danger";
+          else if(zoneColor === "#88b4d6") statusClass = "info";
+          const valText = String(value).replace(".", ",");
+          statusHtml = `<div class="th2-ref-status ${statusClass}">${valText} ${metric.unit} — ${activeZone.label}</div>`;
+        }
+
+        return `<div class="th2-ref-box"><div class="th2-ref-title">Referanseområde</div><div class="th2-ref-bar-wrap">${segments}${markerHtml}</div><div class="th2-ref-labels">${labels}</div>${statusHtml}</div>`;
+      }
+
+      function renderDynamicField(){
+        const wrap = document.getElementById("th2DynamicField");
+        const metric = metrics[activeMetric];
+        const dayValue = selectedDayMetricValue(activeMetric);
+        const lastValue = latestMetricValue(activeMetric);
+        const initialValue = dayValue != null ? dayValue : lastValue;
+        const staleFor = staleDays(activeMetric);
+        const subtleNote = initialValue == null ? `<p class="th2-subtle-note">Ingen registrering ennå. Legg inn første verdi for ${metric.label.toLowerCase()}.</p>`
+          : staleFor ? `<p class="th2-stale-note">⏰ Sist målt for ${staleFor} dager siden – på tide med en ny måling.</p>` : "";
+        document.getElementById("th2ActiveTitle").textContent = metric.label;
+        document.getElementById("th2ChartTitle").textContent = `Utvikling i ${metric.label.toLowerCase()}`;
+
+        const insightHtml = renderInsight(activeMetric);
+        const yesterdayHtml = renderLogYesterdayBtn(activeMetric);
+        renderHeroAndStats();
+
+        if(metric.type === "number"){
+          wrap.innerHTML = `${renderGoalDisplay(metric)}${insightHtml}${renderReferenceBar(activeMetric)}<div class="th2-dynamic" data-metric="${activeMetric}"><label for="th2MetricInput">${metric.label}${metric.unit ? ` (${metric.unit})` : ""}</label>${metric.hint ? `<p class="th2-subtle-note">${metric.hint}</p>` : ""}${metric.how ? `<details class="th2-how"><summary>📏 Slik måler du ${metric.label.toLowerCase()}</summary><p>${metric.how}</p><p class="th2-how-tips">${HOW_TIPS}</p></details>` : ""}${subtleNote}${yesterdayHtml}<div class="th2-inline-save"><input id="th2MetricInput" type="number" step="${metric.step || '0.1'}" placeholder="${metric.placeholder || ""}" value="${initialValue ?? ""}"><button class="th2-inline-btn" id="th2InlineSave" type="button" ${canPersist ? "" : "disabled"}>+</button></div></div>${renderGoalInput(metric)}`;
+          attachGoalHandler(); attachYesterdayHandler();
+          document.getElementById("th2InlineSave").addEventListener("click", async () => { const value = parseNum(document.getElementById("th2MetricInput").value); await saveMetricValue(value); });
+          document.getElementById("th2MetricInput").addEventListener("keydown", async e => { if(e.key === "Enter"){ e.preventDefault(); const value = parseNum(document.getElementById("th2MetricInput").value); await saveMetricValue(value); } });
+          return;
+        }
+        if(metric.type === "score"){
+          wrap.innerHTML = `${renderGoalDisplay(metric)}${insightHtml}<div class="th2-dynamic" data-metric="${activeMetric}"><label>${metric.label}${metric.unit ? ` (${metric.unit})` : ""}</label>${subtleNote}${yesterdayHtml}<div class="th2-score-row" id="th2MetricScores"></div><input id="th2MetricInput" type="hidden"><div class="th2-score-save"><button class="th2-inline-btn" id="th2InlineSave" type="button" ${canPersist ? "" : "disabled"}>+</button></div></div>${renderGoalInput(metric)}`;
+          attachGoalHandler(); attachYesterdayHandler();
+          renderScoreButtons("th2MetricScores", document.getElementById("th2MetricInput"), metric.values, initialValue);
+          document.getElementById("th2InlineSave").addEventListener("click", async () => { const value = parseNum(document.getElementById("th2MetricInput").value); await saveMetricValue(value); });
+          return;
+        }
+        if(metric.type === "slider"){
+          const sliderValue = initialValue != null ? initialValue : 7.5;
+          wrap.innerHTML = `${renderGoalDisplay(metric)}${insightHtml}<div class="th2-dynamic" data-metric="${activeMetric}"><label>${metric.label}${metric.unit ? ` (${metric.unit})` : ""}</label>${subtleNote}${yesterdayHtml}<div class="th2-slider-wrap"><div class="th2-slider-top"><input id="th2MetricInput" class="th2-slider" type="range" min="${metric.min}" max="${metric.max}" step="${metric.step}" value="${sliderValue}"><div class="th2-slider-value" id="th2SliderValue">${String(sliderValue).replace(".", ",")} t</div></div><div class="th2-slider-labels"><span>0 t</span><span>12 t</span></div></div><div class="th2-score-save"><button class="th2-inline-btn" id="th2InlineSave" type="button" ${canPersist ? "" : "disabled"}>+</button></div></div>${renderGoalInput(metric)}`;
+          attachGoalHandler(); attachYesterdayHandler();
+          const slider = document.getElementById("th2MetricInput");
+          const sliderValueEl = document.getElementById("th2SliderValue");
+          slider.addEventListener("input", () => { sliderValueEl.textContent = `${String(slider.value).replace(".", ",")} t`; });
+          document.getElementById("th2InlineSave").addEventListener("click", async () => { const value = parseNum(slider.value); await saveMetricValue(value); });
+          return;
+        }
+        if(metric.type === "computed"){
+          // Midje/hofte og midje/høyde: kunden fyller ut målene det regnes fra, rett her.
+          const fields = metric.inputs.map(k => {
+            const m = metrics[k];
+            const v = selectedDayMetricValue(k) ?? latestMetricValue(k);
+            return `<div class="th2-dynamic" data-metric="${k}"><label for="th2Calc_${k}">${m.label} (${m.unit})</label>${m.how ? `<details class="th2-how"><summary>📏 Slik måler du ${m.label.toLowerCase()}</summary><p>${m.how}</p><p class="th2-how-tips">${HOW_TIPS}</p></details>` : m.hint ? `<p class="th2-subtle-note">${m.hint}</p>` : ""}<div class="th2-inline-save" style="grid-template-columns:1fr;"><input id="th2Calc_${k}" type="number" step="${m.step || "0.1"}" placeholder="${m.placeholder || ""}" value="${v ?? ""}"></div></div>`;
+          }).join("");
+          wrap.innerHTML = `${renderReferenceBar(activeMetric)}<p class="th2-subtle-note" style="margin:0 0 8px;">${metric.from} regnes ut automatisk når du lagrer ${metric.needs}.</p>${fields}<div class="th2-score-save"><button class="th2-inline-btn th2-inline-btn-text" id="th2CalcSave" type="button" ${canPersist ? "" : "disabled"}>Lagre</button></div>`;
+          document.getElementById("th2CalcSave").addEventListener("click", async () => {
+            if(!selectedDate) return alert("Velg dag.");
+            if(!refreshIdentity()) return showBanner("Kan ikke lagre ennå", "error");
+            const vals = {};
+            metric.inputs.forEach(k => { vals[k] = parseNum(document.getElementById("th2Calc_" + k).value); });
+            if(Object.values(vals).every(v => v == null)) return alert("Legg inn en verdi.");
+            let row = entries.find(e => e.date === selectedDate);
+            if(!row){ row = emptyEntry(selectedDate); entries.push(row); }
+            // Høyde lagres bare når den er endret – den gjelder for alle dager.
+            Object.entries(vals).forEach(([k, v]) => {
+              if(v == null) return;
+              if(k === "height" && v === latestMetricValue("height")) return;
+              row[k] = v;
+            });
+            if(!hasAnyMetricValue(row)) entries = entries.filter(e => e !== row);
+            syncLocalCache(); renderCircles(); renderHeroAndStats(); renderChart(); renderHistory(); renderDynamicField();
+            const ok = await persistEntryRemoteByDate(selectedDate, { quiet:true });
+            showBanner(ok ? "Lagret" : "Lagret lokalt", ok ? "success" : "info");
+          });
+          return;
+        }
+        if(metric.type === "pain"){
+          selectedPainAreas = [...selectedDayPainAreas()];
+          const painNoteInitial = selectedDayPainNote();
+          wrap.innerHTML = `<div class="th2-dynamic" data-metric="${activeMetric}"><label>Smerte (0–10)</label>${subtleNote}<div class="th2-score-row" id="th2MetricScores"></div><input id="th2MetricInput" type="hidden"><div class="th2-pain-row"><div class="th2-pain-top"><input id="th2PainNote" class="th2-pain-note" type="text" placeholder="Hvor gjør det vondt?" value="${painNoteInitial}"><button type="button" class="th2-pain-popup-btn" id="th2OpenPainPopup">Vanlige steder</button></div></div><div class="th2-score-save"><button class="th2-inline-btn" id="th2InlineSave" type="button" ${canPersist ? "" : "disabled"}>+</button></div></div>`;
+          renderScoreButtons("th2MetricScores", document.getElementById("th2MetricInput"), metric.values, initialValue);
+          renderPainOptions();
+          document.getElementById("th2OpenPainPopup").addEventListener("click", openPainModal);
+          document.getElementById("th2InlineSave").addEventListener("click", async () => { const value = parseNum(document.getElementById("th2MetricInput").value); await saveMetricValue(value); });
+          document.getElementById("th2PainNote").addEventListener("keydown", async e => { if(e.key === "Enter"){ e.preventDefault(); const value = parseNum(document.getElementById("th2MetricInput").value); if(value != null) await saveMetricValue(value); } });
+        }
+      }
+
+      // Stor ring øverst (mørkt premium-tema): valgt måling + fremdrift mot målet.
+      const PERIODS = [{ days:30, label:"1 mnd" }, { days:90, label:"3 mnd" }, { days:365, label:"1 år" }, { days:0, label:"Alt" }];
+      let chartDays = (() => { try { const v = Number(localStorage.getItem("th2_chart_days")); return PERIODS.some(p => p.days === v) ? v : 90; } catch(e){ return 90; } })();
+      function renderPeriodButtons(){
+        const box = document.getElementById("th2Period");
+        if(!box) return;
+        box.innerHTML = PERIODS.map(p => `<button type="button" class="${p.days === chartDays ? "active" : ""}" data-days="${p.days}">${p.label}</button>`).join("");
+        box.querySelectorAll("[data-days]").forEach(b => b.addEventListener("click", (e) => {
+          e.stopPropagation();
+          chartDays = Number(b.dataset.days);
+          try { localStorage.setItem("th2_chart_days", String(chartDays)); } catch(err){}
+          renderChart();
+        }));
+      }
+
+      // Morgensjekk: registrer alle synlige målinger for valgt dag på én gang.
+      function openCheckin(){
+        const keys = weightLast(visibleMetrics).filter(k => metrics[k] && metrics[k].type !== "computed" && metrics[k].type !== "pain");
+        const row = entries.find(e => e.date === selectedDate);
+        document.getElementById("th2CheckinTitle").textContent = `Morgensjekk ${formatDate(selectedDate)}`;
+        document.getElementById("th2CheckinList").innerHTML = keys.map(k => {
+          const m = metrics[k];
+          const isScore = m.type === "score";
+          const v = row && row[k] != null ? row[k] : "";
+          const step = m.type === "slider" ? m.step : (m.step || (isScore ? 1 : 0.1));
+          const ph = isScore ? "1–10" : (m.type === "slider" ? "7.5" : (m.placeholder || ""));
+          return `<label class="th2-checkin-row"><span>${m.icon} ${m.label}${m.unit && !isScore ? ` <small>${m.unit}</small>` : ""}</span><input type="number" inputmode="decimal" data-key="${k}" step="${step}" ${isScore ? 'min="1" max="10"' : ""} placeholder="${ph}" value="${v}"></label>`;
+        }).join("");
+        ids.checkinModal.classList.add("show");
+        ids.checkinModal.setAttribute("aria-hidden","false");
+      }
+      function closeCheckin(){ ids.checkinModal.classList.remove("show"); ids.checkinModal.setAttribute("aria-hidden","true"); }
+      async function saveCheckin(){
+        if(!selectedDate) return alert("Velg dag.");
+        if(!refreshIdentity()) return showBanner("Kan ikke lagre ennå", "error");
+        const vals = [];
+        document.querySelectorAll("#th2CheckinList input[data-key]").forEach(inp => {
+          const v = parseNum(inp.value);
+          if(v == null) return;
+          const m = metrics[inp.dataset.key];
+          if(m.type === "score" && (v < 1 || v > 10)) return;
+          vals.push({ key: inp.dataset.key, value: v });
+        });
+        if(!vals.length) return alert("Fyll ut minst én måling.");
+        let row = entries.find(e => e.date === selectedDate);
+        if(!row){ row = emptyEntry(selectedDate); entries.push(row); }
+        vals.forEach(x => { row[x.key] = x.value; });
+        closeCheckin();
+        syncLocalCache(); renderWeekCalendar(); renderCircles(); renderHeroAndStats(); renderChart(); renderHistory(); renderDynamicField();
+        const ok = await persistEntryRemoteByDate(selectedDate, { quiet:true });
+        showBanner(ok ? `Lagret ${vals.length} ${vals.length === 1 ? "måling" : "målinger"}` : "Lagret lokalt", ok ? "success" : "info");
+        offerTellCoach(vals);
+      }
+
+      function renderHeroAndStats(){
+        const box = document.getElementById("th2Ring");
+        if(!box) return;
+        const metric = metrics[activeMetric];
+        const value = selectedDayMetricValue(activeMetric) ?? latestMetricValue(activeMetric);
+        const goal = metric.allowGoal ? (goals[activeMetric] ?? "") : "";
+        const hasGoal = goal !== "" && parseNum(goal) != null;
+        const progress = hasGoal ? goalProgress(activeMetric, goal) : 0;
+        const C = 2 * Math.PI * 80;
+        const unit = metric.shortUnit ?? metric.unit ?? "";
+        const valueText = value == null ? "–" : String(value).replace(".", ",");
+        const sub = value == null ? "Ingen registrering ennå"
+          : hasGoal ? goalDistanceText(activeMetric, goal)
+          : metric.refs ? ((metric.refs.find(z => value <= z.max) || metric.refs[metric.refs.length - 1]).label)
+          : metric.allowGoal ? "Sett et mål nedenfor" : (unit ? unit : "");
+        box.innerHTML = `<div class="th2-ring-box"><svg viewBox="0 0 190 190" aria-hidden="true"><circle cx="95" cy="95" r="80" class="th2-ring-track"/><circle cx="95" cy="95" r="80" class="th2-ring-fill" stroke-dasharray="${C.toFixed(1)}" stroke-dashoffset="${(C * (1 - progress / 100)).toFixed(1)}"/></svg><div class="th2-ring-in"><small>${metric.label}</small><div>${valueText}${value != null && unit && unit.length <= 3 ? `<span>${unit}</span>` : ""}</div><em>${sub}</em></div></div>`;
+      }
+      function renderChart(){
+        if(chart) chart.destroy();
+        renderPeriodButtons();
+        const fromIso = chartDays ? iso(addDays(new Date(), -chartDays)) : "";
+        const arr = sortedEntries().filter(e => e[activeMetric] != null && (!fromIso || e.date >= fromIso));
+        const labels = arr.map(e => shortDate(e.date));
+        const goalVal = metrics[activeMetric].allowGoal ? parseNum(goals[activeMetric]) : null;
+        if(!arr.length){
+          chart = new Chart(document.getElementById("th2Chart"), {
+            type:"line",
+            data:{ labels:[""], datasets:[{ label: metrics[activeMetric].label, data:[null], borderColor:colors[activeMetric], backgroundColor:colors[activeMetric] }] },
+            options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{ display:false }, tooltip:{ enabled:false } }, scales:{ x:{ display:false }, y:{ display:false } } },
+            plugins:[{ id:"emptyState", afterDraw(chartInstance){ const { ctx, chartArea } = chartInstance; if(!chartArea) return; ctx.save(); ctx.fillStyle = "#cbb8e4"; ctx.font = "700 14px Inter, Arial, sans-serif"; ctx.textAlign = "center"; ctx.fillText("Ingen data ennå", (chartArea.left + chartArea.right) / 2, chartArea.top + 60); ctx.font = "12px Inter, Arial, sans-serif"; ctx.fillStyle = "#9c8bb3"; ctx.fillText("Legg inn første verdi for å se utvikling", (chartArea.left + chartArea.right) / 2, chartArea.top + 84); ctx.restore(); } }]
+          });
+          return;
+        }
+        const canvas = document.getElementById("th2Chart");
+        const ctx = canvas.getContext("2d");
+        const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height || 220);
+        gradient.addColorStop(0, "rgba(216,196,160,.32)");
+        gradient.addColorStop(1, "rgba(216,196,160,0)");
+        const unitLabel = metrics[activeMetric].unit || metrics[activeMetric].shortUnit || "";
+        chart = new Chart(canvas, {
+          type:"line",
+          data:{
+            labels,
+            datasets:[{
+              label: metrics[activeMetric].label,
+              data: arr.map(e => e[activeMetric]),
+              tension:0.35,
+              fill:true,
+              borderWidth:3,
+              pointRadius:4,
+              pointHoverRadius:5,
+              pointBackgroundColor:"#14081f",
+              pointBorderWidth:2,
+              pointBorderColor:"#d8c4a0",
+              borderColor:"#d8c4a0",
+              backgroundColor:gradient
+            }].concat(goalVal != null ? [{
+              label:"Mål", data: arr.map(() => goalVal), borderColor:"rgba(216,196,160,.55)", borderDash:[6,6],
+              borderWidth:2, pointRadius:0, pointHoverRadius:0, fill:false, tension:0
+            }] : [])
+          },
+          options:{
+            responsive:true,
+            maintainAspectRatio:false,
+            interaction:{ intersect:false, mode:"index" },
+            plugins:{
+              legend:{
+                labels:{
+                  filter: item => item.datasetIndex === 0,
+                  color:"#cbb8e4",
+                  font:{ family:"Inter", weight:"700" },
+                  generateLabels(chartInstance){
+                    const original = Chart.defaults.plugins.legend.labels.generateLabels(chartInstance);
+                    return original.map(item => ({
+                      ...item,
+                      text: unitLabel ? `${item.text} (${unitLabel})` : item.text
+                    }));
+                  }
+                }
+              },
+              tooltip:{
+                backgroundColor:"rgba(29,19,37,.92)",
+                titleColor:"#fff8f0",
+                bodyColor:"#fff8f0",
+                padding:12,
+                displayColors:false,
+                filter: item => item.datasetIndex === 0,
+                callbacks:{
+                  label(context){
+                    const value = context.parsed.y;
+                    const pretty = String(value).replace(".", ",");
+                    return unitLabel ? `${metrics[activeMetric].label}: ${pretty} ${unitLabel}` : `${metrics[activeMetric].label}: ${pretty}`;
+                  }
+                }
+              }
+            },
+            scales:{
+              x:{
+                ticks:{ color:"#9c8bb3", font:{ family:"Inter", weight:"700" } },
+                grid:{ color:"rgba(216,196,160,.08)", drawBorder:false }
+              },
+              y:{
+                ticks:{
+                  color:"#9c8bb3",
+                  font:{ family:"Inter" },
+                  callback(value){
+                    return unitLabel && String(value).length < 6 ? `${value}` : value;
+                  }
+                },
+                grid:{ color:"rgba(216,196,160,.08)", drawBorder:false }
+              }
+            }
+          }
+        });
+      }
+
+      async function deleteMetricFromDate(date, metric){
+        if(!refreshIdentity()) return showBanner("Kan ikke lagre ennå", "error");
+        const row = entries.find(e => e.date === date);
+        if(!row) return;
+        row[metric] = null;
+        if(metric === "pain"){ row.painAreas = []; row.painNote = ""; }
+        if(!hasAnyMetricValue(row)) entries = entries.filter(e => e.date !== date);
+        syncLocalCache(); renderCircles(); renderHeroAndStats(); renderChart(); renderHistory(); renderDynamicField();
+        const ok = await persistEntryRemoteByDate(date, { quiet:true });
+        showBanner(ok ? "Oppdatert" : "Oppdatert lokalt", ok ? "success" : "info");
+      }
+
+      function renderHistory(){
+        const box = document.getElementById("th2History");
+        const historyEntries = [...sortedEntries()].filter(entry => entry[activeMetric] != null).reverse();
+        if(!historyEntries.length){ box.innerHTML = `<div class="th2-empty">Ingen historikk ennå for ${metrics[activeMetric].label.toLowerCase()}.</div>`; return; }
+        box.innerHTML = historyEntries.map(entry => {
+          const val = entry[activeMetric];
+          const refClass = getRefClass(activeMetric, val);
+          let mainValue = `${val}${metrics[activeMetric].unit ? " " + metrics[activeMetric].unit : ""}`;
+          let extraChip = "";
+          if(activeMetric === "pain"){
+            const extra = entry.painAreas?.length ? entry.painAreas.join(", ") : (entry.painNote || "");
+            if(extra) extraChip = `<span class="th2-history-chip"><span>${extra}</span></span>`;
+          }
+          return `<div class="th2-history-item ${refClass}"><div class="th2-history-top"><div class="th2-history-date">${formatDate(entry.date)}</div><div class="th2-history-main ${refClass}">${mainValue}</div></div><div class="th2-history-chips"><span class="th2-history-chip"><span>${metrics[activeMetric].label}</span><button class="th2-chip-delete" type="button" data-date="${entry.date}" data-metric="${activeMetric}">×</button></span>${extraChip}</div></div>`;
+        }).join("");
+        box.querySelectorAll(".th2-chip-delete").forEach(btn => btn.addEventListener("click", async () => { const date = btn.getAttribute("data-date"); const metric = btn.getAttribute("data-metric"); await deleteMetricFromDate(date, metric); }));
+      }
+
+      async function persistSettingsRemote({ quiet = false } = {}){
+        const supabase = await waitForSupabaseClient();
+        if(!memberIdentity?.hasStrongId || !memberIdentity?.customer_key) return false;
+        const payload = {
+          source: "min_helse",
+          customer_key: memberIdentity.customer_key,
+          customer_id: memberIdentity.customer_id,
+          movement_customer_id: memberIdentity.movement_customer_id,
+          customer_name: memberIdentity.customer_name,
+          customer_name_normalized: memberIdentity.customer_name_normalized,
+          customer_email: memberIdentity.customer_email,
+          customer_email_normalized: memberIdentity.customer_email_normalized,
+          goals: goals,
+          visible_metrics: visibleMetrics,
+          active_metric: activeMetric,
+          selected_date: selectedDate
+        };
+        if((await healthRpc("tl_health_save_settings", { p_settings: payload })).ok) return true;
+        try{
+          if(supabase){
+            const { error } = await supabase.from(SETTINGS_TABLE).upsert(payload, { onConflict: "customer_key" });
+            if(error) throw error;
+          } else {
+            await upsertRemoteRowRest(SETTINGS_TABLE, payload, "customer_key");
+          }
+          return true;
+        } catch(error){
+          console.error("Feil ved lagring av settings:", error);
+          if(!quiet) showBanner("Kun lagret lokalt – skyfeil", "error");
+          return false;
+        }
+      }
+
+      async function persistEntryRemoteByDate(date, { quiet = false } = {}){
+        const supabase = await waitForSupabaseClient();
+        if(!memberIdentity?.hasStrongId || !memberIdentity?.customer_key) return false;
+        const row = entries.find(e => e.date === date);
+        if(!row || !hasAnyMetricValue(row)){
+          if((await healthRpc("tl_health_delete_entry", { p_entry_date: date })).ok) return true;
+          try{
+            if(supabase){
+              const { error } = await supabase.from(ENTRIES_TABLE).delete().eq("customer_key", memberIdentity.customer_key).eq("entry_date", date);
+              if(error) throw error;
+            } else {
+              await deleteRemoteRowRest(ENTRIES_TABLE, { customer_key: memberIdentity.customer_key, entry_date: date });
+            }
+            return true;
+          } catch(error){
+            console.error("Feil ved sletting av rad:", error);
+            if(!quiet) showBanner("Kun oppdatert lokalt – skyfeil", "error");
+            return false;
+          }
+        }
+        let payload = mapLocalEntryToDb(row);
+        if((await healthRpc("tl_health_save_entry", { p_entry: payload })).ok) return true;
+        try{
+          if(supabase){
+            let { error } = await supabase.from(ENTRIES_TABLE).upsert(payload, { onConflict: "customer_key,entry_date" });
+            if(error && /extra_metrics/.test(error.message || "")){
+              console.warn("extra_metrics finnes ikke ennå – kjør min-helse-ekstra-malinger.sql. Lagrer uten.");
+              extraColumnMissing = true;
+              payload = mapLocalEntryToDb(row);
+              ({ error } = await supabase.from(ENTRIES_TABLE).upsert(payload, { onConflict: "customer_key,entry_date" }));
+            }
+            if(error) throw error;
+          } else {
+            try { await upsertRemoteRowRest(ENTRIES_TABLE, payload, "customer_key,entry_date"); }
+            catch(err){
+              if(!/extra_metrics/.test(String(err && err.message))) throw err;
+              extraColumnMissing = true;
+              await upsertRemoteRowRest(ENTRIES_TABLE, mapLocalEntryToDb(row), "customer_key,entry_date");
+            }
+          }
+          return true;
+        } catch(error){
+          console.error("Feil ved lagring av rad:", error);
+          if(!quiet) showBanner("Kun lagret lokalt – skyfeil", "error");
+          return false;
+        }
+      }
+
+      async function saveMetricValue(value){
+        if(!selectedDate){ alert("Velg dag."); return; }
+        if(value == null){ alert("Legg inn en verdi."); return; }
+        if(!refreshIdentity()) return showBanner("Kan ikke lagre ennå", "error");
+        const existingIndex = entries.findIndex(e => e.date === selectedDate);
+        if(existingIndex >= 0){
+          entries[existingIndex][activeMetric] = value;
+          if(activeMetric === "pain"){ entries[existingIndex].painAreas = [...selectedPainAreas]; entries[existingIndex].painNote = document.getElementById("th2PainNote")?.value.trim() || ""; }
+        } else {
+          const row = emptyEntry(selectedDate);
+          row[activeMetric] = value;
+          if(activeMetric === "pain"){ row.painAreas = [...selectedPainAreas]; row.painNote = document.getElementById("th2PainNote")?.value.trim() || ""; }
+          entries.push(row);
+        }
+        syncLocalCache(); renderCircles(); renderHeroAndStats(); renderChart(); renderHistory(); renderDynamicField();
+        const entryOk = await persistEntryRemoteByDate(selectedDate, { quiet:true });
+        const settingsOk = await persistSettingsRemote({ quiet:true });
+        if(entryOk || settingsOk) showBanner("Lagret", "success");
+        else showBanner("Lagret lokalt", "info");
+        offerTellCoach([{ key: activeMetric, value }]);
+      }
+
+      function refreshIdentity(){
+        if(memberIdentity?.hasStrongId) return true;
+        memberIdentity = buildCustomerIdentity();
+        canPersist = !!memberIdentity.hasStrongId;
+        return canPersist;
+      }
+      async function waitForIdentity(timeoutMs){
+        const started = Date.now();
+        while(!refreshIdentity()){
+          if(Date.now() - started >= timeoutMs) return false;
+          await new Promise(resolve => setTimeout(resolve, 150));
+        }
+        return true;
+      }
+      let identityRetryTimer = null;
+      function retryIdentityLater(){
+        if(identityRetryTimer) return;
+        let tries = 0;
+        identityRetryTimer = setInterval(() => {
+          tries++;
+          if(refreshIdentity()){
+            clearInterval(identityRetryTimer); identityRetryTimer = null;
+            hydrateFromRemote();
+          } else if(tries >= 90){ clearInterval(identityRetryTimer); identityRetryTimer = null; }
+        }, 2000);
+      }
+
+      async function hydrateFromRemote(){
+        const supabase = await waitForSupabaseClient(8000);
+        if(!supabase && (!getRestBaseUrl() || !window.TLX_SUPABASE_ANON_KEY)){
+          setWarning("Tilkoblingen er ikke klar ennå.");
+          return;
+        }
+        // movement.os legger inn kundedataene (window.MVT_memberData) litt etter at
+        // siden åpnes. Vent på dem i stedet for å gi opp – og fortsett å prøve i
+        // bakgrunnen uten å vise feil til kunden.
+        if(!(await waitForIdentity(8000))){
+          renderDynamicField();
+          retryIdentityLater();
+          return;
+        }
+        setWarning("");
+        try{
+          let remoteEntries, remoteSettings;
+          const viaRpc = await healthRpc("tl_health_get", {});
+          if(viaRpc.ok && viaRpc.data){
+            remoteEntries = Array.isArray(viaRpc.data.entries) ? viaRpc.data.entries : [];
+            remoteSettings = viaRpc.data.settings || null;
+          } else {
+            remoteEntries = await fetchRemoteRows(ENTRIES_TABLE, memberIdentity, { orderBy: "entry_date", ascending: true });
+            remoteSettings = await fetchRemoteRows(SETTINGS_TABLE, memberIdentity, { single: true, limit: 1 });
+          }
+          const hasRemoteEntries = Array.isArray(remoteEntries) && remoteEntries.length > 0;
+          const hasRemoteSettings = !!remoteSettings;
+          if(hasRemoteEntries) entries = remoteEntries.map(mapDbEntryToLocal);
+          if(hasRemoteSettings){
+            goals = remoteSettings.goals || goals;
+            const remoteVisible = Array.isArray(remoteSettings.visible_metrics) ? remoteSettings.visible_metrics.filter(key => metrics[key]) : [];
+            if(remoteVisible.length) visibleMetrics = remoteVisible;
+            if(remoteSettings.active_metric && metrics[remoteSettings.active_metric]) activeMetric = remoteSettings.active_metric;
+          }
+          if(!visibleMetrics.length) visibleMetrics = defaultVisibleMetrics();
+          if(!visibleMetrics.includes(activeMetric)) activeMetric = visibleMetrics[0];
+          startMetric();
+          syncLocalCache(); renderWeekCalendar(); renderMetricPicker(); renderCircles(); renderHeroAndStats(); renderDynamicField(); renderChart(); renderHistory();
+        } catch(err){
+          console.error("Feil ved henting fra Supabase:", err);
+          setWarning("Fant ingen helsedata for denne kunden ennå.");
+        }
+      }
+
+      memberIdentity = buildCustomerIdentity();
+      canPersist = !!memberIdentity.hasStrongId;
+      entries = load(STORAGE_KEY, []).map(normalizeEntry);
+      goals = load(GOALS_KEY, {});
+      visibleMetrics = load(VISIBLE_KEY, defaultVisibleMetrics()).filter(k => metrics[k]);
+      if(!visibleMetrics.length) visibleMetrics = defaultVisibleMetrics();
+      activeMetric = load(ACTIVE_KEY, "weight");
+      if(!metrics[activeMetric]) activeMetric = "weight";
+      if(!visibleMetrics.includes(activeMetric)) activeMetric = visibleMetrics[0];
+      startMetric();
+      const today = new Date();
+      selectedDate = iso(today);
+      weekAnchor = new Date(today);
+
+      ids.prevWeek.addEventListener("click", () => { weekAnchor = addDays(startOfWeek(weekAnchor), -7); save(WEEK_KEY, iso(weekAnchor)); renderWeekCalendar(); });
+      ids.nextWeek.addEventListener("click", () => { weekAnchor = addDays(startOfWeek(weekAnchor), 7); save(WEEK_KEY, iso(weekAnchor)); renderWeekCalendar(); });
+      ids.painBackdrop.addEventListener("click", closePainModal);
+      ids.painClose.addEventListener("click", closePainModal);
+      ids.addMetricBackdrop.addEventListener("click", closeAddMetricModal);
+      ids.addMetricClose.addEventListener("click", closeAddMetricModal);
+      ids.painClear.addEventListener("click", () => { selectedPainAreas = []; renderPainOptions(); });
+      ids.painDone.addEventListener("click", closePainModal);
+      document.getElementById("th2CheckinBtn").addEventListener("click", openCheckin);
+      document.getElementById("th2CheckinClose").addEventListener("click", closeCheckin);
+      document.getElementById("th2CheckinCancel").addEventListener("click", closeCheckin);
+      document.getElementById("th2CheckinBackdrop").addEventListener("click", closeCheckin);
+      document.getElementById("th2CheckinSave").addEventListener("click", saveCheckin);
+
+      document.getElementById("th2HistoryToggle").addEventListener("click", () => {
+        const box = document.getElementById("th2History");
+        const icon = document.getElementById("th2HistoryIcon");
+        const isOpen = box.style.display !== "none";
+        if(!isOpen) renderHistory();
+        box.style.display = isOpen ? "none" : "grid";
+        icon.classList.toggle("open", !isOpen);
+      });
+
+      // Diagrammet ("Utvikling i ...") er slått sammen som standard, samme
+      // mønster som Historikk over — kunden åpner det selv om ønskelig.
+      // Chart.js måler cellen sin ved opprettelse, og en skjult (display:none)
+      // celle har 0 i bredde/høyde da — derfor kalles renderChart() på nytt
+      // RETT ETTER at boksen vises, slik at diagrammet faktisk får riktig
+      // størrelse i stedet for å forbli usynlig/feil skalert.
+      document.getElementById("th2ChartToggle").addEventListener("click", () => {
+        const box = document.getElementById("th2ChartBox");
+        const icon = document.getElementById("th2ChartIcon");
+        const isOpen = box.style.display !== "none";
+        box.style.display = isOpen ? "none" : "block";
+        icon.classList.toggle("open", !isOpen);
+        if(!isOpen) renderChart();
+      });
+
+      deriveComputed();
+      renderWeekCalendar();
+      renderMetricPicker();
+      renderCircles();
+      renderHeroAndStats();
+      renderDynamicField();
+      renderChart();
+      renderHistory();
+
+      await hydrateFromRemote();
+    })();
+  </script>
+</div>
+<script>
+/* Vakthund (samme idé som i vanekalenderen): movement.os kan bytte ut sidens
+   innhold etter at skriptene har kjørt. Da ligger en ny kopi av skriptene her
+   som aldri har startet, og siden står tom til kunden laster på nytt. Vakten
+   finner nye skript merket data-tl-widget="min-helse-1to1" som ikke har kjørt, og
+   starter dem. Kjører nettleseren sidens skript på vanlig måte, tar den nye vakten over. */
+(function () {
+  var KEY = "min-helse-1to1";
+  var counterKey = "__tlWatch_" + KEY;
+  var me = (window[counterKey] = (window[counterKey] || 0) + 1);
+  var sel = 'script[data-tl-widget="' + KEY + '"]';
+  // Husker selve skript-elementene som har kjørt (ikke et merke i HTML-en,
+  // som kan bli med når innholdet kopieres).
+  var known = new WeakSet();
+  document.querySelectorAll(sel).forEach(function (s) { known.add(s); });
+  var timer = setInterval(function () {
+    if (window[counterKey] !== me) { clearInterval(timer); return; }
+    var fresh = Array.prototype.filter.call(document.querySelectorAll(sel), function (s) { return !known.has(s); });
+    if (!fresh.length) return;
+    console.info("Tro & Livsstil (" + KEY + "): innholdet ble byttet ut – starter på nytt.");
+    var ran = {};
+    fresh.forEach(function (orig) {
+      known.add(orig);
+      var code = orig.textContent;
+      if (ran[code]) return; // samme skript to ganger (kopi av kopi) – kjør én gang
+      ran[code] = true;
+      var again = document.createElement("script");
+      again.setAttribute("data-tl-widget", KEY);
+      known.add(again);
+      again.textContent = code;
+      orig.parentNode.insertBefore(again, orig.nextSibling);
+    });
+  }, 700);
+})();
+</script>
+
+</div>
+<nav class="pt-nav" aria-label="Meny"><a href="index.html" data-nav class=""><i>🏠</i>Hjem</a><a href="index.html?vis=trening" data-nav class=""><i>🏋️</i>Trening</a><a href="meny.html" data-nav class=""><i>🍽️</i>Mat</a><a href="helse.html" data-nav class="on"><i>❤️</i>Helse</a></nav>
+<script>
+(function () {
+  // Menyen tar med den personlige koden mellom sidene
+  document.querySelectorAll("[data-nav]").forEach(function (a) { a.href = a.getAttribute("href") + (window.TL_PT_HASH || ""); });
+  var r = document.getElementById("ptRefresh");
+  function refresh() { if (r) r.classList.add("spin"); location.replace(location.pathname + "?r=" + Date.now() + (location.search.indexOf("vis=") >= 0 ? "&vis=trening" : "") + location.hash); }
+  if (r) r.addEventListener("click", refresh);
+  var hiddenAt = 0;
+  document.addEventListener("visibilitychange", function () { if (document.hidden) hiddenAt = Date.now(); else if (hiddenAt && Date.now() - hiddenAt > 15 * 60 * 1000) refresh(); });
+  // Navnet til kunden (lagres når planen lagres)
+  var m = window.MVT_memberData; if (!m || !m.id) return;
+  fetch("https://cpqbdorxilssxylkqdkt.supabase.co/rest/v1/rpc/tl_plan_get", { method: "POST", headers: { apikey: "sb_publishable_37LxJJHdYNa8HpqDOVKpVw_0fJlfDmd", Authorization: "Bearer sb_publishable_37LxJJHdYNa8HpqDOVKpVw_0fJlfDmd", "Content-Type": "application/json" }, body: JSON.stringify({ p_member_id: m.id }) })
+    .then(function (x) { return x.ok ? x.json() : null; }).then(function (row) {
+      var n = row && row.member_name ? String(row.member_name) : ""; if (!n || /^Kunde [0-9a-f]{8}$/i.test(n)) return;
+      m.name = n; try { localStorage.setItem("tl_pt_name:" + m.id, n); } catch (e) {}
+      var h = document.getElementById("ptHello"); if (h) h.textContent = "Hei, " + n.trim().split(/\s+/)[0] + "!";
+    }).catch(function () {});
+})();
+</script>
+</body>
+</html>
