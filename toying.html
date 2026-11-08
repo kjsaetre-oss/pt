@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<!-- en-myk-kropp.html: velg tøyeprogram (øvelser med video og tid, som styrkeprogram) -->
+<html lang="no">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="referrer" content="no-referrer">
+<meta name="theme-color" content="#6f35b5">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="PT Kjetil">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="apple-touch-icon" href="ikon-180.png">
+<link rel="icon" type="image/png" sizes="192x192" href="ikon-192.png">
+<title>En myk kropp – PT Kjetil</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script>
+// Personlig lenke: app.metabolsktesting.no/#<kunde-ID>/<Fornavn>. Koden står etter # og sendes aldri til nettstedet.
+(function () {
+  var ok = function (v) { return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(String(v || "")); };
+  var raw = String(location.hash || "").replace(/^#\/?/, "").trim(), parts = raw.split("/"), id = parts[0], hashName = "";
+  try { hashName = decodeURIComponent(parts[1] || "").trim().slice(0, 40); } catch (e) {}
+  try {
+    if (ok(id)) { localStorage.setItem("tl_pt_member", id); if (hashName) localStorage.setItem("tl_pt_name:" + id, hashName); }
+    else id = localStorage.getItem("tl_pt_member") || "";
+  } catch (e) {}
+  window.TL_STANDALONE = { brand: "pt" };
+  if (ok(id) && !(window.MVT_memberData && window.MVT_memberData.id)) {
+    var name = ""; try { name = localStorage.getItem("tl_pt_name:" + id) || ""; } catch (e) {}
+    window.MVT_memberData = { id: id, name: name || hashName };
+  }
+  window.TL_TP_OK = ok(id) || !!(window.MVT_memberData && window.MVT_memberData.id);
+  window.TL_PT_HASH = ok(id) ? "#" + id + (hashName ? "/" + encodeURIComponent(hashName) : "") : "";
+})();
+</script><style>
+  html, body { margin: 0; background: #f4efe8; }
+  body.tl-standalone { padding: 0 0 calc(76px + env(safe-area-inset-bottom)) !important; -webkit-text-size-adjust: 100%; }
+  .pt-head { position: sticky; top: 0; z-index: 50; display: flex; align-items: center; gap: 10px; padding: calc(env(safe-area-inset-top) + 10px) 14px 10px;
+    background: rgba(244,239,232,.94); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-bottom: 1px solid #ece4d8; color: #2b2235; font-family: Inter, -apple-system, sans-serif; }
+  .pt-logo { width: 32px; height: 32px; border-radius: 10px; background: linear-gradient(140deg, #8c57cb, #6f35b5); color: #fff; display: grid; place-items: center; font: 800 13px "Outfit", sans-serif; flex: none; }
+  .pt-head b { font: 800 17px "Outfit", -apple-system, sans-serif; display: block; line-height: 1.1; } .pt-head small { display: block; font-size: 10.5px; color: #7a6f86; }
+  .pt-refresh { margin-left: auto; flex: none; width: 34px; height: 34px; border-radius: 50%; border: 1px solid #ece4d8; background: #fffdfa; color: #6f35b5; font: 700 18px/1 -apple-system, sans-serif; display: grid; place-items: center; padding: 0; }
+  .pt-refresh.spin { animation: ptSpin .8s linear infinite; } @keyframes ptSpin { to { transform: rotate(360deg); } }
+  .pt-av { width: 34px; height: 34px; border-radius: 50%; background: #ddd url("bilder/kjetil-lindefjell-saetre.jpg") center/cover; border: 2px solid #6f35b5; flex: none; }
+  .tl-brand-pt .lock-btn { display: none !important; }   /* redigeringslås for coachen i Verd å vite-artikler */
+  .pt-back { width: 32px; height: 32px; border-radius: 10px; background: #fffdfa; border: 1px solid #ece4d8; color: #6f35b5; display: grid; place-items: center; font: 800 22px/1 -apple-system, sans-serif; text-decoration: none; flex: none; }
+  /* Startsider for Trening, Mat og Helse */
+  .pt-hub { padding: 14px 14px 24px; display: grid; gap: 12px; font-family: Inter, -apple-system, sans-serif; color: #2b2235; max-width: 560px; margin: 0 auto; }
+  .pt-hub h1 { margin: 2px 2px 0; font: 800 28px/1.1 "Outfit", -apple-system, sans-serif; } .pt-hub > p { margin: -6px 2px 2px; color: #7a6f86; font-size: 13.5px; line-height: 1.45; }
+  .pt-card { position: relative; display: flex; flex-direction: column; justify-content: flex-end; min-height: 150px; padding: 16px; border-radius: 22px; color: #fff; text-decoration: none; overflow: hidden;
+    background: #2b2235 center/cover no-repeat; box-shadow: 0 14px 30px -18px rgba(43,34,53,.6); }
+  .pt-card::before { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(20,12,32,.05) 0%, rgba(20,12,32,.45) 45%, rgba(20,12,32,.88) 100%); }
+  .pt-card > * { position: relative; } .pt-card small { font: 800 10.5px Inter, sans-serif; letter-spacing: .12em; text-transform: uppercase; opacity: .85; }
+  .pt-card b { font: 800 21px/1.15 "Outfit", -apple-system, sans-serif; margin-top: 2px; } .pt-card span { font-size: 13px; opacity: .88; margin-top: 3px; line-height: 1.4; }
+  .pt-card.big { min-height: 190px; } .pt-card .go { position: absolute; right: 14px; top: 14px; width: 34px; height: 34px; border-radius: 50%; background: rgba(255,255,255,.18); display: grid; place-items: center; font-size: 18px; }
+  .pt-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; } .pt-row .pt-card { min-height: 140px; } .pt-row .pt-card b { font-size: 17px; }
+  .pt-nav { position: fixed; left: 0; right: 0; bottom: 0; z-index: 40; display: grid; grid-template-columns: repeat(4, 1fr); background: rgba(255,253,250,.97);
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-top: 1px solid #ece4d8; padding: 6px 4px calc(6px + env(safe-area-inset-bottom)); box-shadow: 0 -8px 24px -16px rgba(43,34,53,.35); }
+  .pt-nav a { display: grid; justify-items: center; gap: 2px; padding: 4px 2px; font: 700 10.5px Inter, -apple-system, sans-serif; color: #7a6f86; text-decoration: none; }
+  .pt-nav a i { font-style: normal; font-size: 20px; line-height: 1.1; filter: grayscale(1); opacity: .65; } .pt-nav a.on { color: #6f35b5; } .pt-nav a.on i { filter: none; opacity: 1; }
+  .pt-nolink { display: none; max-width: 420px; margin: 60px auto; padding: 0 24px; text-align: center; font: 16px/1.5 -apple-system, sans-serif; color: #3b3640; }
+  body.tp-missing .pt-nolink { display: block; } body.tp-missing .tp-app, body.tp-missing .pt-nav { display: none; }
+  .pt-hero { margin: 12px 14px 0; border-radius: 22px; background: #fffdfa; border: 1px solid #ece4d8; padding: 14px 16px; font-family: Inter, -apple-system, sans-serif; color: #2b2235; }
+  .pt-hero h1 { margin: 0; font: 800 26px/1.1 "Outfit", -apple-system, sans-serif; } .pt-hero p { margin: 4px 0 0; font-size: 13px; color: #7a6f86; }
+  /* Fokus og mål (samme kode som bordtennis, lilla farger) */
+
+</style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+<style>
+  :root{
+    --tbsa-bg:#ffffff;
+    --tbsa-bg-2:#f0f6f5;
+    --tbsa-line:rgba(15,47,43,.08);
+    --tbsa-line-2:rgba(15,47,43,.16);
+    --tbsa-text:#132422;
+    --tbsa-muted:#5d746f;
+    --tbsa-accent:#1f5c56;
+    --tbsa-accent-2:#b5772f;
+    --tbsa-accent-3:#0f2f2b;
+    --tbsa-shadow:0 20px 46px rgba(15,71,64,.12);
+    --tbsa-shadow-soft:0 10px 22px rgba(15,71,64,.08);
+    --tbsa-warn-bg:rgba(214,90,110,.10);
+    --tbsa-warn-line:rgba(214,90,110,.28);
+    --tbsa-warn-text:#9c2f45;
+    --tbsa-ok-bg:rgba(60,150,120,.12);
+    --tbsa-ok-line:rgba(60,150,120,.32);
+    --tbsa-ok-text:#1f6b52;
+  }
+  *{ box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html,body{ margin:0; padding:0; font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; background:#ffffff; color:var(--tbsa-text); min-height:100vh; -webkit-font-smoothing:antialiased; }
+  body{ padding:0; }
+  button:focus-visible{ outline:2px solid rgba(31,92,86,.5); outline-offset:2px; }
+  @keyframes tbsaCardIn{ from{ opacity:0; transform:translateY(10px); } to{ opacity:1; transform:translateY(0); } }
+  @keyframes tbsaPanelIn{ from{ opacity:0; transform:translateY(8px); } to{ opacity:1; transform:translateY(0); } }
+  .tbsa-hidden{ display:none !important; }
+  .tbsa-shell{ max-width:100%; width:100%; margin:0; border-radius:0; background:transparent; overflow:hidden; padding:14px 16px 32px; }
+  .tbsa-card{
+    position:relative; border-radius:28px; padding:14px;
+    background:
+      radial-gradient(circle at top right, rgba(181,119,47,.08), transparent 26%),
+      radial-gradient(circle at top left, rgba(31,92,86,.07), transparent 24%),
+      linear-gradient(180deg, #ffffff, var(--tbsa-bg-2));
+    border:1px solid var(--tbsa-line);
+    box-shadow:var(--tbsa-shadow);
+    overflow:hidden;
+    animation:tbsaCardIn .5s cubic-bezier(.16,1,.3,1);
+  }
+  .tbsa-top{ display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:8px; }
+  .tbsa-chip{
+    display:inline-flex; align-items:center; gap:8px; padding:8px 11px; border-radius:999px;
+    background:rgba(31,92,86,.08); border:1px solid rgba(31,92,86,.18); color:#153f3a;
+    font-size:11px; font-weight:900; text-transform:uppercase; letter-spacing:.05em;
+  }
+  .tbsa-chip-dot{ width:8px; height:8px; border-radius:50%; background:linear-gradient(180deg, var(--tbsa-accent), var(--tbsa-accent-3)); box-shadow:0 0 0 5px rgba(31,92,86,.12); }
+  .tbsa-hero{
+    position:relative; overflow:hidden; border-radius:22px; min-height:120px; padding:18px 18px 16px; margin-bottom:10px;
+    background:
+      radial-gradient(circle at 18% 12%, rgba(255,255,255,.08), transparent 30%),
+      radial-gradient(circle at 82% 22%, rgba(232,166,89,.20), transparent 32%),
+      linear-gradient(155deg,#1f5c56 0%, #184a45 55%, #0f2f2b 100%);
+    border:1px solid rgba(255,255,255,.08);
+    box-shadow:0 14px 30px rgba(15,47,43,.32);
+  }
+  .tbsa-hero h2{ margin:0; font-size:1.5rem; line-height:1.08; letter-spacing:-.05em; color:#f2fbf9; }
+  .tbsa-hero h2 span{ color:#e8a659; }
+  .tbsa-hero p{ margin:8px 0 0; color:rgba(242,251,249,.78); line-height:1.45; font-size:.88rem; max-width:280px; }
+  .tbsa-progress{ display:grid; grid-auto-flow:column; grid-auto-columns:1fr; gap:5px; margin:2px 2px 14px; }
+  .tbsa-progress div{ height:6px; border-radius:999px; background:rgba(19,36,34,.08); transition:.35s cubic-bezier(.16,1,.3,1); }
+  .tbsa-progress div.on{ background:linear-gradient(90deg, var(--tbsa-accent), var(--tbsa-accent-2)); box-shadow:0 2px 6px rgba(31,92,86,.22); }
+  .tbsa-panel{ display:none; gap:9px; }
+  .tbsa-panel.active{ display:grid; animation:tbsaPanelIn .32s cubic-bezier(.16,1,.3,1); }
+  .tbsa-note{ margin:14px 2px 0; text-align:center; color:#4c625e; font-size:.79rem; line-height:1.4; font-weight:800; }
+
+  .adv-weeks-input-wrap{
+    display:flex; align-items:center; justify-content:center; gap:10px;
+    border:1px solid var(--tbsa-line); border-radius:18px; background:#ffffff;
+    padding:22px 16px; box-shadow:var(--tbsa-shadow-soft); margin-bottom:4px;
+  }
+  .adv-weeks-input{
+    width:110px; border:1px solid var(--tbsa-line-2); border-radius:14px; background:var(--tbsa-bg-2);
+    color:var(--tbsa-accent); font:inherit; font-size:1.8rem; font-weight:900; letter-spacing:-.02em;
+    text-align:center; padding:10px 6px; -moz-appearance:textfield;
+  }
+  .adv-weeks-input::-webkit-outer-spin-button, .adv-weeks-input::-webkit-inner-spin-button{
+    -webkit-appearance:none; margin:0;
+  }
+  .adv-weeks-input:focus{ outline:none; border-color:var(--tbsa-accent); background:#ffffff; }
+  .adv-weeks-input-suffix{ font-size:1rem; font-weight:800; color:var(--tbsa-muted); }
+
+  .adv-days-grid{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; margin-bottom:4px; }
+  .adv-day-btn{
+    min-height:46px; border:1px solid var(--tbsa-line); border-radius:15px; background:#ffffff;
+    color:var(--tbsa-text); font:inherit; font-weight:800; cursor:pointer; transition:.18s cubic-bezier(.16,1,.3,1);
+  }
+  .adv-day-btn:hover{ transform:translateY(-1px); border-color:var(--tbsa-line-2); }
+  .adv-day-btn:active{ transform:scale(.96); }
+  .adv-day-btn.sel{
+    background:linear-gradient(180deg, rgba(31,92,86,.16), rgba(216,196,160,.14));
+    border-color:rgba(181,119,47,.5); box-shadow:0 8px 18px rgba(31,92,86,.16);
+  }
+
+  .adv-series-list{ display:flex; flex-direction:column; gap:10px; }
+  .adv-series-card{
+    border-radius:20px; padding:14px; background:#ffffff;
+    border:1px solid var(--tbsa-line); box-shadow:var(--tbsa-shadow-soft); transition:.18s cubic-bezier(.16,1,.3,1);
+  }
+  .adv-series-card:hover{ transform:translateY(-2px); box-shadow:0 16px 30px rgba(31,92,86,.14); }
+  .adv-series-card.active{
+    border-color:rgba(181,119,47,.5);
+    background:linear-gradient(135deg,rgba(31,92,86,.08), rgba(255,255,255,.4));
+    box-shadow:0 14px 28px rgba(31,92,86,.14);
+  }
+  .adv-series-thumb{
+    width:100%; aspect-ratio:16/9; border-radius:14px; overflow:hidden; margin-bottom:10px;
+    background:var(--tbsa-bg-2); position:relative;
+  }
+  .adv-series-thumb img{ width:100%; height:100%; object-fit:cover; display:block; }
+  .adv-series-thumb-play{
+    position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    background:rgba(15,47,43,.18);
+  }
+  .adv-series-thumb-play svg{ width:42px; height:42px; filter:drop-shadow(0 2px 6px rgba(0,0,0,.35)); }
+  .adv-series-title{ margin:0 0 2px; font-size:1rem; font-weight:900; letter-spacing:-.02em; color:#132422; }
+  .adv-series-meta{ margin:0 0 8px; font-size:.78rem; color:var(--tbsa-muted); font-weight:700; }
+  .adv-series-desc{ margin:0 0 10px; font-size:.84rem; line-height:1.45; color:#2f4441; }
+  .adv-series-pick{
+    width:100%; min-height:42px; border:none; border-radius:14px; cursor:pointer;
+    background:linear-gradient(135deg, #1f5c56 0%, #184a45 55%, #0f2f2b 100%); color:#f2fbf9; font:inherit; font-weight:900; font-size:.86rem;
+    transition:.18s cubic-bezier(.16,1,.3,1); box-shadow:0 10px 20px rgba(15,47,43,.28);
+  }
+  .adv-series-pick:hover{ transform:translateY(-1px); background:linear-gradient(135deg, #2a7269 0%, #1f5c56 55%, #123f39 100%); }
+  .adv-series-pick:active{ transform:scale(.97); }
+  .adv-series-pick.picked{ filter:brightness(.92); }
+
+  .adv-confirm-box{ border-radius:18px; padding:2px 14px; background:#ffffff; border:1px solid var(--tbsa-line); margin-bottom:14px; }
+  .adv-confirm-row{ display:flex; justify-content:space-between; gap:8px; font-size:.86rem; padding:10px 0; border-bottom:1px solid var(--tbsa-line); }
+  .adv-confirm-row:last-child{ border-bottom:none; }
+  .adv-confirm-row span:first-child{ color:var(--tbsa-muted); font-weight:700; }
+  .adv-confirm-row span:last-child{ font-weight:900; text-align:right; color:#132422; }
+
+  .tbsa-actions{ display:flex; gap:10px; margin-top:2px; }
+  .tbsa-btn{ min-height:46px; border:none; border-radius:15px; font:inherit; font-weight:900; cursor:pointer; transition:.18s cubic-bezier(.16,1,.3,1); }
+  .tbsa-btn:hover{ transform:translateY(-1px); }
+  .tbsa-btn:active{ transform:scale(.97); }
+  .tbsa-btn:disabled{ opacity:.45; cursor:not-allowed; transform:none; }
+  .tbsa-btn-primary{ flex:1; color:#f2fbf9; background:linear-gradient(135deg, #1f5c56 0%, #184a45 55%, #0f2f2b 100%); box-shadow:0 14px 26px rgba(15,47,43,.28); }
+  .tbsa-btn-primary:hover{ background:linear-gradient(135deg, #2a7269 0%, #1f5c56 55%, #123f39 100%); box-shadow:0 16px 30px rgba(15,47,43,.32); }
+  .tbsa-btn-primary:active{ box-shadow:0 8px 16px rgba(15,47,43,.26); }
+  .tbsa-btn-secondary{ background:#ffffff; color:#132422; border:1px solid var(--tbsa-line); padding:0 16px; }
+  .tbsa-btn-secondary:hover{ background:#eef6f5; }
+  .tbsa-btn-full{ width:100%; }
+  .tbsa-status{
+    border-radius:16px; padding:11px 12px; border:1px solid var(--tbsa-line);
+    background:#eef6f5; margin-top:14px; display:none;
+    font-size:.82rem; font-weight:800; line-height:1.45; color:#153f3a;
+  }
+  .tbsa-status.show{ display:block; }
+  .tbsa-status.ok{ background:var(--tbsa-ok-bg); border-color:var(--tbsa-ok-line); color:var(--tbsa-ok-text); }
+  .tbsa-status.warn{ background:var(--tbsa-warn-bg); border-color:var(--tbsa-warn-line); color:var(--tbsa-warn-text); }
+</style>
+</head>
+<body class="tl-standalone tl-brand-pt">
+<header class="pt-head"><a class="pt-back" data-nav href="trening.html" aria-label="Tilbake">‹</a><span><b>En myk kropp</b><small>PT Kjetil</small></span><button type="button" class="pt-refresh" id="ptRefresh" aria-label="Oppdater">↻</button><span class="pt-av" aria-hidden="true"></span></header>
+<div class="pt-nolink"><h1 style="font-family:Outfit,sans-serif">PT Kjetil</h1><p>Denne siden åpnes med den personlige lenken du har fått fra Kjetil.<br>Spør ham om å få lenken på nytt.</p></div>
+<script>if (!window.TL_TP_OK) document.body.classList.add("tp-missing");</script>
+
+  <div class="tbsa-shell">
+    <div class="tbsa-card">
+      <div class="tbsa-top">
+        <div class="tbsa-chip"><span class="tbsa-chip-dot"></span><span id="advStepChip">Steg 1 av 4</span></div>
+      </div>
+
+      <div class="tbsa-hero">
+        <h2 id="advHeroTitle">Velg <span>program</span></h2>
+        <p id="advHeroSub">Velg fokuset som passer deg best akkurat nå. Videoene er fra FLEXFORM by Shan.</p>
+      </div>
+
+      <div class="tbsa-progress" id="advProgress"><div></div><div></div><div></div><div></div></div>
+
+      <!-- Steg 1: velg program -->
+      <div class="tbsa-panel active" data-step="series" id="advStepSeries">
+        <div class="adv-series-list" id="advSeriesList"></div>
+      </div>
+
+      <!-- Steg 2: hvor lenge -->
+      <div class="tbsa-panel" data-step="weeks" id="advStepWeeks">
+        <div class="adv-weeks-input-wrap">
+          <input type="number" inputmode="numeric" min="1" max="52" step="1" placeholder="F.eks. 6" class="adv-weeks-input" id="advWeeksInput" />
+          <span class="adv-weeks-input-suffix">uker</span>
+        </div>
+        <div class="tbsa-status" id="advWeeksStatus"></div>
+        <div class="tbsa-actions">
+          <button type="button" class="tbsa-btn tbsa-btn-secondary" data-back-step="series">&#x27f5; Bytt program</button>
+          <button type="button" class="tbsa-btn tbsa-btn-primary" id="advToFrequency" disabled>Neste</button>
+        </div>
+      </div>
+
+      <!-- Steg 3: hvor ofte -->
+      <div class="tbsa-panel" data-step="frequency" id="advStepFrequency">
+        <div class="adv-days-grid" id="advDaysGrid">
+          <button type="button" class="adv-day-btn" data-day="mon">Mandag</button>
+          <button type="button" class="adv-day-btn" data-day="tue">Tirsdag</button>
+          <button type="button" class="adv-day-btn" data-day="wed">Onsdag</button>
+          <button type="button" class="adv-day-btn" data-day="thu">Torsdag</button>
+          <button type="button" class="adv-day-btn" data-day="fri">Fredag</button>
+          <button type="button" class="adv-day-btn" data-day="sat">Lørdag</button>
+          <button type="button" class="adv-day-btn" data-day="sun">Søndag</button>
+        </div>
+        <div class="tbsa-status" id="advDaysStatus"></div>
+        <div class="tbsa-actions">
+          <button type="button" class="tbsa-btn tbsa-btn-secondary" data-back-step="weeks">&#x27f5; Bytt varighet</button>
+          <button type="button" class="tbsa-btn tbsa-btn-primary" id="advToConfirm" disabled>Neste</button>
+        </div>
+      </div>
+
+      <!-- Steg 4: bekreft -->
+      <div class="tbsa-panel" data-step="confirm" id="advStepConfirm">
+        <div class="adv-confirm-box" id="advConfirmSummary"></div>
+        <div class="tbsa-actions" style="flex-direction:column;">
+          <button type="button" class="tbsa-btn tbsa-btn-primary tbsa-btn-full" id="advConfirmSave">&#x2713; Legg i vanekalenderen</button>
+          <button type="button" class="tbsa-btn tbsa-btn-secondary tbsa-btn-full" data-back-step="frequency">&#x27f5; Bytt frekvens</button>
+        </div>
+        <div class="tbsa-status" id="advStatus"></div>
+      </div>
+
+      <p class="tbsa-note">Tøyeøktene dukker opp i vanekalenderen din på dagene du velger. Trykk på økta for å se øvelsene – hver har en kort video, hvor lenge du skal holde, og en klokke du kan starte. Kryss av når du er ferdig.</p>
+    </div>
+  </div>
+
+  <script data-tl-widget="en-myk-kropp">
+  (function(){
+    const SUPABASE_URL = window.TLX_SUPABASE_URL || "https://cpqbdorxilssxylkqdkt.supabase.co";
+    const SUPABASE_ANON_KEY = window.TLX_SUPABASE_ANON_KEY || "sb_publishable_37LxJJHdYNa8HpqDOVKpVw_0fJlfDmd";
+
+    async function getSupabaseClient(){
+      if (window.dppSupabaseClient) return window.dppSupabaseClient;
+      if (!window.supabase || !window.supabase.createClient) {
+        await new Promise((resolve, reject) => {
+          const existing = document.querySelector('script[data-dpp-supabase="1"]');
+          if (existing) {
+            existing.addEventListener("load", resolve, { once: true });
+            existing.addEventListener("error", () => reject(new Error("Kunne ikke laste Supabase-biblioteket")), { once: true });
+            return;
+          }
+          const s = document.createElement("script");
+          s.src = "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2";
+          s.async = true;
+          s.setAttribute("data-dpp-supabase", "1");
+          s.onload = resolve;
+          s.onerror = () => reject(new Error("Kunne ikke laste Supabase-biblioteket"));
+          document.head.appendChild(s);
+        });
+      }
+      if (!window.supabase || !window.supabase.createClient) throw new Error("Supabase-biblioteket ble ikke lastet");
+      window.dppSupabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+      return window.dppSupabaseClient;
+    }
+
+    function getMovementMember(){
+      const member = window.MVT_memberData || {};
+      return { id: member.id || "", name: member.name || "" };
+    }
+
+    function pad(n){ return String(n).padStart(2, "0"); }
+    function toDateValue(date){
+      return date.getFullYear() + "-" + pad(date.getMonth() + 1) + "-" + pad(date.getDate());
+    }
+    function generateId(){
+      return "toying_" + Date.now() + "_" + Math.random().toString(36).slice(2, 8);
+    }
+    function getYtId(url){
+      if (!url) return null;
+      const m = url.match(/(?:youtu\.be\/|[?&]v=)([A-Za-z0-9_-]{11})/);
+      return m ? m[1] : null;
+    }
+
+    // ============================================================
+    // Tøyeøvelser: korte demovideoer, mest fra E3 Rehab Exercise Library
+    // (samme stil), resten korte klipp fra andre kanaler. Sjekket: riktig
+    // øvelse og avspilling i appen. Samme navn ligger i det felles
+    // øvelsesbiblioteket (tl_exercises, utstyr «Mobilitet»), så coachen kan
+    // bruke dem i programbyggeren – og rettede videoer slår igjennom.
+    // ============================================================
+    const yt = id => "https://www.youtube.com/watch?v=" + id;
+    const STRETCHES = {
+      kattku: { name: "Katt-ku (rygg)", video: yt("FLQDiUccsko"), tip: "På alle fire. Rund ryggen opp mens du puster ut, svai rolig ned mens du puster inn." },
+      barn: { name: "Barnestilling (rygg)", video: yt("w1Jt2UN5Qc0"), tip: "Sitt på hælene, strekk armene fram og la brystet synke mot gulvet. Pust rolig." },
+      hofteboyer: { name: "Hofteleddsbøyer-tøy (knestående)", video: yt("vIDzsqJiAIo"), side: true, tip: "Stå på ett kne, skyv hofta rolig fram. Stram setet, ikke svai i ryggen." },
+      due: { name: "Due-tøy (hofte og sete)", video: yt("ac5QAU5nq98"), side: true, tip: "Fremre legg på tvers, bakre bein strakt bak. Len deg rolig fram." },
+      thread: { name: "Rotasjon på alle fire (øvre rygg)", video: yt("ADeGAWCDjhQ"), side: true, tip: "På alle fire, én hånd bak hodet. Vri albuen rolig ned og opp mot taket." },
+      hamStaaende: { name: "Hamstring-tøy (sittende)", video: yt("jkKpCt3ylH0"), side: true, tip: "Sitt med ett bein strakt. Rett rygg, len deg rolig fram fra hofta." },
+      hamLiggende: { name: "Hamstring-tøy (sittende)", video: yt("jkKpCt3ylH0"), side: true, tip: "Sitt med ett bein strakt. Rett rygg, len deg rolig fram fra hofta." },
+      laar: { name: "Lårtøy (stående)", video: yt("R7g1POiEoZs"), side: true, tip: "Ta tak i foten bak deg, knærne inntil hverandre, skyv hofta litt fram." },
+      legg: { name: "Leggtøy mot vegg", video: yt("yZCfQ6YbAvA"), side: true, tip: "Bakre bein strakt, hælen i gulvet. Len deg mot veggen til du kjenner det i leggen." },
+      bryst:       { name: "Brysttøy i døråpning", video: yt("6dA42H1hJy8"), tip: "Underarmene mot dørkarmen, ta et lite steg fram til du kjenner strekk i brystet." },
+      nakke: { name: "Nakketøy sideveis", video: yt("EjkFVidgy7o"), side: true, tip: "Øret rolig ned mot skulderen. Senk den andre skulderen. Ikke dra hardt." },
+      skulder:     { name: "Skuldertøy (arm over brystet)", video: yt("Pg0JvLSfWwM"), side: true, tip: "Trekk armen inntil brystet med den andre armen. Skuldrene ned." },
+      triceps:     { name: "Triceps-tøy (over hodet)", video: yt("-WFQhIRimnw"), side: true, tip: "Hånden ned mellom skulderbladene, press albuen rolig med den andre hånden." },
+      figur4: { name: "Figur-4 (liggende sete-tøy)", video: yt("SSbRKbeoFCs"), side: true, tip: "Ankelen over motsatt kne, trekk låret rolig mot deg." },
+      rotasjon: { name: "Liggende rotasjon (korsrygg)", video: yt("57h47-j9_FM"), side: true, tip: "Knærne til siden, skuldrene i gulvet. Pust rolig ut." },
+      kobra: { name: "Kobra (mage og rygg)", video: yt("vaSf7GhtSLQ"), tip: "Hoftene i gulvet, press deg rolig opp med armene. Bare så langt det er behagelig." },
+      sommerfugl:  { name: "Sommerfugl (innside lår)", video: yt("v4OLkxi5-Q0"), tip: "Fotsålene mot hverandre, rett rygg, la knærne synke rolig ned." },
+      verdensBeste: { name: "Verdens beste tøyeøvelse", video: yt("Utq8EFO3NzY"), side: true, tip: "Langt utfall, hånden i gulvet, vri den andre armen opp mot taket." },
+      hofte9090: { name: "90/90 hoftebytte", video: yt("Lx07WIkllbA"), tip: "Sitt med begge knær i 90 grader og bytt rolig fra side til side. Støtt deg med hendene." },
+      kneBryst: { name: "Kne til bryst (korsrygg)", video: yt("ioJXmjaiZjE"), tip: "Ligg på ryggen og trekk knærne rolig inn mot brystet." },
+    };
+
+    // Et tøyeprogram er bygget opp som et styrkeprogram: øvelser med tid,
+    // pause og video. [nøkkel, sekunder]. «side: true» = én gang per side
+    // (2 runder).
+    const SERIES = [
+      { id: "hele-kroppen", title: "Hele kroppen – rolig", desc: "En enkel runde gjennom hele kroppen. Passer de fleste dager.",
+        items: [["kattku",45],["barn",45],["hofteboyer",30],["hamLiggende",30],["figur4",30],["rotasjon",30],["bryst",30],["nakke",20]] },
+      { id: "hofter-sete", title: "Hofter & sete", desc: "For stramme hofter og sete – fint etter mye sitting.",
+        items: [["hofte9090",30],["due",40],["figur4",30],["hofteboyer",30],["sommerfugl",45],["verdensBeste",20]] },
+      { id: "rygg", title: "Rygg & korsrygg", desc: "Rolige øvelser for en stiv rygg.",
+        items: [["kattku",60],["kneBryst",45],["rotasjon",30],["barn",60],["kobra",20],["figur4",30]] },
+      { id: "nakke-skuldre", title: "Nakke & skuldre", desc: "For deg som sitter mye foran skjerm.",
+        items: [["nakke",30],["skulder",30],["triceps",30],["bryst",30],["thread",30],["kattku",45]] },
+      { id: "bein", title: "Bein – etter trening", desc: "Lår, legger og hofter etter løping eller beintrening.",
+        items: [["laar",30],["hamStaaende",30],["legg",30],["hofteboyer",30],["sommerfugl",45],["figur4",30]] },
+      { id: "morgen", title: "Morgenrutine (5 min)", desc: "Kort og lett for å vekke kroppen.",
+        items: [["kattku",45],["verdensBeste",20],["kobra",20],["barn",45],["nakke",20]] },
+      { id: "kveld", title: "Kveldsro", desc: "Rolig tøying for å slappe av før du legger deg.",
+        items: [["barn",60],["kneBryst",60],["rotasjon",45],["figur4",45],["sommerfugl",60]] }
+    ];
+    SERIES.forEach(sr => {
+      sr.exercises = sr.items.map(([key, secs]) => {
+        const st = STRETCHES[key];
+        const sets = st.side ? 2 : 1;
+        return {
+          name: st.name, emoji: "🧘", category: "mobility", isHold: true, videoUrl: st.video,
+          equipment: "Mobilitet", sets, targetReps: secs, reps: formatHold(secs),
+          restSeconds: 10, rest: "10 sek pause",
+          tip: (st.side ? "Én gang per side. " : "") + st.tip
+        };
+      });
+      const secs = sr.exercises.reduce((n, ex) => n + ex.sets * (ex.targetReps + ex.restSeconds), 0);
+      sr.minutes = Math.max(3, Math.round(secs / 60));
+      sr.playlistUrl = sr.exercises[0].videoUrl; // miniatyrbilde på kortet
+    });
+    function formatHold(secs){
+      if (secs < 60) return secs + " sek hold";
+      const m = Math.floor(secs / 60), r = secs % 60;
+      return m + " min" + (r ? " " + r + " sek" : "");
+    }
+
+    const DAY_LABELS = { mon:"Mandag", tue:"Tirsdag", wed:"Onsdag", thu:"Torsdag", fri:"Fredag", sat:"Lørdag", sun:"Søndag" };
+    const DAY_ORDER = Object.keys(DAY_LABELS);
+    const DEFAULT_DAYS = ["mon", "wed", "fri"];
+
+    const state = { seriesId: null, weeks: null, selectedDays: [] };
+    let currentStep = "series";
+    const STEP_ORDER = ["series", "weeks", "frequency", "confirm"];
+    const HERO_TEXT = {
+      series: { title: 'Velg <span>program</span>', sub: "Velg fokuset som passer deg best akkurat nå. Hver øvelse har en kort video og står med hvor lenge du skal holde." },
+      weeks: { title: 'Hvor <span>lenge</span>?', sub: "Hvor mange uker vil du følge dette programmet?" },
+      frequency: { title: 'Hvor <span>ofte</span>?', sub: "Velg hvilke dager du vil tøye." },
+      confirm: { title: 'Bekreft <span>valget</span>', sub: "Dette legges inn i vanekalenderen din fra og med i dag." }
+    };
+
+    const panels = Array.from(document.querySelectorAll(".tbsa-panel"));
+    const progressWrap = document.getElementById("advProgress");
+    const stepChip = document.getElementById("advStepChip");
+    const heroTitle = document.getElementById("advHeroTitle");
+    const heroSub = document.getElementById("advHeroSub");
+    const seriesList = document.getElementById("advSeriesList");
+    const weeksInput = document.getElementById("advWeeksInput");
+    const weeksStatus = document.getElementById("advWeeksStatus");
+    const toFrequencyBtn = document.getElementById("advToFrequency");
+    const daysGrid = document.getElementById("advDaysGrid");
+    const daysStatus = document.getElementById("advDaysStatus");
+    const toConfirmBtn = document.getElementById("advToConfirm");
+    const confirmSummary = document.getElementById("advConfirmSummary");
+    const confirmSaveBtn = document.getElementById("advConfirmSave");
+    const statusEl = document.getElementById("advStatus");
+
+    function showStep(step){
+      currentStep = step;
+      const idx = STEP_ORDER.indexOf(step);
+      panels.forEach(panel => panel.classList.toggle("active", panel.dataset.step === step));
+      stepChip.textContent = `Steg ${idx + 1} av ${STEP_ORDER.length}`;
+      heroTitle.innerHTML = HERO_TEXT[step].title;
+      heroSub.textContent = HERO_TEXT[step].sub;
+      Array.from(progressWrap.children).forEach((bar, i) => bar.classList.toggle("on", i <= idx));
+    }
+
+    document.querySelectorAll("[data-back-step]").forEach(btn => {
+      btn.addEventListener("click", () => showStep(btn.dataset.backStep));
+    });
+
+    function renderSeriesList(){
+      seriesList.innerHTML = "";
+      SERIES.forEach(series => {
+        const card = document.createElement("div");
+        card.className = "adv-series-card" + (state.seriesId === series.id ? " active" : "");
+
+        const ytId = getYtId(series.playlistUrl);
+        if (ytId) {
+          const thumb = document.createElement("div");
+          thumb.className = "adv-series-thumb";
+          const img = document.createElement("img");
+          img.src = `https://img.youtube.com/vi/${ytId}/mqdefault.jpg`;
+          img.alt = "";
+          img.loading = "lazy";
+          const playOverlay = document.createElement("div");
+          playOverlay.className = "adv-series-thumb-play";
+          playOverlay.innerHTML = '<svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="18" cy="18" r="18" fill="rgba(0,0,0,0.45)"/><polygon points="14,11 27,18 14,25" fill="white"/></svg>';
+          thumb.appendChild(img);
+          thumb.appendChild(playOverlay);
+          card.appendChild(thumb);
+        }
+
+        const title = document.createElement("h3");
+        title.className = "adv-series-title";
+        title.textContent = series.title;
+
+        const meta = document.createElement("p");
+        meta.className = "adv-series-meta";
+        meta.textContent = `${series.exercises.length} øvelser · ca. ${series.minutes} min`;
+        const list = document.createElement("p");
+        list.className = "adv-series-desc";
+        list.style.fontSize = ".8em";
+        list.textContent = series.exercises.map(ex => ex.name.replace(/\s*\(.*\)$/, "")).join(" · ");
+
+        const desc = document.createElement("p");
+        desc.className = "adv-series-desc";
+        desc.textContent = series.desc;
+
+        const pickBtn = document.createElement("button");
+        pickBtn.type = "button";
+        pickBtn.className = "adv-series-pick" + (state.seriesId === series.id ? " picked" : "");
+        pickBtn.textContent = state.seriesId === series.id ? "✓ Valgt – gå videre" : "Velg dette programmet";
+        pickBtn.addEventListener("click", () => {
+          state.seriesId = series.id;
+          showStep("weeks");
+        });
+
+        card.appendChild(title);
+        card.appendChild(meta);
+        card.appendChild(desc);
+        card.appendChild(list);
+        card.appendChild(pickBtn);
+        seriesList.appendChild(card);
+      });
+    }
+
+    weeksInput.addEventListener("input", () => {
+      const raw = weeksInput.value.trim();
+      const parsed = Number(raw);
+      const isValid = raw !== "" && Number.isInteger(parsed) && parsed >= 1 && parsed <= 52;
+      state.weeks = isValid ? parsed : null;
+      toFrequencyBtn.disabled = !isValid;
+      if (!raw) {
+        weeksStatus.className = "tbsa-status";
+        weeksStatus.textContent = "";
+      } else if (!isValid) {
+        weeksStatus.textContent = "Skriv inn et helt antall uker mellom 1 og 52.";
+        weeksStatus.className = "tbsa-status show warn";
+      } else {
+        weeksStatus.textContent = `${parsed} uker er valgt.`;
+        weeksStatus.className = "tbsa-status show ok";
+      }
+    });
+
+    toFrequencyBtn.addEventListener("click", () => {
+      if (!state.weeks) return;
+      if (!state.selectedDays.length) state.selectedDays = DEFAULT_DAYS.slice();
+      renderDaysGrid();
+      showStep("frequency");
+    });
+
+    function renderDaysGrid(){
+      daysGrid.querySelectorAll(".adv-day-btn").forEach(btn => {
+        btn.classList.toggle("sel", state.selectedDays.includes(btn.dataset.day));
+      });
+      updateDaysStatus();
+    }
+
+    function updateDaysStatus(){
+      if (!state.selectedDays.length) {
+        daysStatus.textContent = "Velg minst én dag.";
+        daysStatus.className = "tbsa-status show";
+        toConfirmBtn.disabled = true;
+        return;
+      }
+      const sorted = state.selectedDays.slice().sort((a, b) => DAY_ORDER.indexOf(a) - DAY_ORDER.indexOf(b));
+      daysStatus.textContent = `Dagene er valgt: ${sorted.map(d => DAY_LABELS[d]).join(", ")}.`;
+      daysStatus.className = "tbsa-status show ok";
+      toConfirmBtn.disabled = false;
+    }
+
+    daysGrid.querySelectorAll(".adv-day-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const day = btn.dataset.day;
+        if (state.selectedDays.includes(day)) {
+          state.selectedDays = state.selectedDays.filter(d => d !== day);
+        } else {
+          state.selectedDays = [...state.selectedDays, day];
+        }
+        renderDaysGrid();
+      });
+    });
+
+    toConfirmBtn.addEventListener("click", () => {
+      if (!state.selectedDays.length) return;
+      renderConfirmSummary();
+      showStep("confirm");
+    });
+
+    function row(label, value){
+      const r = document.createElement("div");
+      r.className = "adv-confirm-row";
+      const a = document.createElement("span");
+      a.textContent = label;
+      const b = document.createElement("span");
+      b.textContent = value;
+      r.appendChild(a);
+      r.appendChild(b);
+      return r;
+    }
+
+    function renderConfirmSummary(){
+      const series = SERIES.find(s => s.id === state.seriesId);
+      const sortedDays = state.selectedDays.slice().sort((a, b) => DAY_ORDER.indexOf(a) - DAY_ORDER.indexOf(b));
+      confirmSummary.innerHTML = "";
+      confirmSummary.appendChild(row("Program", series ? series.title : ""));
+      confirmSummary.appendChild(row("Innhold", series ? `${series.exercises.length} øvelser · ca. ${series.minutes} min` : ""));
+      confirmSummary.appendChild(row("Varighet", state.weeks + " uker"));
+      confirmSummary.appendChild(row("Frekvens", sortedDays.map(d => DAY_LABELS[d]).join(", ")));
+      confirmSummary.appendChild(row("Startdato", new Date().toLocaleDateString("no-NO")));
+    }
+
+    function showStatus(message, isError){
+      statusEl.textContent = message;
+      statusEl.className = "tbsa-status show " + (isError ? "warn" : "ok");
+    }
+
+    confirmSaveBtn.addEventListener("click", async () => {
+      const series = SERIES.find(s => s.id === state.seriesId);
+      if (!series || !state.weeks || !state.selectedDays.length) return;
+
+      const member = getMovementMember();
+      if (!member.id) {
+        showStatus("Fant ikke kundeprofilen din. Last siden på nytt og prøv igjen.", true);
+        return;
+      }
+
+      confirmSaveBtn.disabled = true;
+      confirmSaveBtn.textContent = "Lagrer …";
+
+      const sortedDays = state.selectedDays.slice().sort((x, y) => DAY_ORDER.indexOf(x) - DAY_ORDER.indexOf(y));
+      // Lagres som et vanlig program (samme som styrke), med programType
+      // «toying»: vanekalenderen viser øvelsene med video, tid og nedtelling.
+      const newProgram = {
+        id: generateId(),
+        programType: "toying",
+        title: "🧘 " + series.title,
+        programUrl: "",
+        days: sortedDays,
+        startDate: toDateValue(new Date()),
+        totalWeeks: state.weeks,
+        autoProgress: false,
+        equipment: "Mobilitet",
+        tracksWeight: false,
+        exercises: series.exercises,
+        exerciseNames: series.exercises.map(ex => ({ name: ex.name, emoji: ex.emoji, isHold: true, videoUrl: ex.videoUrl })),
+        exerciseSessions: null,
+        restSecondsNormal: 10,
+        restSecondsHold: 10,
+        completedDates: []
+      };
+
+      try {
+        // ATOMISK skriving – se movement-plans-atomic-list-rpc.sql.
+        const client = await getSupabaseClient();
+        const { error: saveError } = await client
+          .rpc("upsert_movement_plan_list_item", {
+            p_member_id: member.id,
+            p_member_name: member.name || "",
+            p_field: "assignedPrograms",
+            p_item: newProgram
+          });
+        if (saveError) throw saveError;
+
+        showStatus("✓ Tøyeprogrammet er lagt inn i vanekalenderen din! Du blir sendt tilbake til hjem-siden om et øyeblikk …", false);
+        confirmSaveBtn.textContent = "✓ Lagt til";
+        setTimeout(() => {
+          window.location.href = "index.html" + (window.TL_PT_HASH || "");
+        }, 1600);
+      } catch (e) {
+        console.warn("Kunne ikke lagre tøyeprogrammet.", e);
+        showStatus("⚠️ Kunne ikke lagre. Sjekk internett og prøv igjen.", true);
+        confirmSaveBtn.disabled = false;
+        confirmSaveBtn.textContent = "✓ Legg i vanekalenderen";
+      }
+    });
+
+    renderSeriesList();
+    showStep("series");
+  })();
+  </script>
+<script>
+/* Vakthund (samme idé som i vanekalenderen): movement.os kan bytte ut sidens
+   innhold etter at skriptene har kjørt. Da ligger en ny kopi av skriptene her
+   som aldri har startet, og siden står tom til kunden laster på nytt. Vakten
+   finner nye skript merket data-tl-widget="en-myk-kropp" som ikke har kjørt, og
+   starter dem. Kjører nettleseren sidens skript på vanlig måte, tar den nye vakten over. */
+(function () {
+  var KEY = "en-myk-kropp";
+  var counterKey = "__tlWatch_" + KEY;
+  var me = (window[counterKey] = (window[counterKey] || 0) + 1);
+  var sel = 'script[data-tl-widget="' + KEY + '"]';
+  // Husker selve skript-elementene som har kjørt (ikke et merke i HTML-en,
+  // som kan bli med når innholdet kopieres).
+  var known = new WeakSet();
+  document.querySelectorAll(sel).forEach(function (s) { known.add(s); });
+  var timer = setInterval(function () {
+    if (window[counterKey] !== me) { clearInterval(timer); return; }
+    var fresh = Array.prototype.filter.call(document.querySelectorAll(sel), function (s) { return !known.has(s); });
+    if (!fresh.length) return;
+    console.info("Tro & Livsstil (" + KEY + "): innholdet ble byttet ut – starter på nytt.");
+    var ran = {};
+    fresh.forEach(function (orig) {
+      known.add(orig);
+      var code = orig.textContent;
+      if (ran[code]) return; // samme skript to ganger (kopi av kopi) – kjør én gang
+      ran[code] = true;
+      var again = document.createElement("script");
+      again.setAttribute("data-tl-widget", KEY);
+      known.add(again);
+      again.textContent = code;
+      orig.parentNode.insertBefore(again, orig.nextSibling);
+    });
+  }, 700);
+})();
+</script>
+<nav class="pt-nav" aria-label="Meny"><a href="index.html" data-nav class=""><i>🏠</i>Hjem</a><a href="trening.html" data-nav class="on"><i>🏋️</i>Trening</a><a href="mat.html" data-nav class=""><i>🍽️</i>Mat</a><a href="helse.html" data-nav class=""><i>❤️</i>Helse</a></nav>
+<script>
+(function () {
+  // Menyen tar med den personlige koden mellom sidene
+  document.querySelectorAll("[data-nav]").forEach(function (a) { a.href = a.getAttribute("href") + (window.TL_PT_HASH || ""); });
+  var r = document.getElementById("ptRefresh");
+  function refresh() { if (r) r.classList.add("spin"); location.replace(location.pathname + "?r=" + Date.now() + (location.search.indexOf("vis=") >= 0 ? "&vis=trening" : "") + location.hash); }
+  if (r) r.addEventListener("click", refresh);
+  var hiddenAt = 0;
+  document.addEventListener("visibilitychange", function () { if (document.hidden) hiddenAt = Date.now(); else if (hiddenAt && Date.now() - hiddenAt > 15 * 60 * 1000) refresh(); });
+  // Navnet til kunden (lagres når planen lagres)
+  var m = window.MVT_memberData; if (!m || !m.id) return;
+  fetch("https://cpqbdorxilssxylkqdkt.supabase.co/rest/v1/rpc/tl_plan_get", { method: "POST", headers: { apikey: "sb_publishable_37LxJJHdYNa8HpqDOVKpVw_0fJlfDmd", Authorization: "Bearer sb_publishable_37LxJJHdYNa8HpqDOVKpVw_0fJlfDmd", "Content-Type": "application/json" }, body: JSON.stringify({ p_member_id: m.id }) })
+    .then(function (x) { return x.ok ? x.json() : null; }).then(function (row) {
+      var n = row && row.member_name ? String(row.member_name) : ""; if (!n || /^Kunde [0-9a-f]{8}$/i.test(n)) return;
+      m.name = n; try { localStorage.setItem("tl_pt_name:" + m.id, n); } catch (e) {}
+      var h = document.getElementById("ptHello"); if (h) h.textContent = "Hei, " + n.trim().split(/\s+/)[0] + "!";
+    }).catch(function () {});
+})();
+</script>
+</body>
+</html>

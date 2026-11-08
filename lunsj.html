@@ -1,0 +1,1349 @@
+<script>
+// Sikkerhetsadapter (sikkerhet-2a-planer-funksjoner.sql): lesing og lagring av
+  // movement_plans går via funksjoner som bare gir ut/lagrer ÉN kundes plan.
+  // Mangler funksjonene, eller noe feiler, brukes den gamle direkte måten.
+  window.tlSecurePlans = window.tlSecurePlans || function (client) {
+    if (!client || client.__tlSecurePlans) return client;
+    var direct = client.from.bind(client);
+    var rpc = client.rpc.bind(client);
+    var idOk = function (v) { return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(String(v || "")); };
+    function pick(row, cols) {
+      var c = String(cols || "*").split(",").map(function (s) { return s.trim(); }).filter(Boolean);
+      if (!c.length || c.indexOf("*") >= 0) return row;
+      var out = {}; c.forEach(function (k) { out[k] = row[k]; }); return out;
+    }
+    function select(cols) {
+      var filters = [];
+      function run(mode) {
+        var id = filters.length === 1 && filters[0][0] === "member_id" ? filters[0][1] : null;
+        var viaDirect = function () {
+          var q = direct("movement_plans").select(cols);
+          filters.forEach(function (f) { q = q.eq(f[0], f[1]); });
+          return mode === "maybe" ? q.maybeSingle() : mode === "single" ? q.single() : q;
+        };
+        if (!idOk(id)) return viaDirect();
+        return rpc("tl_plan_get", { p_member_id: String(id) }).then(function (r) {
+          if (r.error) { console.warn("tl_plan_get feilet – bruker gammel måte:", r.error.message || r.error); return viaDirect(); }
+          var row = r.data ? pick(r.data, cols) : null;
+          if (mode === "list") return { data: row ? [row] : [], error: null };
+          if (mode === "single" && !row) return { data: null, error: { message: "Ingen rad" } };
+          return { data: row, error: null };
+        }, function () { return viaDirect(); });
+      }
+      var b = {
+        eq: function (c, v) { filters.push([c, v]); return b; },
+        maybeSingle: function () { return run("maybe"); },
+        single: function () { return run("single"); },
+        then: function (res, rej) { return run("list").then(res, rej); }
+      };
+      return b;
+    }
+    function upsert(payload, opts) {
+      var p = Array.isArray(payload) ? null : payload;
+      var viaDirect = function () { return direct("movement_plans").upsert(payload, opts); };
+      if (!p || !idOk(p.member_id) || !p.state_json) return viaDirect();
+      var state = typeof p.state_json === "string" ? JSON.parse(p.state_json) : p.state_json;
+      return rpc("tl_plan_save", { p_member_id: String(p.member_id), p_member_name: p.member_name || "", p_state_json: state, p_updated_at: p.updated_at || null })
+        .then(function (r) {
+          if (r.error) { console.warn("tl_plan_save feilet – bruker gammel måte:", r.error.message || r.error); return viaDirect(); }
+          return { data: null, error: null };
+        }, function () { return viaDirect(); });
+    }
+    return new Proxy(client, {
+      get: function (t, k) {
+        if (k === "__tlSecurePlans") return true;
+        if (k === "from") return function (table) { return table === "movement_plans" ? { select: select, upsert: upsert } : direct(table); };
+        var v = t[k];
+        return typeof v === "function" ? v.bind(t) : v;
+      }
+    });
+  };
+</script>
+<!DOCTYPE html>
+<!-- sok-oppskrifter.html: frittstående side hvor kunden kan søke i ALLE
+     oppskriftene (lavkarbo/hverdagskost/glutenfri) og legge en rett til en
+     bestemt dag i menyen sin. Samme MENU_RECIPES-datasett som min-meny.html
+     og vanekalender.html — hold i sync om oppskrifter endres. Skriver
+     direkte til movement_plans.state_json.assignedLunches for member_id,
+     samme mønster som min-meny.html sin lagring. -->
+<html lang="no">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="referrer" content="no-referrer">
+<meta name="theme-color" content="#6f35b5">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="PT Kjetil">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="apple-touch-icon" href="ikon-180.png">
+<link rel="icon" type="image/png" sizes="192x192" href="ikon-192.png">
+<title>Lunsj – PT Kjetil</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script>
+// Personlig lenke: app.metabolsktesting.no/#<kunde-ID>/<Fornavn>. Koden står etter # og sendes aldri til nettstedet.
+(function () {
+  var ok = function (v) { return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(String(v || "")); };
+  var raw = String(location.hash || "").replace(/^#\/?/, "").trim(), parts = raw.split("/"), id = parts[0], hashName = "";
+  try { hashName = decodeURIComponent(parts[1] || "").trim().slice(0, 40); } catch (e) {}
+  try {
+    if (ok(id)) { localStorage.setItem("tl_pt_member", id); if (hashName) localStorage.setItem("tl_pt_name:" + id, hashName); }
+    else id = localStorage.getItem("tl_pt_member") || "";
+  } catch (e) {}
+  window.TL_STANDALONE = { brand: "pt" };
+  if (ok(id) && !(window.MVT_memberData && window.MVT_memberData.id)) {
+    var name = ""; try { name = localStorage.getItem("tl_pt_name:" + id) || ""; } catch (e) {}
+    window.MVT_memberData = { id: id, name: name || hashName };
+  }
+  window.TL_TP_OK = ok(id) || !!(window.MVT_memberData && window.MVT_memberData.id);
+  window.TL_PT_HASH = ok(id) ? "#" + id + (hashName ? "/" + encodeURIComponent(hashName) : "") : "";
+})();
+</script><style>
+  html, body { margin: 0; background: #f4efe8; }
+  body.tl-standalone { padding: 0 0 calc(76px + env(safe-area-inset-bottom)) !important; -webkit-text-size-adjust: 100%; }
+  .pt-head { position: sticky; top: 0; z-index: 50; display: flex; align-items: center; gap: 10px; padding: calc(env(safe-area-inset-top) + 10px) 14px 10px;
+    background: rgba(244,239,232,.94); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-bottom: 1px solid #ece4d8; color: #2b2235; font-family: Inter, -apple-system, sans-serif; }
+  .pt-logo { width: 32px; height: 32px; border-radius: 10px; background: linear-gradient(140deg, #8c57cb, #6f35b5); color: #fff; display: grid; place-items: center; font: 800 13px "Outfit", sans-serif; flex: none; }
+  .pt-head b { font: 800 17px "Outfit", -apple-system, sans-serif; display: block; line-height: 1.1; } .pt-head small { display: block; font-size: 10.5px; color: #7a6f86; }
+  .pt-refresh { margin-left: auto; flex: none; width: 34px; height: 34px; border-radius: 50%; border: 1px solid #ece4d8; background: #fffdfa; color: #6f35b5; font: 700 18px/1 -apple-system, sans-serif; display: grid; place-items: center; padding: 0; }
+  .pt-refresh.spin { animation: ptSpin .8s linear infinite; } @keyframes ptSpin { to { transform: rotate(360deg); } }
+  .pt-av { width: 34px; height: 34px; border-radius: 50%; background: #ddd url("bilder/kjetil-lindefjell-saetre.jpg") center/cover; border: 2px solid #6f35b5; flex: none; }
+  .tl-brand-pt .lock-btn { display: none !important; }   /* redigeringslås for coachen i Verd å vite-artikler */
+  .pt-back { width: 32px; height: 32px; border-radius: 10px; background: #fffdfa; border: 1px solid #ece4d8; color: #6f35b5; display: grid; place-items: center; font: 800 22px/1 -apple-system, sans-serif; text-decoration: none; flex: none; }
+  /* Startsider for Trening, Mat og Helse */
+  .pt-hub { padding: 14px 14px 24px; display: grid; gap: 12px; font-family: Inter, -apple-system, sans-serif; color: #2b2235; max-width: 560px; margin: 0 auto; }
+  .pt-hub h1 { margin: 2px 2px 0; font: 800 28px/1.1 "Outfit", -apple-system, sans-serif; } .pt-hub > p { margin: -6px 2px 2px; color: #7a6f86; font-size: 13.5px; line-height: 1.45; }
+  .pt-card { position: relative; display: flex; flex-direction: column; justify-content: flex-end; min-height: 150px; padding: 16px; border-radius: 22px; color: #fff; text-decoration: none; overflow: hidden;
+    background: #2b2235 center/cover no-repeat; box-shadow: 0 14px 30px -18px rgba(43,34,53,.6); }
+  .pt-card::before { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(20,12,32,.05) 0%, rgba(20,12,32,.45) 45%, rgba(20,12,32,.88) 100%); }
+  .pt-card > * { position: relative; } .pt-card small { font: 800 10.5px Inter, sans-serif; letter-spacing: .12em; text-transform: uppercase; opacity: .85; }
+  .pt-card b { font: 800 21px/1.15 "Outfit", -apple-system, sans-serif; margin-top: 2px; } .pt-card span { font-size: 13px; opacity: .88; margin-top: 3px; line-height: 1.4; }
+  .pt-card.big { min-height: 190px; } .pt-card .go { position: absolute; right: 14px; top: 14px; width: 34px; height: 34px; border-radius: 50%; background: rgba(255,255,255,.18); display: grid; place-items: center; font-size: 18px; }
+  .pt-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; } .pt-row .pt-card { min-height: 140px; } .pt-row .pt-card b { font-size: 17px; }
+  .pt-nav { position: fixed; left: 0; right: 0; bottom: 0; z-index: 40; display: grid; grid-template-columns: repeat(4, 1fr); background: rgba(255,253,250,.97);
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-top: 1px solid #ece4d8; padding: 6px 4px calc(6px + env(safe-area-inset-bottom)); box-shadow: 0 -8px 24px -16px rgba(43,34,53,.35); }
+  .pt-nav a { display: grid; justify-items: center; gap: 2px; padding: 4px 2px; font: 700 10.5px Inter, -apple-system, sans-serif; color: #7a6f86; text-decoration: none; }
+  .pt-nav a i { font-style: normal; font-size: 20px; line-height: 1.1; filter: grayscale(1); opacity: .65; } .pt-nav a.on { color: #6f35b5; } .pt-nav a.on i { filter: none; opacity: 1; }
+  .pt-nolink { display: none; max-width: 420px; margin: 60px auto; padding: 0 24px; text-align: center; font: 16px/1.5 -apple-system, sans-serif; color: #3b3640; }
+  body.tp-missing .pt-nolink { display: block; } body.tp-missing .tp-app, body.tp-missing .pt-nav { display: none; }
+  .pt-hero { margin: 12px 14px 0; border-radius: 22px; background: #fffdfa; border: 1px solid #ece4d8; padding: 14px 16px; font-family: Inter, -apple-system, sans-serif; color: #2b2235; }
+  .pt-hero h1 { margin: 0; font: 800 26px/1.1 "Outfit", -apple-system, sans-serif; } .pt-hero p { margin: 4px 0 0; font-size: 13px; color: #7a6f86; }
+  /* Fokus og mål (samme kode som bordtennis, lilla farger) */
+
+</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <style>
+    :root{
+      --tbsa-bg:#ffffff;
+      --tbsa-bg-2:#f6f4fa;
+      --tbsa-line:rgba(28,20,42,.08);
+      --tbsa-line-2:rgba(28,20,42,.16);
+      --tbsa-text:#1f1730;
+      --tbsa-muted:#675d78;
+      --tbsa-accent:#4b2e83;
+      --tbsa-accent-2:#9c7a3f;
+      --tbsa-accent-3:#38215e;
+      --tbsa-shadow:0 20px 46px rgba(111,53,181,.12);
+      --tbsa-shadow-soft:0 10px 22px rgba(111,53,181,.08);
+      --tbsa-warn-bg:rgba(214,90,110,.10);
+      --tbsa-warn-line:rgba(214,90,110,.28);
+      --tbsa-warn-text:#9c2f45;
+      --tbsa-ok-bg:rgba(60,150,120,.12);
+      --tbsa-ok-line:rgba(60,150,120,.32);
+      --tbsa-ok-text:#1f6b52;
+    }
+    *{ box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+    img{ -webkit-user-drag:none; user-drag:none; -webkit-touch-callout:none; user-select:none; pointer-events:none; }
+    html,body{ margin:0; padding:0; overscroll-behavior:none; font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; background:#ffffff; color:var(--tbsa-text); -webkit-font-smoothing:antialiased; }
+    body{ padding:0; }
+    .tbsa-scroll{ overscroll-behavior-y:contain; }
+    button:focus-visible{ outline:2px solid rgba(111,53,181,.5); outline-offset:2px; }
+    @keyframes tbsaCardIn{ from{ opacity:0; transform:translateY(10px); } to{ opacity:1; transform:translateY(0); } }
+    @keyframes tbsaPanelIn{ from{ opacity:0; transform:translateY(8px); } to{ opacity:1; transform:translateY(0); } }
+    .tbsa-shell{ max-width:100%; width:100%; margin:0; border-radius:0; background:transparent; overflow:hidden; padding:14px 16px 32px; touch-action:pan-y; }
+    .tbsa-card{
+      position:relative; border-radius:28px; padding:14px;
+      background:
+        radial-gradient(circle at top right, rgba(156,122,63,.08), transparent 26%),
+        radial-gradient(circle at top left, rgba(75,46,131,.07), transparent 24%),
+        linear-gradient(180deg, #ffffff, var(--tbsa-bg-2));
+      border:1px solid var(--tbsa-line);
+      box-shadow:var(--tbsa-shadow);
+      overflow:hidden;
+      animation:tbsaCardIn .5s cubic-bezier(.16,1,.3,1);
+    }
+    .tbsa-top{ display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:8px; }
+    .tbsa-chip{
+      display:inline-flex; align-items:center; gap:8px; padding:8px 11px; border-radius:999px;
+      background:rgba(111,53,181,.07); border:1px solid rgba(111,53,181,.16); color:#34213f;
+      font-size:11px; font-weight:900; text-transform:uppercase; letter-spacing:.05em;
+    }
+    .tbsa-chip-dot{ width:8px; height:8px; border-radius:50%; background:linear-gradient(180deg, var(--tbsa-accent), var(--tbsa-accent-3)); box-shadow:0 0 0 5px rgba(111,53,181,.12); }
+    .tbsa-note{ margin:2px 0 14px; text-align:center; color:#52415f; font-size:.79rem; line-height:1.4; font-weight:800; }
+    .tbsa-btn{ min-height:46px; border:none; border-radius:15px; font:inherit; font-weight:900; cursor:pointer; transition:.18s cubic-bezier(.16,1,.3,1); }
+    .tbsa-btn:hover{ transform:translateY(-1px); }
+    .tbsa-btn:active{ transform:scale(.97); }
+    .tbsa-btn:disabled{ opacity:.45; cursor:not-allowed; transform:none; }
+    .tbsa-btn-primary{ width:100%; color:#fff; background:linear-gradient(90deg, #4b2e83, #6d4bab); box-shadow:0 14px 26px rgba(111,53,181,.28); }
+    .tbsa-btn-primary:hover{ background:linear-gradient(90deg, #7d3fc7, #9a63d9); box-shadow:0 16px 30px rgba(111,53,181,.32); }
+    .tbsa-status{
+      border-radius:16px; padding:11px 12px; border:1px solid var(--tbsa-line); margin-top:12px;
+      background:#f5eefb; font-size:.82rem; font-weight:800; line-height:1.45; color:#34213f; display:none;
+    }
+    .tbsa-status.show{ display:block; }
+    .tbsa-status.ok{ background:var(--tbsa-ok-bg); border-color:var(--tbsa-ok-line); color:var(--tbsa-ok-text); }
+    .tbsa-status.warn{ background:var(--tbsa-warn-bg); border-color:var(--tbsa-warn-line); color:var(--tbsa-warn-text); }
+
+    /* Søk + filter + liste */
+    .sok-search-wrap{ position:relative; margin-bottom:12px; }
+    .sok-search-icon{ position:absolute; left:15px; top:50%; transform:translateY(-50%); width:18px; height:18px; color:var(--tbsa-muted); pointer-events:none; }
+    .sok-search-input{
+      width:100%; border-radius:14px; border:1px solid var(--tbsa-line); padding:0 16px 0 44px;
+      font:inherit; font-size:16px; background:#ffffff; color:#241831; min-height:48px; margin-bottom:0;
+      box-shadow:var(--tbsa-shadow-soft);
+    }
+    .sok-search-input:focus{ outline:2px solid rgba(111,53,181,.35); outline-offset:1px; }
+    .sok-filter-chips{ display:flex; flex-wrap:wrap; gap:8px; margin-bottom:10px; }
+    .sok-filter-chip{
+      border:1px solid var(--tbsa-line); border-radius:999px; padding:8px 14px; cursor:pointer;
+      background:#ffffff; color:#52415f; font:inherit; font-weight:800; font-size:.78rem; white-space:nowrap;
+    }
+    .sok-filter-chip.active{ background:linear-gradient(90deg,#4b2e83,#6d4bab); color:#fff; border-color:transparent; }
+    .sok-result-count{ margin:0 0 10px; color:var(--tbsa-muted); font-size:.78rem; font-weight:800; }
+    .sok-row{
+      width:100%; display:flex; align-items:center; justify-content:space-between; gap:10px; text-align:left;
+      border:none; cursor:pointer; border-radius:14px; padding:13px 14px; background:#ffffff; margin-bottom:8px;
+      border:1px solid var(--tbsa-line); font:inherit; box-shadow:var(--tbsa-shadow-soft); transition:.15s ease;
+      touch-action:pan-y;
+    }
+    .sok-row:hover{ transform:translateY(-1px); border-color:var(--tbsa-line-2); }
+    .sok-row-thumb{ width:52px; height:52px; border-radius:12px; flex-shrink:0; overflow:hidden; background:var(--tbsa-bg-2); }
+    .sok-row-thumb img{ width:100%; height:100%; object-fit:cover; display:block; }
+    .sok-row-main{ display:flex; flex:1; flex-direction:column; gap:4px; min-width:0; }
+    .sok-row-title{ font-size:.9rem; font-weight:800; color:#241831; }
+    .sok-row-focus-tag{
+      display:inline-flex; align-self:flex-start; padding:2px 9px; border-radius:999px;
+      font-size:.66rem; font-weight:900; text-transform:uppercase; letter-spacing:.03em; color:#fff;
+    }
+    .sok-row-focus-tag.tag-lavkarbo{ background:linear-gradient(90deg,#2f8f6c,#3fae87); }
+    .sok-row-focus-tag.tag-vanlig{ background:linear-gradient(90deg,#9c7a3f,#c8944e); }
+    .sok-row-focus-tag.tag-glutenfri{ background:linear-gradient(90deg,#2f6f8f,#4a97b8); }
+    .sok-row-arrow{ color:var(--tbsa-muted); font-size:.9rem; flex-shrink:0; }
+    .sok-empty{ text-align:center; color:var(--tbsa-muted); font-size:.85rem; padding:28px 0; }
+
+    /* Oppskrift-modal (delt utseende med min-meny.html) */
+    #rmod{ display:none; position:fixed; inset:0; z-index:99999; background:rgba(20,10,30,.55); align-items:flex-end; justify-content:center; }
+    #rmod.show{ display:flex; }
+    #rmod-inner{
+      width:100%; max-width:520px; max-height:88vh; overflow-y:auto; overflow-x:hidden; background:#fff;
+      border-radius:24px 24px 0 0; padding:20px 18px 26px; box-shadow:0 -10px 40px rgba(20,10,30,.3);
+      animation:tbsaPanelIn .25s cubic-bezier(.16,1,.3,1); position:relative; touch-action:pan-y;
+    }
+    #rmod-title{ margin:0 0 12px; font-size:1.15rem; font-weight:900; letter-spacing:-.02em; color:#241831; }
+    .rmod-rating{ display:flex; align-items:center; gap:10px; margin:0 0 14px; flex-wrap:wrap; }
+    .rmod-rating-stars{ display:flex; gap:2px; }
+    .rmod-rating-star{
+      border:none; background:transparent; cursor:pointer; padding:2px; font-size:1.3rem;
+      line-height:1; color:var(--tbsa-line-2); transition:transform .1s ease;
+    }
+    .rmod-rating-star:hover{ transform:scale(1.12); }
+    .rmod-rating-star.filled{ color:#e0a52c; }
+    .rmod-rating-summary{ font-size:.78rem; font-weight:700; color:var(--tbsa-muted); }
+    .rmod-rating-fav{ margin-left:auto; display:inline-flex; align-items:center; gap:6px; border:1px solid rgba(28,20,42,.12); background:#fff; color:#6d5f7c; border-radius:999px; padding:7px 13px; font:inherit; font-size:.8rem; font-weight:800; cursor:pointer; touch-action:manipulation; }
+    .rmod-rating-fav.on{ color:#c23a5f; border-color:rgba(214,69,107,.4); background:#fff2f5; }
+    .rmod-servings{
+      display:flex; align-items:center; justify-content:space-between; gap:10px;
+      border-radius:14px; padding:10px 12px; margin-bottom:16px;
+      background:#f5eefb; border:1px solid var(--tbsa-line);
+    }
+    .rmod-servings-label{ font-size:.82rem; font-weight:800; color:#34213f; }
+    .rmod-servings-stepper{ display:flex; align-items:center; gap:12px; }
+    .rmod-servings-stepper button{
+      width:30px; height:30px; border-radius:50%; border:none; cursor:pointer;
+      background:linear-gradient(135deg,#4b2e83,#6d4bab); color:#fff; font-size:1.1rem; font-weight:900;
+      display:flex; align-items:center; justify-content:center; line-height:1;
+    }
+    .rmod-servings-stepper button:disabled{ opacity:.4; cursor:not-allowed; }
+    #rmod-servings-count{ min-width:1.4em; text-align:center; font-weight:900; font-size:.95rem; color:#241831; }
+    #rmod-close{
+      position:absolute; top:14px; right:14px; width:34px; height:34px; border-radius:50%;
+      border:none; background:rgba(28,20,42,.06); color:#241831; font-size:1.1rem; cursor:pointer;
+    }
+    .rmod-section-title{
+      font-size:.72rem; font-weight:900; text-transform:uppercase; letter-spacing:.05em;
+      color:var(--tbsa-accent-2); margin:14px 0 8px;
+    }
+    .rmod-section-title:first-of-type{ margin-top:0; }
+    .rmod-ingredient{ display:flex; gap:8px; padding:6px 0; font-size:.86rem; border-bottom:1px solid var(--tbsa-line); }
+    .rmod-ingredient:last-child{ border-bottom:none; }
+    .rmod-ingredient-group-title{ font-size:.76rem; font-weight:700; text-transform:uppercase; letter-spacing:.03em; color:var(--tbsa-muted,#8a8a92); margin:12px 0 2px; }
+    .rmod-ingredient-group-title:first-child{ margin-top:2px; }
+    .rmod-step{ display:flex; gap:11px; padding:9px 0; border-bottom:1px solid var(--tbsa-line); }
+    .rmod-step:last-child{ border-bottom:none; }
+    .rmod-step-num{
+      width:26px; height:26px; border-radius:50%; flex-shrink:0; display:flex; align-items:center; justify-content:center;
+      background:linear-gradient(135deg,#4b2e83,#6d4bab); color:#fff; font-size:.76rem; font-weight:900;
+    }
+    .rmod-step-title{ margin:0 0 2px; font-size:.86rem; font-weight:800; color:#241831; }
+    .rmod-step-text{ margin:0; font-size:.82rem; line-height:1.45; color:#5a4a68; }
+
+    .sok-add-section{ margin-top:18px; padding-top:16px; border-top:1px solid var(--tbsa-line); }
+    .sok-date-input{
+      width:100%; border-radius:14px; border:1px solid var(--tbsa-line); padding:0 14px;
+      font:inherit; font-size:16px; background:#faf7fd; color:#241831; min-height:46px; margin-bottom:12px;
+    }
+    .sok-date-input:focus{ outline:2px solid rgba(111,53,181,.35); outline-offset:1px; }
+  </style>
+</head>
+<body class="tl-standalone tl-brand-pt">
+<header class="pt-head"><a class="pt-back" data-nav href="mat.html" aria-label="Tilbake">‹</a><span><b>Lunsj</b><small>PT Kjetil</small></span><button type="button" class="pt-refresh" id="ptRefresh" aria-label="Oppdater">↻</button><span class="pt-av" aria-hidden="true"></span></header>
+<div class="pt-nolink"><h1 style="font-family:Outfit,sans-serif">PT Kjetil</h1><p>Denne siden åpnes med den personlige lenken du har fått fra Kjetil.<br>Spør ham om å få lenken på nytt.</p></div>
+<script>if (!window.TL_TP_OK) document.body.classList.add("tp-missing");</script>
+
+  <div class="tbsa-scroll">
+  <div class="tbsa-shell">
+    <div class="tbsa-card">
+      <div class="sok-search-wrap">
+        <svg class="sok-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+        <input type="text" id="searchInput" class="sok-search-input" placeholder="Søk blant lunsjoppskriftene …" />
+      </div>
+      <div class="sok-filter-chips" id="focusFilters">
+        <button type="button" class="sok-filter-chip active" data-focus="alle">Alle</button>
+        <button type="button" class="sok-filter-chip" data-focus="vanlig">Hverdagskost</button>
+        <button type="button" class="sok-filter-chip" data-focus="lavkarbo">Lavkarbo</button>
+        <button type="button" class="sok-filter-chip" data-focus="glutenfri">Glutenfri</button>
+        <button type="button" class="sok-filter-chip" data-focus="favoritter">❤️ Mine favoritter</button>
+      </div>
+      <div id="recipeList"></div>
+    </div>
+  </div>
+  </div>
+
+  <!-- Oppskrift-detalj + legg til på en dag -->
+  <div id="rmod">
+    <div id="rmod-inner">
+      <button id="rmod-close" type="button" aria-label="Lukk">✕</button>
+      <h3 id="rmod-title">Rett</h3>
+      <div id="rmod-rating" class="rmod-rating"></div>
+      <div class="rmod-servings">
+        <span class="rmod-servings-label">Antall personer</span>
+        <div class="rmod-servings-stepper">
+          <button type="button" id="rmod-servings-minus" aria-label="Færre personer">−</button>
+          <span id="rmod-servings-count">4</span>
+          <button type="button" id="rmod-servings-plus" aria-label="Flere personer">+</button>
+        </div>
+      </div>
+      <p class="rmod-section-title">Ingredienser</p>
+      <div id="rmod-ingredients"></div>
+      <p class="rmod-section-title">Slik gjør du</p>
+      <div id="rmod-steps"></div>
+
+      <div class="sok-add-section">
+        <p class="rmod-section-title">Legg til på en dag</p>
+        <input type="date" id="addDateInput" class="sok-date-input" />
+        <button type="button" id="addToDayBtn" class="tbsa-btn tbsa-btn-primary">Legg til denne dagen</button>
+        <div class="tbsa-status" id="addStatus"></div>
+      </div>
+    </div>
+  </div>
+
+  <script data-tl-widget="sok-oppskrifter-lunsj">
+    (function(){
+      const SUPABASE_URL = window.TLX_SUPABASE_URL || "https://cpqbdorxilssxylkqdkt.supabase.co";
+      const SUPABASE_ANON_KEY = window.TLX_SUPABASE_ANON_KEY || "sb_publishable_37LxJJHdYNa8HpqDOVKpVw_0fJlfDmd";
+
+      function withTimeout(promise, ms){
+        return Promise.race([
+          promise,
+          new Promise((_, reject) => setTimeout(() => reject(new Error("Tidsavbrudd — ingen respons fra serveren")), ms))
+        ]);
+      }
+
+      async function getSupabaseClient(){
+        if (window.dppSupabaseClient) return (window.dppSupabaseClient = window.tlSecurePlans(window.dppSupabaseClient));
+        if (!window.supabase || !window.supabase.createClient) {
+          await new Promise((resolve, reject) => {
+            const existing = document.querySelector('script[data-dpp-supabase="1"]');
+            if (existing) {
+              existing.addEventListener("load", resolve, { once: true });
+              existing.addEventListener("error", () => reject(new Error("Kunne ikke laste Supabase-biblioteket")), { once: true });
+              return;
+            }
+            const s = document.createElement("script");
+            s.src = "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2";
+            s.async = true;
+            s.setAttribute("data-dpp-supabase", "1");
+            s.onload = resolve;
+            s.onerror = () => reject(new Error("Kunne ikke laste Supabase-biblioteket"));
+            document.head.appendChild(s);
+          });
+        }
+        if (!window.supabase || !window.supabase.createClient) throw new Error("Supabase-biblioteket ble ikke lastet");
+        window.dppSupabaseClient = window.tlSecurePlans(window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY));
+        return (window.dppSupabaseClient = window.tlSecurePlans(window.dppSupabaseClient));
+      }
+
+      function getMovementMember(){
+        const member = window.MVT_memberData || {};
+        return { id: member.id || "", name: member.name || "" };
+      }
+
+      // ============================================================
+      // 150 ekte oppskrifter (50 lavkarbo + 50 hverdagskost + 50 glutenfri).
+      // Samme datasett (kopiert) finnes i min-meny.html og vanekalender.html
+      // — hold i sync om oppskrifter endres.
+      // ============================================================
+      const MENU_RECIPES = [
+{
+    id: "grove-vafler",
+    image: "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAASABIAAD/4QCARXhpZgAATU0AKgAAAAgABAEaAAUAAAABAAAAPgEbAAUAAAABAAAARgEoAAMAAAABAAIAAIdpAAQAAAABAAAATgAAAAAAAABIAAAAAQAAAEgAAAABAAOgAQADAAAAAQABAACgAgAEAAAAAQAAAHigAwAEAAAAAQAAAGAAAAAA/+0AOFBob3Rvc2hvcCAzLjAAOEJJTQQEAAAAAAAAOEJJTQQlAAAAAAAQ1B2M2Y8AsgTpgAmY7PhCfv/CABEIAGAAeAMBIgACEQEDEQH/xAAfAAABBQEBAQEBAQAAAAAAAAADAgQBBQAGBwgJCgv/xADDEAABAwMCBAMEBgQHBgQIBnMBAgADEQQSIQUxEyIQBkFRMhRhcSMHgSCRQhWhUjOxJGIwFsFy0UOSNIII4VNAJWMXNfCTc6JQRLKD8SZUNmSUdMJg0oSjGHDiJ0U3ZbNVdaSVw4Xy00Z2gONHVma0CQoZGigpKjg5OkhJSldYWVpnaGlqd3h5eoaHiImKkJaXmJmaoKWmp6ipqrC1tre4ubrAxMXGx8jJytDU1dbX2Nna4OTl5ufo6erz9PX29/j5+v/EAB8BAAMBAQEBAQEBAQEAAAAAAAECAAMEBQYHCAkKC//EAMMRAAICAQMDAwIDBQIFAgQEhwEAAhEDEBIhBCAxQRMFMCIyURRABjMjYUIVcVI0gVAkkaFDsRYHYjVT8NElYMFE4XLxF4JjNnAmRVSSJ6LSCAkKGBkaKCkqNzg5OkZHSElKVVZXWFlaZGVmZ2hpanN0dXZ3eHl6gIOEhYaHiImKkJOUlZaXmJmaoKOkpaanqKmqsLKztLW2t7i5usDCw8TFxsfIycrQ09TV1tfY2drg4uPk5ebn6Onq8vP09fb3+Pn6/9sAQwAEBAQEBAQGBAQGCQYGBgkMCQkJCQwPDAwMDAwPEg8PDw8PDxISEhISEhISFRUVFRUVGRkZGRkcHBwcHBwcHBwc/9sAQwEEBQUHBwcMBwcMHRQQFB0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0d/9oADAMBAAIRAxEAAAHyW0q2zo/e01gjuXTK9dRGvLzLXzOj9aoBUCGD5TZ9P5JZk+h01buXq5kS0+h5wnzb0TPXpeourZTUza5kpa/pWuOvn3nvt/mC6cG7pFdnI6HMFW+0g3Pvnjne47WHd0/GZNZ0jp34PsUaJlNPR6O0uPovD+cue7XjXkIlPRzxlarn6S+Wfp7LSp4YTXwvXtENoxe5anf6I/7jnrf2fL8O4q5o2cKFp6eXSnUT0zy1xnp6zSXjvh6+Sfk6rl6LC+K+9vx0+W3fkeWwaDrqLLeuQsfVyKs663Vkzq8EHXcUevXOh8GiHuPDcYINbM2M1N/zqa6ZKHOWv//aAAgBAQABBQJ29x7uzMgyQy9dNUsAPFLmtyorQtDtNxVAk3Et/Oi7srZ291b3YniTOlqLTy6GaMRI4CFYcFmiV/ouOi7CNz7bMAqChTHha8XZFQu17hPFMz2ghVMuxsIo0xWcaXyFl+7MwyBqjS7u0Qoc9VieTarEUkVs8e4FTt1iVKigAADKkJZWgAyxNS4i1ISU7haDJcao1JFHXvYoSZdvgCIbTdpbjczIlBv6Ll5IVAuODly+6pms6Kh3G2yiu0ZJ+5YAcveL+7s12sSI0XZku5k3tVotLNcapLaOGSa1Ee30AlSCF0yde9nJjKuCNZ3K792iTFFI0XK0xC35TN1JLCq6uDFaCZV8rhPy5bhYxX3T7Fvcpmsrm6mXNJGZmLmCWYpuQTJIZMpy7JBDuZRBB1Ida/cQddkvSEyCZCZLYIKZDha25Q4IA0xBpTR+Ib5rWTAPuhT2/dIbxN7ty8Ux80W1qiqEUYD3Teo7UICyShKnJBQkKHaODIBVuld1bxJSDV2u8XlqEb5t8rRve0pEviayQ7rfry6aUgOWdS2mRaHHOmUEBPbn8pd8FLRbE1YW+ksPodUvU9xVJjmjlH//2gAIAQMRAT8BQEQMvD+nl6vtzD70vCM0g78MuTpCN+WWU+I+EQn+TGGUeAmp/wCFOsuIgODFvPLEgDa25jtzEuePN6nmmGPZGtJZYR4tzyEp3FzngDUMep9Jss8atJtxwsuaBPOkQCeWUaLf5u0NAJn6BjkITuP4X//aAAgBAhEBPwFJTIDy+/F92BfYhe6k4ol2ZRwNJyrwxx+svKZw/NlkxepQTD/AjWPMiXqc/tjjyyBlIyQHB92GIcB4rUcWzye5KykehY4MkuaemhKGOpOEck6ln0nrjLHp5bttIFM5U4pAcaSJrhjKw02Xkoh6llAFG31f/9oACAEBAAY/An0mlWVBNATweZHSjyenbi+LrV0L5aycfgKui1cWEoSZaefB0R0qH5S8Vd9Q8Iww+vpegWt6Rq/F0OUZdUfSOhFHPIB6J/EvVxYcSoORI6khRp8vuBCeL6Rr5rL6E5fFX9x6l8XoXRQx+IdJR8lBywSoEsUooR/cdUTY/BQdYDnLSmXAJ+X3NGEjTzUWBTQcB21LqS/adKhmnUg8WY1fMFlKvL7uauCWFeauo/1OSy5f0aa6/J0J1LV1YZJFC8V3A0Vxq463FNKA66sSc7r6SHT4lmnFHUP63n5p+6E+a1UccVoND8K/IMTqQESLSCtkwyCqD7Pm/dLlHNToCfi1e7fSCtcGnOI0yUKeYaSYVGqRRrA9a/qerkhPkSPuwfBY/hYUsVo9GbqzJUtQPSeNWPe+NaVp1Pm2SzJUaUZM0YWscHGUQJpQ6U9GiU8OXr2lr0nM0P2tSfQ/c+ILRdeqK/3XWSPJC/X+pp9yVTleXn82YbhJUeAWOLEtoehOlQf4XkFf6L4kfJ1NSfi1yq/IKvNWtdfu09Wvbln2tY/n5h8pXs+j5tpXKnD0edyMT7IVTV1C8kr4fcFjF85P6g1J+9kNFBi3vKJm/aPBX+iyYTQtMV4ipHBQ0o04j2Rp3MFscpv1JZkUak8S9NC9NPg9e2SvPgB5vCVI/W+faqqj08x2CCebGPyq/uv6eNUZ/wAIPSQ/4Jf0KFSH8GUJPKQfJP8Adea3ijRL4vFT6lDH49qeVafg47igorzDKfI8e2vbi9S9Hr3qH18X/8QAMxABAAMAAgICAgIDAQEAAAILAREAITFBUWFxgZGhscHw0RDh8SAwQFBgcICQoLDA0OD/2gAIAQEAAT8hK2ESmQ8e/Hqz+cQcV8uJfCUg+7yvGiYhvY1VIqNZXsArwYmASjgZ/nqz7evAB58AVZE8sfqplRZ4Tw3oFzN4qVQTrPI3MVeWow5aKd+g80T5SMP1/uuske1+kSdP3ZwA9Y/is8ocjU6mn8G38WSTh/zqiXGiPbXaB/wOVbq7dK1+C8tD/wDJ/qlxyp5D64FOQ/Vl50HlPDXcv9H4ujD/AJv/AC7biWccK6S8gP8Aik/1ZRLQMgPMNl99Vmc/8SqAJWt0s+EXLj/I+aJVIMfFgzD3QYj83faeUL424HT/ALLyAk9s80ytpBNFH/elL+2qo7T/AB4sTJDO55vWtKeEF0a8Qwj56oTKt9pxZ+bFwEGzFKSAfB1PdSYcE+9uHfwPT8bTOPm9n/JI/wCsOCNfbFi0EzHIZR6gAeYlvQ0S4DhOryIjtKc/ahInzSaHCjwTkfiz7zKehzq+Vwj8jzcUk4fhxsvihfTFV0eq4sVKU7Nf40OLUk0yNOKevH3cWGMB2+YsaAE/VTbt0F2G6p5q8xiZy9zUM4XIErgA4HglCIPkomnxthflzX5aQn7q5/xvg7RR7oD+Qx+b6TcOfEqlDcssCXZd2esvKPMWGq51Xwsu0xqFHAlc4J/VI+cPbwxL/p+67NCSfm93msGf8m6XxUbTcnEv5erunf8Ag8VYya279u63mmBr5/FdTF0PXcnmiBS+HSOV2TMIx13/AGNBHMVVmJ/612E5Ocid1QeAYfL4/lZYA09XJCoqS+O7LMAPTz+bG/4l5fJN9j5fVVEuU2Z83lvp6ayQl5XNKf8AIkl+e9l6LERDmD+VHT/lP/0KHzp9OBrHxyKwfFA/obihYH8Ej+6eJ85++X4ockF/+olWklQe6fkqD8h/w63Z9MlyW8e06fdXzSYfTY8VjDNUuY+aBxH5sAx+ql3f1XvZ4sf8Qc0sAAd54fm//9oADAMBAAIRAxEAABBPcmU+vpVUzFWg7gM+qHdXH0gSK4//AGlI12/CBj6y39W3WBY4/8QAMxEBAQEAAwABAgUFAQEAAQEJAQARITEQQVFhIHHwkYGhsdHB4fEwQFBgcICQoLDA0OD/2gAIAQMRAT8QQTGJHXJrDtj2D+b45p9rh28T27p9J/wDw3qwO5x1xAIuftMakNRMMMcbnzivzzGvwI39H6/iccqMgX139+YgH59LwQAOU7/OHnTnP73KMZfk4LmRzbZPTLPB6+fmBza/H137yLWbRsAc5YnDEBcRODYeJt8xyp06Jn7TTcZ/F//aAAgBAhEBPxAc5JBONj9eX0xf4tebj94Jjkx2Zz9Y55x+fmHOz1CPdBKI4+5PMH+9ko65aaXHnJPjiYfm/W3GDl3r9b+RcmAn6/X5RFPpn7cSqfx6jRnXiHr6Z9863/cn0N5+2XHdjz3/ANgHfq/vzcQePTjsCuTfj4l6YF5+mfZgGEYwtZfNu9RGnmY1JRyX2peCMey/PYAze3//2gAIAQEAAT8QNWmImOBMINxy/FVMgHAswdh+Y4qk8cjyUnmSJPioitsnqdsAILY8bhwKBCe+IC7rgzq6Ih08WbDKYvBxzxpo7DhgwPXWA0uQBxZwpCZK5IRUOl/BZZV0SwanEwGkT81Q0DhYhO5393hmFkYsdnVxWZKSTxEP6ihZHlj/ACfXip3I8Gs9FdlgASh4Q/2lBIHYPxSGKUEo0Uf528ddymr9P4aoh2YhH8lH6WsEVAET5GzfkcDsNdSQfTTLRZGM+IZt2uTMyAJHiFmryQk5SaI64q+blQlBQ8k8uB2r4LGYEHWXo7Hw1OWgOiBiXmaQfG0sjBwYD4Oqw5L81oP3BI/Jw0Jkrg8vLk/EVGFBeR9MbHa/HdBPcwtJJs6p72kz0FUKepd+qSXQbAQmUooNOwTZede67cKkRQAdrxYcZDJheD3OA8u0TQsckHl8rlWngEU05eW76Nvfs5kH7rOy8ENjxthJxgC28Ys71W1yHkg5R6/wy8WMSIl4Hs4TpEsXRvpOk+b5hslLlYXbE1iazCPiPxzcIQI5R4voUx5aPkgE9STkcRkSc7SnAL2IeChcKDyNIfIMM2CiabRJBoOgTFYU3PK5TiYnZodSSDZAkBHlElgY2nLyS+0p983Of6T+QpsgkKIlfww91w8RUon3Y7pMWatockJ/AyXSwKCUIiMAHXPmiwgjRgZ8DNLg6jClDCmZSZNsitRQGjZ4kHvqwmxogkRB5/D+a8yDbRQVIPKOrALBQQoCkhnlK2EHcKhE+Gc0HoMD3ifY0uOt4ItIn4miQkpH1GVVYULzYjxUtQkuM0s6GSJhnkoRksgcEj5KwVyE4fPBE5BlaWl3PEVMhjk83bzIhBzJaHMKVvSsJZxGB+2LJ1jcLwgyhs/uyGOiZ1oGMYeC4Ps/my8OprC/w57sxOLO4RNSR7ohdlkyaSg5HkfzWOBidRPoKVIFIYwLpPHEjxZ4lDNeAuHn1YleNoSQrgik/FM8QAecL4JVaPQYDhR253zZVhcQaOVgS+6654bINT8Nn2hj7gfdMlI7EUrPpWgKiFqvtZrB96Z3YxFM4hj7OKPnU9QumZ32k7KlkGcuCGYTv1qUZEw/aJIJxdWZdMIbxOjbDSSgGuKw9DxSoy3BJoQEF878AQhPv+goNREx3Ak/OUJmYiyIGXXuxSmmJpQW0AVCEgT3+LFrRHdIlh8+L3X8QN5XxOj2VZUsbxi8C90i4IlzPDzLVaBAcWKJKBb1wSezgeujz4rEnb5qVn5psB0J/A9Ppr/Eu4H09fxWZL74+mkTFQJ0mSDnofnl6jkQspChMzKrDvvzZQdgZ4PvQljFiXm47nY/1coqSUPB/USnqoI/nQek/YUGQHWv8VqdEkfeyfwNwwKozPCx+gr8PLK8/wC6YulmY/L16oVA7HaSMSB4+J7+Gj0GS4hLGkMMticakEH0DRR4yXzSBIGMB/6Y6eqwVHSMQyT5jn6nqnblQcXyY2TDXgf2XhBOFBeYz8mzYV6XH+6gBkcSykSCoNVKROUCCkQzHpD57v8A/9k=",
+    focus: "vanlig",
+    protein: "vegetar",
+    title: "Grove vafler",
+    servings: 4,
+    ingredients: [
+      { amount: 1, unit: null, name: "eple med skall, økologisk", group: "Ingredienser" },
+      { amount: 2, unit: "dl", name: "lettkokte havregryn", group: "Ingredienser" },
+      { amount: 2, unit: "dl", name: "sammalt spelt, økologisk", group: "Ingredienser" },
+      { amount: 1, unit: "ts", name: "Ceylon-kanel", group: "Ingredienser" },
+      { amount: 1, unit: null, name: "egg, økologisk", group: "Ingredienser" },
+      { amount: 1, unit: "ss", name: "rømme, økologisk", group: "Ingredienser" },
+      { amount: 2, unit: "ss", name: "smeltet smør", group: "Ingredienser" },
+      { amount: 1, unit: "dl", name: "melk (tjukkmelk), økologisk", group: "Ingredienser" },
+      { amount: 1, unit: "dl", name: "eplejuice, rå", group: "Ingredienser" }
+    ],
+    steps: [
+      { title: "Riv eplet", text: "Riv eplet fint, gjerne med skallet på." },
+      { title: "Bland de tørre ingrediensene", text: "Ha havregryn, spelt og kanel i en bakebolle og rør godt sammen." },
+      { title: "Lag vaffelrøren", text: "Visp sammen egg, rømme, smeltet smør, melk, eplejuice og det revne eplet i en egen bolle. Rør blandingen ned i de tørre ingrediensene til du får en jevn, fin vaffelrøre." },
+      { title: "Stek vaflene", text: "Stek røren i et varmt vaffeljern til vaflene er gyldne og gjennomstekte. Oppskriften gir nok røre til 2 store vaffelplater." }
+    ]
+  },
+
+{
+    id: "spicy-salat-kremet-avokadodressing",
+    image: "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAASABIAAD/4QCARXhpZgAATU0AKgAAAAgABAEaAAUAAAABAAAAPgEbAAUAAAABAAAARgEoAAMAAAABAAIAAIdpAAQAAAABAAAATgAAAAAAAABIAAAAAQAAAEgAAAABAAOgAQADAAAAAQABAACgAgAEAAAAAQAAAHigAwAEAAAAAQAAAFoAAAAA/+0AOFBob3Rvc2hvcCAzLjAAOEJJTQQEAAAAAAAAOEJJTQQlAAAAAAAQ1B2M2Y8AsgTpgAmY7PhCfv/CABEIAFoAeAMBIgACEQEDEQH/xAAfAAABBQEBAQEBAQAAAAAAAAADAgQBBQAGBwgJCgv/xADDEAABAwMCBAMEBgQHBgQIBnMBAgADEQQSIQUxEyIQBkFRMhRhcSMHgSCRQhWhUjOxJGIwFsFy0UOSNIII4VNAJWMXNfCTc6JQRLKD8SZUNmSUdMJg0oSjGHDiJ0U3ZbNVdaSVw4Xy00Z2gONHVma0CQoZGigpKjg5OkhJSldYWVpnaGlqd3h5eoaHiImKkJaXmJmaoKWmp6ipqrC1tre4ubrAxMXGx8jJytDU1dbX2Nna4OTl5ufo6erz9PX29/j5+v/EAB8BAAMBAQEBAQEBAQEAAAAAAAECAAMEBQYHCAkKC//EAMMRAAICAQMDAwIDBQIFAgQEhwEAAhEDEBIhBCAxQRMFMCIyURRABjMjYUIVcVI0gVAkkaFDsRYHYjVT8NElYMFE4XLxF4JjNnAmRVSSJ6LSCAkKGBkaKCkqNzg5OkZHSElKVVZXWFlaZGVmZ2hpanN0dXZ3eHl6gIOEhYaHiImKkJOUlZaXmJmaoKOkpaanqKmqsLKztLW2t7i5usDCw8TFxsfIycrQ09TV1tfY2drg4uPk5ebn6Onq8vP09fb3+Pn6/9sAQwAEBAQEBAQGBAQGCQYGBgkMCQkJCQwPDAwMDAwPEg8PDw8PDxISEhISEhISFRUVFRUVGRkZGRkcHBwcHBwcHBwc/9sAQwEEBQUHBwcMBwcMHRQQFB0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0dHR0d/9oADAMBAAIRAxEAAAHyCC7WDB4oGMkQYsXgqCOkpgWmCQhUKxkZUVaYstCgyRNyt6nLR8/a9twdFnSe8U/APG+F978d9fOrIAvVhMKg13My0MDlqDWSLs+Hv6W74Ivl9frXS1R8MW/gPpvA+nx8SQZPU5iJVBryUy1DV0hTR3VUTn6L/vfLPROLt3R+cVfPy2Dpk39Xk5kqD7jRkmuJHDRUpihsn046Vz8j4SbmsZ4YWvHLnq0hcQwhOirOIhqYTFKSlNKHKRaMkU5OqYiK0aK//9oACAEBAAEFAv8AUNHTuiErabQFnbwRLazRuv3qdy6oiC7mZbWussNvIm3QtRe47aY1fzGdBkVGC35kttbJXKhIwXtduTuSVxW12gVY+7J7EpqqGBcxsYbS6f0aILe+ReWUc8Ujv4guMwlMbH3ZeCq1t4cEIllge33cilW1hbwp5aAjcrwxWVsn6Jj7s37skhMEsmEUkSlbTbpS7vcrmymtt2hFrc3E4n/dW7H3eIQOofRpEGaNtuTHY3K0yyFRQmBJld9LRP31IzKmCcIJ5oUW0ipFJTGBNOiBJJWf5gkKeIICEvmIS13RZqT/AL4v/9oACAEDEQE/AdeB5LX5dwjf+BEa4ZdODyHJCj2B6bFvNJMbIJeCHLL7gOwOOUom3HkvghnlqRpBs32iXDch6O2Xrw/0H0//2gAIAQIRAT8B15/Jv8+4ypz5hEODq8sPL0+XfG+wubJtFubFkkCfRlYlYeh5EiOwsgC54cIgDH+rhxe3DkcntMX7T5LLpsZP2lA+n//aAAgBAQAGPwL/AFNr/C9CR+t19oeo/m6yaq9HSuI+DQQiuFB83NJIDGumifJo5lM1GmnkziOrj8D/ADPNP2PJTEcnQOJJaMArlpI1+J4PFYofQvJCcFpNUkMr9op41/qYnRwXx+f36ftGjp6OiHLzE1Ujy/uMx255f5g85aZjRYYCDXSr+ejuICa8s6fZ99HzLJaQOJGTkmhIB4auOIJ5qaaj0ZKR1rHUWEJ6WLadR59eKeOnnoyVHIqCiT66ffr6H+FiRP8AZLSFdVeHqHp+UkkF86EdZ1r5ULmxk5hI0+DjXfKpKoa0DWa1K1UFf9v0aj+ymn46ffKT5taVcQ80+0+ak6sgIJKdKjzYJNSol6618ywqUcODEA+Z/q/mMke2P1smmvo9Sa/B9Emh8vR0m1oePq1pw04ir6ePkHkrif5nr/HzdAoH56PgPxD1IdI/xLqdT/vj/8QAMxABAAMAAgICAgIDAQEAAAILAREAITFBUWFxgZGhscHw0RDh8SAwQFBgcICQoLDA0OD/2gAIAQEAAT8hixYsWLFj/k//AI4sf9IsUKSU9Z+2owGfjP8AFmi/uB+ovAg/b+TkpQ//AII/4ixREPM4HmsSeI3EepipNYpDi6loF9LqZM+5wylCJkHvy+avRRwcPrw+v+D/AMbFixY84GtZ/wAAqvotkzi4GBPfmhpmYYmS9xYYa8wM0p0qiH/Teb04NDz8Kn4Gdf8ArmlX/Isf8x6D6ctiDwKhKU3WKGTICNUeH4WUU4U8x7+ssXE+DBO62bOKOE4x7reN5vuiEmSPL/1/+M4T/GChR7KbJByRJyuRKZQ44T5rUMZEsf8AywncD3/WXr8MjEXlLKTwDeydJtCjyW//AIxUD/JF5cAgbDTkmaHrxQMZMiKRslKQiwEaOPOR3ZLAorkPX3TuTgZ7zD1d5rhcT/6qnnn7f+n/AA/8H/jUOJGL12HHsoQWQ5vFLkbk7/N+mIDy85wVg0k+id/VePY8kv8Aq8CHv/L7podf/F/dChWzZs1rA0Znr4+bHVTz1+bw08BS80brReQeG+fIlntu3lKSGya0NLk/zipUlJWhH/GzZs1a2HjKdf8AE3CV93+v3Rk5/wCHdOCT0z/FjQf4dFknk5Wx/wBbNmzZs1a3P/wTZs//AI3/APK//9oADAMBAAIRAxEAABBrSXIJpSBSeqMpxaiDWlN/4BxSfMnIVIzTBdKWyjxTyxDSAzj/xAAzEQEBAQADAAECBQUBAQABAQkBABEhMRBBUWEgcfCRgaGx0cHh8TBAUGBwgJCgsMDQ4P/aAAgBAxEBPxDwFcJeAP1+Wxo1b+X4QVwi4/8Ar/k4QcflZrY/s20fP4Pk/awPiXz6fJ+ef+xxN6hfl9fv+Dvj82I8fWEOB+v5/wDLSPj9fFr/AAP7/h0w93aN/kw7vF+7KZ8H/wA//9oACAECEQE/EMsnjljXS/t/fJw4M/X7W/gXDWZcd/2/7PlFQ3+jcU9Hs5Q4656sP+P8x78LS+TFRwYnP8u/GfH3uAO8scUDnp7H9H4OmkfjzOb3SNafpxdCGe59P1/Vj8Cjpyf1/iBsE/Pj+9vEfscH7/8Av8WAb8cfkfT8S/h//9oACAEBAAE/EKbf+tj/AMsFQWT/ALFipX/uaSVbvB5cPzUAk7EP8PV18IyLXqkgt2Ptafz8UF5gZIH+BJ/wlozUyp/yf8U2ChJwuV69HdDGX0D66oD4T1vmxeAiuFEXfYx2WeW1MxImRg5RZ2FPMETog09EoOZo3TwY5Sk4e+3VJGHEvXTSilltglXCU8AStAISnpmwHvtrQK5Vr6jYAMScTgPmumGpgkoMWEdbMpNFKkG+A6KM+J+qI9WTkMpAwhicWK5JdyHFojfCU5AnhwHn6GPu4shWmLKpXP2/wB6D7oyYFnvik7CpAAfPfgsLqhCeiTkQPpbKfXyYiDCcOyfJNgH0FSwyOpNNqoSY0Bl0oeQZO6Il0KMjG2awqRBKyfZGn/LxTqoRWpxnJ9f7aQUmcckmKeGpMUNddJcKTm8/Fav2AicxByRMBPDZO86JXZ1iU9eKeAoQmNJPg2J/NOQlXHRIOGWbJkIBJGcAwhSA3iyV8iqVlOy8tLzqZSvFbu1z/A1+QPusqEJJ2OYev4bMyoS+Q5YXxmOWf3275CSeYSfcQUKOmYWAiZQTMCZ6aOMNOOCTrCByNxsh1kllGVhQKdc2K4+THP65DPGdWYoQmRhCj/g8f8Jqr4wxvh5H6YbkKukuSxj+GxkAhLIrEZEzxQa0cGZuuM56qVpkIQXYktEDj80FAKSEMYY4Dy2e6LDhIE4IcmGINJLAK8vCwAsJKgh8WYch54DT8q+rM2AvClF6qo+jaRHBKcxhPPHMWEhNlIodh5mtEHmIBE8MJYsikcq7jewie5oXQwmg6JIZHUVKxJum1ZhYOiSF1uKM7z1C8Z6nngrXmkcq2N/x/wDUsGoqiTCLBPC6D5/NiDaM4Z5XX1RKEO5/3Q8GuAH+J16avEH74fytkyTKJWgOLNWqv/B/5tg1DUlpWPFyyf8AD/wWteK15r3e17rWtf8Aje68X//Z",
+    focus: "vanlig",
+    protein: "vegetar",
+    title: "Spicy salat med kremet avokadodressing",
+    servings: 4,
+    ingredients: [
+      { amount: 0.5, unit: null, name: "søtpoteter, skrellet og skåret i terninger", group: "Spicy salat" },
+      { amount: 0.125, unit: "dl", name: "ekstra virgin olivenolje/rapsolje", group: "Spicy salat" },
+      { amount: 0.25, unit: "ts", name: "spisskummen", group: "Spicy salat" },
+      { amount: 0.25, unit: "ts", name: "chilipulver", group: "Spicy salat" },
+      { amount: 0.125, unit: "ts", name: "cayennepepper", group: "Spicy salat" },
+      { amount: null, unit: null, name: "mineralsalt og sort pepper etter smak", group: "Spicy salat" },
+      { amount: 100, unit: "g", name: "sorte bønner, skylt og avrent", group: "Spicy salat" },
+      { amount: 100, unit: "g", name: "økologisk maiskorn, skylt og avrent", group: "Spicy salat" },
+      { amount: 0.25, unit: null, name: "hjertesalathode, finstrimlet", group: "Spicy salat" },
+      { amount: 0.125, unit: null, name: "avokado", group: "Kremet avokadodressing" },
+      { amount: 0.125, unit: "dl", name: "gresk yoghurt naturell", group: "Kremet avokadodressing" },
+      { amount: 0.25, unit: "dl", name: "vann", group: "Kremet avokadodressing" },
+      { amount: 0.5, unit: "dl", name: "korianderblader og stilker", group: "Kremet avokadodressing" },
+      { amount: 0.25, unit: "fedd", name: "hvitløk, finhakket", group: "Kremet avokadodressing" },
+      { amount: 0.125, unit: "ts", name: "mineralsalt", group: "Kremet avokadodressing" },
+      { amount: 0.125, unit: null, name: "lime (saften)", group: "Kremet avokadodressing" },
+    ],
+    steps: [
+      { title: "Stek søtpotet", text: "Sett ovnen på 175°C. Skrell og skjær søtpotetene i terninger, og vend dem godt i en blanding av olje, spisskummen, chilipulver og cayennepepper." },
+      { title: "Bak i ovnen", text: "Legg potetterningene på et bakepapirkledd brett og stek i 15-20 minutter. Vend dem og stek videre 15-20 minutter til de er møre med litt gyllen overflate. Smak til med salt og pepper." },
+      { title: "Kjør dressingen", text: "Bland alle dressingingrediensene i en blender på full styrke til du får en jevn puré." },
+      { title: "Sett sammen salaten", text: "Fordel bønner, mais og strimlet salat på et fat. Legg de ristede søtpotetterningene over, og avslutt med dressingen." },
+    ]
+},
+{
+    id: "cantaloupesalat-med-spekeskinke",
+    image: "data:image/jpeg;base64,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",
+    focus: "vanlig",
+    protein: "svin",
+    title: "Cantaloupesalat med spekeskinke",
+    servings: 3,
+    ingredients: [
+      { amount: 2, unit: "håndfull", name: "blandede salatblader", group: "Salat" },
+      { amount: 0.5, unit: null, name: "cantaloupemelon", group: "Salat" },
+      { amount: 10, unit: "stk", name: "jordbær, delt i to", group: "Salat" },
+      { amount: null, unit: null, name: "skiver hard hvit ost (eller avokado)", group: "Salat" },
+      { amount: 1, unit: "håndfull", name: "valnøtter", group: "Salat" },
+      { amount: null, unit: null, name: "skiver god spekeskinke", group: "Salat" },
+      { amount: 4, unit: "ss", name: "extra virgin olivenolje", group: "Vinaigrette" },
+      { amount: 1, unit: "ss", name: "syrlig væske (hvitvinseddik, sitron eller limejuice)", group: "Vinaigrette" },
+      { amount: 0.5, unit: "ts", name: "dijonsennep", group: "Vinaigrette" },
+      { amount: null, unit: null, name: "mineralsalt og nykvernet pepper etter smak", group: "Vinaigrette" },
+    ],
+    steps: [
+      { title: "Klargjør ingrediensene", text: "Skyll og rens salatblader, jordbær og melon. Del alt i passende biter og legg det pent an på et fat sammen med ost eller avokado, valnøtter og spekeskinke." },
+      { title: "Lag vinaigretten", text: "Rør sammen olivenolje, den syrlige væsken (eddik, sitron eller lime) og dijonsennep. Smak til med salt og pepper, og drypp over salaten rett før servering." },
+    ]
+},
+{
+    id: "russisk-rodbetesalat-med-plantebasert-hvitloksdressing",
+    image: "data:image/jpeg;base64,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",
+    focus: "vanlig",
+    protein: "vegetar",
+    title: "Russisk rødbetesalat med plantebasert hvitløksdressing",
+    servings: 4,
+    ingredients: [
+      { amount: 100, unit: "g", name: "rødkål (ca. 0,25 lite hode)", group: "Salat" },
+      { amount: 100, unit: "g", name: "rødbete", group: "Salat" },
+      { amount: 100, unit: "g", name: "gulrøtter", group: "Salat" },
+      { amount: 2, unit: "dl", name: "frosne grønne erter", group: "Salat" },
+      { amount: 3, unit: "stk", name: "poteter, revet", group: "Salat" },
+      { amount: 0.5, unit: null, name: "rødløk, hakket", group: "Salat" },
+      { amount: null, unit: null, name: "smøremyk eller flytende smøremyk til steking", group: "Salat" },
+      { amount: 1, unit: "fedd", name: "hvitløk, finhakket", group: "Dressing" },
+      { amount: 1.2, unit: "dl", name: "plantebasert yoghurt naturell (f.eks. Yoko)", group: "Dressing" },
+      { amount: 1, unit: "ss", name: "sitronsaft", group: "Dressing" },
+      { amount: null, unit: null, name: "havsalt og pepper etter smak", group: "Dressing" },
+    ],
+    steps: [
+      { title: "Stek potetkrønsj", text: "Stek revet rå potet i en panne på middels varme til den blir gyllen og sprø. Krydre med havsalt og sort pepper. La potetraspet renne av på kjøkkenpapir over en rist mens det stekes for ekstra sprøhet - dette tar litt tid." },
+      { title: "Rør sammen dressingen", text: "Bland hvitløk, plantebasert yoghurt, sitronsaft, havsalt og pepper. Hell dressingen i en liten skål som settes midt på salatfatet." },
+      { title: "Dander salaten", text: "Legg de øvrige salatingrediensene i hver sin sone rundt dressingskålen. Sett salaten kaldt før servering." },
+    ]
+},
+{
+    id: "squashpasta-med-pesto",
+    image: "data:image/jpeg;base64,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",
+    focus: "vanlig",
+    protein: "vegetar",
+    title: "Squashpasta med pesto",
+    servings: 4,
+    ingredients: [
+      { amount: 1, unit: null, name: "liten squash", group: "Ingredienser" },
+      { amount: 0.25, unit: "glass", name: "grønn pesto", group: "Ingredienser" },
+      { amount: 1, unit: "håndfull", name: "rukkola", group: "Ingredienser" },
+      { amount: 4, unit: "stk", name: "cherrytomater, delt i to", group: "Ingredienser" },
+      { amount: 0.25, unit: null, name: "økologisk sitron (skall/zest)", group: "Ingredienser" },
+      { amount: null, unit: null, name: "parmesan, skåret i skiver", group: "Ingredienser" },
+      { amount: null, unit: null, name: "sort kvernet pepper etter smak", group: "Ingredienser" },
+    ],
+    steps: [
+      { title: "Lag squashnudler", text: "Vask squashen og kjør den gjennom en spiralkutter eller mandolin slik at den blir til nudler." },
+      { title: "Klargjør rukkola", text: "Vask rukkolaen og tørk den godt, enten i salatslynge eller med tørkepapir." },
+      { title: "Rør inn pesto", text: "Bruk hjemmelaget eller kjøpt (helst økologisk) pesto og rør den inn i squashnudlene." },
+      { title: "Sett sammen retten", text: "Legg rukkola i bunnen av tallerkenen og fordel squashnudlene med pesto over. Topp med cherrytomater, biter av parmesan og sitronskall." },
+      { title: "Avslutt og server", text: "Kvern over sort pepper og server retten sammen med grovt brød eller knekkebrød og smør." },
+    ]
+},
+{
+    id: "toast-med-sopp-og-sennep",
+    image: "data:image/jpeg;base64,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",
+    focus: "vanlig",
+    protein: "vegetar",
+    title: "Toast med sopp og sennep",
+    servings: 4,
+    ingredients: [
+      { amount: 2, unit: "ss", name: "smøremyk rapskokos/smør", group: "Ingredienser" },
+      { amount: 10, unit: "stk", name: "aromasopp", group: "Ingredienser" },
+      { amount: 3, unit: "fedd", name: "hvitløk", group: "Ingredienser" },
+      { amount: 2, unit: "skiver", name: "grytebrød (evt. glutenfritt brød)", group: "Ingredienser" },
+      { amount: 2, unit: "ss", name: "sennep", group: "Ingredienser" },
+      { amount: 100, unit: "g", name: "revet ost/GoVegan", group: "Ingredienser" },
+      { amount: 1, unit: "ts", name: "friske timianblader", group: "Ingredienser" },
+      { amount: null, unit: null, name: "havsalt og sort kvernet pepper etter smak", group: "Ingredienser" },
+    ],
+    steps: [
+      { title: "Forvarm ovnen", text: "Sett ovnen på 200°C." },
+      { title: "Stek soppen", text: "Stek soppen på middels varme i cirka 5 minutter." },
+      { title: "Tilsett hvitløk", text: "Ha i hvitløken og fortsett stekingen i cirka 15 minutter til væsken fra soppen har fordampet." },
+      { title: "Sett sammen toasten", text: "Smør sennep på brødskivene, strø over litt av den revne osten, legg på soppblandingen og avslutt med resten av osten." },
+      { title: "Stek i ovnen", text: "Legg brødskivene på bakepapir på en stekeplate eller i et ildfast fat, og sett dem midt i ovnen til osten har smeltet og fått litt farge." },
+      { title: "Server", text: "Dryss over timian og server toasten varm." },
+    ]
+},
+{
+    id: "fiskekakesandwich",
+    image: "data:image/jpeg;base64,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",
+    focus: "vanlig",
+    protein: "fisk",
+    title: "Fiskekakesandwich",
+    servings: 1,
+    ingredients: [
+      { amount: 1, unit: "skive", name: "grovt brød (grytebrød), ristet i stekepannen", group: "Sandwich" },
+      { amount: 0.25, unit: "ts", name: "smøremyk rapskokos/smør til brødskiven", group: "Sandwich" },
+      { amount: 1, unit: "skive", name: "bacon (øko/beitedyr anbefalt)", group: "Sandwich" },
+      { amount: 1, unit: "stk", name: "stor fiskeburger (f.eks. Lofotburger)", group: "Sandwich" },
+      { amount: 0.5, unit: "håndfull", name: "rukkola", group: "Sandwich" },
+      { amount: 0.5, unit: "skive", name: "tomat", group: "Sandwich" },
+      { amount: 0.5, unit: "skive", name: "rødløk, skivet", group: "Sandwich" },
+      { amount: null, unit: null, name: "fersk kantarell (eller erstatning når ikke i sesong)", group: "Sandwich" },
+      { amount: 0.5, unit: "ss", name: "øko rømme", group: "Saus" },
+      { amount: 0.25, unit: "ss", name: "ren majones", group: "Saus" },
+      { amount: 0.5, unit: "ts", name: "dijonsennep", group: "Saus" },
+      { amount: 0.25, unit: "ts", name: "sitronsaft", group: "Saus" },
+      { amount: null, unit: null, name: "havsalt og pepper etter smak", group: "Saus" },
+    ],
+    steps: [
+      { title: "Rist brødet", text: "Smør en brødskive med olivenolje eller smøremyk rapskokos, og rist den i en tørr stekepanne på middels varme." },
+      { title: "Stek fyllet", text: "Stek fiskeburgeren, baconet og soppen hver for seg." },
+      { title: "Klargjør grønnsakene", text: "Skyll rukkola og skjær tomat og rødløk i skiver." },
+      { title: "Lag sausen", text: "Visp sammen rømme, majones og dijonsennep, og smak til med sitronsaft, salt og pepper." },
+      { title: "Sett sammen sandwichen", text: "Bygg opp sandwichen med rukkola, den stekte fiskeburgeren, sopp og bacon, og avslutt med timian på toppen." },
+    ]
+},
+{
+    id: "salat-med-spekeskinke-nypotet-og-cherrytomat",
+    image: "data:image/jpeg;base64,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",
+    focus: "vanlig",
+    protein: "svin",
+    title: "Salat med spekeskinke, nypotet og cherrytomat",
+    servings: 4,
+    ingredients: [
+      { amount: 50, unit: "g", name: "rukkolasalat eller spinat (1 pose)", group: "Salat" },
+      { amount: 100, unit: "g", name: "cherrytomater, delt i to", group: "Salat" },
+      { amount: 3, unit: "stk", name: "nypoteter, kokt, avkjølt og i skiver", group: "Salat" },
+      { amount: 100, unit: "g", name: "spekeskinke", group: "Salat" },
+      { amount: 30, unit: "g", name: "pinjekjerner", group: "Salat" },
+      { amount: 4, unit: "ss", name: "extra virgin olivenolje", group: "Vinaigrette" },
+      { amount: 1, unit: "ss", name: "balsamicoeddik", group: "Vinaigrette" },
+      { amount: null, unit: null, name: "havsalt og pepper", group: "Vinaigrette" },
+    ],
+    steps: [
+      { title: "Dander salaten", text: "Legg rukkola eller spinat, cherrytomater, potetskiver, spekeskinke og pinjekjerner pent utover et serveringsfat." },
+      { title: "Lag og hell over vinaigrette", text: "Visp sammen olivenolje, balsamicoeddik, salt og pepper, og hell blandingen over salaten rett før servering." },
+    ]
+},
+{
+    id: "laks-mango-avokadosalat",
+    image: "data:image/jpeg;base64,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",
+    focus: "vanlig",
+    protein: "laks",
+    title: "Laks med mango- og avokadosalat",
+    servings: 4,
+    ingredients: [
+      { amount: null, unit: null, name: "lakseloin, liten pakke", group: "Hovedrett" },
+      { amount: null, unit: null, name: "råris eller fullkornsris", group: "Hovedrett" },
+      { amount: 1, unit: "ss", name: "smør, til steking", group: "Hovedrett" },
+      { amount: 2, unit: null, name: "mango, i terninger", group: "Salat" },
+      { amount: 1, unit: null, name: "avokado, i terninger", group: "Salat" },
+      { amount: 1, unit: null, name: "rødløk, i tynne skiver", group: "Salat" },
+      { amount: 1, unit: null, name: "øko spisspaprika, i terninger", group: "Salat" },
+      { amount: 0.5, unit: null, name: "rød chili, finhakket (etter smak)", group: "Salat" },
+      { amount: 1, unit: "neve", name: "frisk koriander, grovhakket", group: "Salat" },
+      { amount: 2, unit: "ss", name: "ekstra virgin olivenolje", group: "Dressing" },
+      { amount: 0.5, unit: null, name: "sitron, saften av", group: "Dressing" },
+      { amount: 1, unit: "ss", name: "soyasaus", group: "Dressing" },
+      { amount: 1, unit: "ss", name: "honning", group: "Dressing" },
+      { amount: null, unit: null, name: "havsalt og sort kvernet pepper, etter smak", group: "Dressing" },
+    ],
+    steps: [
+      { title: "Kok risen", text: "Kok risen etter anvisningen på posen." },
+      { title: "Lag salaten", text: "Skjær mango, avokado, rødløk og paprika i terninger/skiver, finhakk chili og koriander, og bland alt sammen i en bolle." },
+      { title: "Rør dressingen", text: "Rør sammen olivenolje, sitronsaft, soyasaus og honning til en dressing, og vend den inn i salaten." },
+      { title: "Stek laksen", text: "La salaten trekke mens du steker laksen i smør i en varm panne, ca. 2-3 minutter på hver side." },
+      { title: "Server", text: "Server laksen sammen med mango-avokadosalaten og risen." },
+    ]
+},
+{
+    id: "enkel-barnevennlig-wrap",
+    image: "data:image/jpeg;base64,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",
+    focus: "vanlig",
+    protein: "vegetar",
+    title: "Enkel barnevennlig wrap",
+    servings: 4,
+    ingredients: [
+      { amount: 170, unit: "g", name: "hvite bønner", group: "Fyll" },
+      { amount: 0.25, unit: null, name: "moden avokado", group: "Fyll" },
+      { amount: 1, unit: null, name: "stor gulrot, revet", group: "Fyll" },
+      { amount: 1.25, unit: "dl", name: "revet hodekål (eller rødkål)", group: "Fyll" },
+      { amount: 0.25, unit: "håndfull", name: "cherrytomater, delt i to", group: "Fyll" },
+      { amount: 0.13, unit: "dl", name: "hakket frisk koriander", group: "Fyll" },
+      { amount: 1, unit: "ss", name: "rå eplecidereddik (eller hvitvinseddik)", group: "Dressing" },
+      { amount: 0.25, unit: "ss", name: "ekstra virgin olivenolje", group: "Dressing" },
+      { amount: 0.25, unit: "ss", name: "rå honning", group: "Dressing" },
+      { amount: 0.063, unit: "ts", name: "sort kvernet pepper", group: "Dressing" },
+      { amount: 0.13, unit: "ts", name: "havsalt", group: "Dressing" },
+      { amount: 4, unit: "stk", name: "store fullkorns-wraps uten E-stoffer", group: "Wraps" },
+    ],
+    steps: [
+      { title: "Grovhakk bønner og avokado", text: "Skyll og rens bønnene og avokadoen, og grovhakk dem i en bolle." },
+      { title: "Bland inn grønnsaker", text: "Bland inn revet gulrot, revet hodekål, halverte cherrytomater og hakket koriander." },
+      { title: "Lag dressing", text: "Rør sammen eddik, olivenolje, honning, salt og pepper, og vend dressingen inn i grønnsaksblandingen." },
+      { title: "Fyll wrapsene", text: "Legg wrapsene utover en flat overflate og fordel 2-3 spiseskjeer fyll på hver." },
+      { title: "Rull og server", text: "Brett inn endene som en konvolutt, rull sammen, og skjær hver wrap i to på skrå." },
+    ]
+},
+{
+    id: "lapper-med-ansjos",
+    image: "data:image/jpeg;base64,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",
+    focus: "vanlig",
+    protein: "fisk",
+    title: "Lapper med ansjos",
+    servings: 4,
+    ingredients: [
+      { amount: 1, unit: null, name: "egg", group: "Ingredienser" },
+      { amount: 1, unit: "dl", name: "glutenfri havre", group: "Ingredienser" },
+      { amount: 1, unit: null, name: "økologisk banan", group: "Ingredienser" },
+      { amount: 0.25, unit: "ts", name: "kardemomme", group: "Ingredienser" },
+      { amount: null, unit: null, name: "flytende eller smøremyk rapskokos, til steking (uten melk, fri for herdet fett)", group: "Ingredienser" },
+      { amount: 2, unit: "stk", name: "ansjosfileter", group: "Ingredienser" },
+    ],
+    steps: [
+      { title: "Kjør røren", text: "Ha egg, havre, banan, kardemomme og ansjosfiletene i en blender og kjør til du får en jevn røre." },
+      { title: "Stek lappene", text: "Stek røren som små lapper i en middels varm stekepanne med rapskokos eller kokosfett, til de er gyldne på begge sider." },
+    ]
+},
+{
+    id: "spekematsalat",
+    image: "data:image/jpeg;base64,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",
+    focus: "vanlig",
+    protein: "svin",
+    title: "Spekematsalat",
+    servings: 4,
+    ingredients: [
+      { amount: 70, unit: "g", name: "blandet salat", group: "Salat" },
+      { amount: 6, unit: "stk", name: "små kokte poteter, i skiver (ca. 300 g)", group: "Salat" },
+      { amount: 50, unit: "g", name: "soltørket tomat, finhakket", group: "Salat" },
+      { amount: 2, unit: null, name: "vårløk, finhakket", group: "Salat" },
+      { amount: 70, unit: "g", name: "spekemat, grovhakket", group: "Salat" },
+      { amount: 25, unit: "g", name: "pinjekjerner", group: "Salat" },
+      { amount: 4, unit: "ss", name: "ekstra virgin olivenolje", group: "Vinaigrette" },
+      { amount: 1, unit: "ss", name: "eplecidereddik", group: "Vinaigrette" },
+      { amount: 1, unit: "ts", name: "grov sennep", group: "Vinaigrette" },
+      { amount: null, unit: null, name: "havsalt og pepper, etter smak", group: "Vinaigrette" },
+    ],
+    steps: [
+      { title: "Klargjør salaten", text: "Vask og slyng salaten, og legg den utover et stort fat." },
+      { title: "Poteter og tomat", text: "Skjær de avkjølte, kokte potetene i skiver og fordel dem over salaten. Finhakk den soltørkede tomaten og dryss over." },
+      { title: "Spekemat i midten", text: "Grovhakk spekematen og legg den i midten av fatet." },
+      { title: "Rist pinjekjerner", text: "Rist pinjekjernene lett i en tørr panne og strø dem over salaten." },
+      { title: "Kjøl ned", text: "Sett salaten kaldt til servering, gjerne sammen med grovbrød eller knekkebrød og smør." },
+      { title: "Lag vinaigretten", text: "Visp sammen olivenolje, eplecidereddik, sennep, salt og pepper til en vinaigrette, og hell den over salaten rett før servering." },
+    ]
+},
+{
+    id: "mango-avokado-gronnkalsalat",
+    image: "data:image/jpeg;base64,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",
+    focus: "vanlig",
+    protein: "vegetar",
+    title: "Mango, avokado og grønnkålsalat",
+    servings: 1,
+    ingredients: [
+      { amount: 37.5, unit: "g", name: "grønnkål, finhakket", group: "Salat" },
+      { amount: 43.75, unit: "g", name: "cherrytomater, delt i to", group: "Salat" },
+      { amount: 0.5, unit: "dl", name: "quinoa, kokt", group: "Salat" },
+      { amount: 0.25, unit: null, name: "avokado", group: "Salat" },
+      { amount: 0.25, unit: null, name: "mango", group: "Salat" },
+      { amount: 0.25, unit: "bunt", name: "reddik", group: "Salat" },
+      { amount: 12.5, unit: "g", name: "reddikspirer", group: "Salat" },
+      { amount: 0.125, unit: "dl", name: "ekstra virgin olivenolje", group: "Dressing" },
+      { amount: 1, unit: "ss", name: "balsamikoeddik", group: "Dressing" },
+      { amount: 0.25, unit: "klype", name: "kvernet havsalt", group: "Dressing" },
+      { amount: 0.125, unit: "ts", name: "sort pepper", group: "Dressing" },
+    ],
+    steps: [
+      { title: "Damp grønnkålen", text: "Damp grønnkålen på rist i 2 minutter, skyll den raskt i isvann og tørk den i en salatslynge." },
+      { title: "Klargjør grønnsaker", text: "Vask og halver cherrytomatene, og vask og halver reddikene." },
+      { title: "Mango og avokado", text: "Rens og skjær mangoen i biter, og skjær avokadoen i skiver." },
+      { title: "Kok quinoa", text: "Kok quinoaen i vann i 10-15 minutter etter posens anvisning, og avkjøl den." },
+      { title: "Sett sammen salaten", text: "Legg grønnkålen utover et stort fat og fordel resten av salatingrediensene oppå." },
+      { title: "Lag dressingen", text: "Visp sammen olivenolje og balsamikoeddik til en dressing, smak til med havsalt og pepper, og hell over salaten." },
+    ]
+},
+{
+    id: "salat-med-blomkal-avokado-og-laks",
+    image: "data:image/jpeg;base64,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",
+    focus: "vanlig",
+    protein: "laks",
+    title: "Salat med blomkål, avokado og laks",
+    servings: 4,
+    ingredients: [
+      { amount: 1, unit: "hode", name: "hjertesalat", group: "Salat" },
+      { amount: 1, unit: null, name: "søtpotet", group: "Salat" },
+      { amount: 1, unit: "dl", name: "quinoa, ukokt", group: "Salat" },
+      { amount: 1, unit: null, name: "liten blomkål, i små buketter", group: "Salat" },
+      { amount: 1, unit: null, name: "avokado, i skiver", group: "Salat" },
+      { amount: 100, unit: "g", name: "røkt laks, peppermakrell eller kaldrøkt laks o.l.", group: "Salat" },
+      { amount: 0.5, unit: null, name: "rødløk, i ringer", group: "Salat" },
+      { amount: 4, unit: "ss", name: "extra virgin olivenolje", group: "Sennepsvinaigrette" },
+      { amount: 1, unit: "ss", name: "rå eplecidereddik, hvitvinseddik eller sitronsaft", group: "Sennepsvinaigrette" },
+      { amount: 1.5, unit: "ts", name: "Dijon-sennep", group: "Sennepsvinaigrette" },
+      { amount: 2, unit: "ss", name: "frisk dill", group: "Sennepsvinaigrette" },
+      { amount: null, unit: null, name: "havsalt og sort kvernet pepper, etter smak", group: "Sennepsvinaigrette" },
+    ],
+    steps: [
+      { title: "Kok quinoa", text: "Kok quinoaen etter anvisningen på pakken." },
+      { title: "Stek søtpotet", text: "Skrell søtpoteten og skjær den i ca. 1 cm tykke skiver, pensle med olivenolje, krydre med salt og pepper, og stek i ovnen på 175 °C til den er mør. Avkjøl og skjær i terninger." },
+      { title: "Klargjør resten", text: "Vask salatbladene, del blomkålen i små buketter, og skjær avokadoen i båter og rødløken i ringer." },
+      { title: "Dander salaten", text: "Legg alle salatingrediensene utover et stort fat." },
+      { title: "Lag vinaigretten", text: "Rør sammen olivenolje, eddik, sennep og dill til en vinaigrette, smak til med salt og pepper, og hell over salaten like før servering." },
+    ]
+},
+{
+    id: "brokkolisalat",
+    image: "data:image/jpeg;base64,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",
+    focus: "vanlig",
+    protein: "svin",
+    title: "Brokkolisalat",
+    servings: 4,
+    ingredients: [
+      { amount: 1, unit: "dl", name: "majones", group: "Dressing" },
+      { amount: 1, unit: "dl", name: "rømme", group: "Dressing" },
+      { amount: 2, unit: "ss", name: "honning", group: "Dressing" },
+      { amount: 3, unit: "ss", name: "hvitvinseddik", group: "Dressing" },
+      { amount: 1, unit: null, name: "brokkoli", group: "Salat" },
+      { amount: 2, unit: "dl", name: "rosiner", group: "Salat" },
+      { amount: 1, unit: null, name: "rødløk", group: "Salat" },
+      { amount: 190, unit: "g", name: "revet mozzarella", group: "Salat" },
+      { amount: 6, unit: "skiver", name: "spekeskinke", group: "Salat" },
+      { amount: null, unit: null, name: "salt og pepper, etter smak", group: "Salat" },
+    ],
+    steps: [
+      { title: "Lag dressingen", text: "Rør sammen majones, rømme, honning og hvitvinseddik til en dressing, og sett den kaldt." },
+      { title: "Stek spekeskinke", text: "Stek spekeskinkeskivene sprø i panne og del dem i småbiter." },
+      { title: "Finhakk grønnsaker", text: "Finhakk brokkolien og rødløken." },
+      { title: "Bland salaten", text: "Bland brokkoli, rosiner, rødløk, mozzarella og spekeskinke i en stor bolle, og vend inn dressingen." },
+      { title: "Smak til", text: "Smak til med salt og pepper." },
+      { title: "Kjøl ned", text: "Sett salaten kaldt før servering." },
+    ]
+},
+{
+    id: "glutenfri-pastasalat-med-brokkoli",
+    image: "data:image/jpeg;base64,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",
+    focus: "vanlig",
+    protein: "svin",
+    title: "Glutenfri pastasalat med brokkoli",
+    servings: 4,
+    ingredients: [
+      { amount: 150, unit: "g", name: "glutenfri pastaskruer, tørr (ca. 5 dl)", group: "Salat" },
+      { amount: 150, unit: "g", name: "rå brokkoli i buketter (ca. 1/2 brokkolihode)", group: "Salat" },
+      { amount: 1, unit: "dl", name: "vårløk, hakket", group: "Salat" },
+      { amount: 0.5, unit: null, name: "avokado, i biter", group: "Salat" },
+      { amount: 5, unit: "skiver", name: "bacon, sprøstekt og i biter", group: "Salat" },
+      { amount: 1.5, unit: "dl", name: "majones (eller Yokos naturell)", group: "Dressing" },
+      { amount: 1, unit: "ss", name: "tørket gressløk", group: "Dressing" },
+      { amount: 1, unit: "ss", name: "tørket persille", group: "Dressing" },
+      { amount: 1, unit: "ts", name: "tørket dill", group: "Dressing" },
+      { amount: 1, unit: "ts", name: "hvitløkspulver", group: "Dressing" },
+      { amount: 0.5, unit: "ts", name: "havsalt", group: "Dressing" },
+      { amount: 0.5, unit: "ts", name: "løkpulver", group: "Dressing" },
+      { amount: 2, unit: "ss", name: "sitronsaft", group: "Dressing" },
+    ],
+    steps: [
+      { title: "Kok pastaen", text: "Kok pastaen etter posens anvisning og avkjøl den (alternativt kan du lage squashnudler med en spiralskjærer)." },
+      { title: "Kok brokkolien", text: "Del brokkolien i buketter og kok den i saltet vann i 3-4 minutter, avkjøl den deretter raskt i isvann." },
+      { title: "Stek bacon", text: "Stek baconet sprøtt på middels varme eller i ovnen på 200 °C, og del det i småbiter." },
+      { title: "Klargjør resten", text: "Hakk vårløken og skjær avokadoen i biter." },
+      { title: "Lag dressingen", text: "Rør de tørkede kryddernene (gressløk, persille, dill, hvitløkspulver, salt og løkpulver) inn i majonesen, og smak til med sitronsaft og pepper." },
+      { title: "Bland salaten", text: "Bland pasta, brokkoli, vårløk, avokado og bacon i en stor bolle, vend inn dressingen, og server alene eller med brød og smør." },
+    ]
+},
+{
+    id: "vegan-caesarsalat-med-facon",
+    image: "data:image/jpeg;base64,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",
+    focus: "vanlig",
+    protein: "vegetar",
+    title: "Vegan Cæsarsalat med facon",
+    servings: 4,
+    ingredients: [
+      { amount: 1, unit: "dl", name: "rå cashewnøtter", group: "Cæsardressing" },
+      { amount: 0.75, unit: "dl", name: "vann", group: "Cæsardressing" },
+      { amount: 1, unit: "fedd", name: "hvitløk", group: "Cæsardressing" },
+      { amount: 1, unit: "ss", name: "tahini", group: "Cæsardressing" },
+      { amount: 1, unit: "ss", name: "hvit miso", group: "Cæsardressing" },
+      { amount: 0.25, unit: "dl", name: "næringsgjær", group: "Cæsardressing" },
+      { amount: 0.5, unit: "ss", name: "kapers på glass", group: "Cæsardressing" },
+      { amount: 100, unit: "g", name: "hjertesalat, isbergsalat eller romanosalat", group: "Salat" },
+      { amount: 50, unit: "g", name: "champignon eller portobellosopp", group: "Fakon" },
+      { amount: 0.5, unit: "ss", name: "ekstra virgin olivenolje", group: "Fakon" },
+      { amount: 1, unit: "ss", name: "glutenfri soyasaus (Tamari)", group: "Fakon" },
+      { amount: 1, unit: "ss", name: "næringsgjær", group: "Fakon" },
+      { amount: 0.5, unit: "ts", name: "paprikapulver", group: "Fakon" },
+      { amount: 0.5, unit: "ts", name: "hvitløkspulver", group: "Fakon" },
+      { amount: 0.5, unit: "ss", name: "smøremyk rapskokos, til steking", group: "Fakon" },
+    ],
+    steps: [
+      { title: "Bløtlegg cashewnøtter", text: "Legg cashewnøttene i vann over natten, eller minst 30 minutter, slik at de bløtlegges." },
+      { title: "Skyll nøttene", text: "Hell av vannet og skyll nøttene godt." },
+      { title: "Kjør dressingen", text: "Kjør cashewnøtter, vann, hvitløk, tahini, miso, næringsgjær og kapers i en blender til en jevn og kremet dressing, og juster konsistensen med litt mer vann om ønskelig." },
+      { title: "Marinér soppen", text: "Vask og skjær soppen i skiver, bland den med olivenolje, soyasaus, næringsgjær, paprikapulver og hvitløkspulver, og la den marinere i 10 minutter." },
+      { title: "Stek fakonet", text: "Stek den marinerte soppen i rapskokosfett i en middels varm panne til væsken har dampet bort." },
+      { title: "Klargjør salaten", text: "Vask, tørk og kutt salatbladene, hell dressingen over og bland godt." },
+      { title: "Server", text: "Strø fakon over salaten og server." },
+    ]
+},
+{
+    id: "sotpotetvafler-med-tacosmak",
+    image: "data:image/jpeg;base64,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",
+    focus: "vanlig",
+    protein: "vegetar",
+    title: "Søtpotetvafler med tacosmak",
+    servings: 2,
+    ingredients: [
+      { amount: 3.5, unit: "dl", name: "revet søtpotet (ca. 1 liten søtpotet)", group: "Vafler" },
+      { amount: 2, unit: null, name: "egg", group: "Vafler" },
+      { amount: 0.5, unit: "dl", name: "hakket vårløk", group: "Vafler" },
+      { amount: 2, unit: "ss", name: "kokosmel", group: "Vafler" },
+      { amount: 2, unit: "ts", name: "tacokrydder", group: "Vafler" },
+      { amount: 1, unit: "ts", name: "havsalt (hvis tacokrydderet er uten salt)", group: "Vafler" },
+      { amount: null, unit: null, name: "smøremyk rapsolje til steking", group: "Vafler" },
+      { amount: 1, unit: "håndfull", name: "rucola", group: "Salat" },
+      { amount: 1, unit: null, name: "lime, i båter", group: "Salat" },
+      { amount: 1, unit: null, name: "avokado, i skiver", group: "Salat" },
+      { amount: 1, unit: null, name: "mozzarellaost, i skiver", group: "Salat" },
+      { amount: 1, unit: "håndfull", name: "cherrytomater, halvert", group: "Salat" },
+      { amount: 1, unit: "håndfull", name: "basilikumblader", group: "Salat" },
+    ],
+    steps: [
+      { title: "Riv søtpoteten", text: "Skrell og grovriv søtpoteten ned i en bakebolle." },
+      { title: "Bland vaffelrøren", text: "Ha i egg, vårløk, kokosmel, tacokrydder og eventuelt salt, og rør sammen til en jevn røre." },
+      { title: "Varm vaffeljernet", text: "Pensle vaffeljernet med smøremyk rapsolje eller flytende rapsolje før du begynner å steke." },
+      { title: "Stek vaflene", text: "Stek halve røren om gangen, eller del den i fire og lag mindre vaffelhjerter ved å bare dekke midten av jernet. Fordel røren jevnt og lukk lokket til vaflene er gjennomstekte." },
+      { title: "Sett sammen og server", text: "Legg vaflene på en tallerken og topp med rucola, limebåter, avokadoskiver, mozzarella, cherrytomater og basilikum." },
+    ]
+},
+];
+
+      const FOCUS_LABELS = { lavkarbo: "Lavkarbo", vanlig: "Hverdagskost", glutenfri: "Glutenfri" };
+
+      function escapeHtml(str){
+        return String(str).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;");
+      }
+
+      function formatIngredient(ing, scale){
+        if(ing.amount == null) return ing.name.charAt(0).toUpperCase() + ing.name.slice(1);
+        const scaledAmount = scale ? Math.round(ing.amount * scale * 100) / 100 : ing.amount;
+        const amt = String(scaledAmount).replace(".", ",");
+        return ing.unit ? `${amt} ${ing.unit} ${ing.name}` : `${amt} ${ing.name}`;
+      }
+
+      function toDateValue(date){
+        const y = date.getFullYear();
+        const m = String(date.getMonth() + 1).padStart(2, "0");
+        const d = String(date.getDate()).padStart(2, "0");
+        return `${y}-${m}-${d}`;
+      }
+      function parseDateValue(value){
+        if(!value) return null;
+        const [y, m, d] = value.split("-").map(Number);
+        return new Date(y, m - 1, d);
+      }
+
+      // ---- Søk + filter + liste ----
+      let currentFocusFilter = "alle";
+      // ── Mine favoritter: oppskrifter kunden har gitt 4–5 stjerner (recipe_ratings) ──
+      const MY_RATINGS = new Map(); // recipeId -> stjerner
+      function loadMyRatings(after){
+        const m = (window.MVT_memberData || {});
+        if (!m.id) return;
+        fetch(SUPABASE_URL + "/rest/v1/rpc/tl_ratings_mine", {
+      method: "POST", body: JSON.stringify({ p_member_id: m.id }),
+      headers: { apikey: SUPABASE_ANON_KEY, Authorization: "Bearer " + SUPABASE_ANON_KEY, "Content-Type": "application/json" }
+        }).then(r => r.ok ? r.json() : null).then(rows => {
+          if (!Array.isArray(rows)) return;
+          MY_RATINGS.clear(); rows.forEach(x => MY_RATINGS.set(x.recipe_id, Number(x.stars) || 0));
+          if (after) after();
+        }).catch(() => {});
+      }
+      function isFavorite(id){ return (MY_RATINGS.get(id) || 0) >= 4; }
+
+
+      function renderRecipeList(){
+        const term = document.getElementById("searchInput").value.trim().toLowerCase();
+        let pool = currentFocusFilter === "favoritter"
+          ? MENU_RECIPES.filter(r => isFavorite(r.id)).sort((a, b) => (MY_RATINGS.get(b.id) || 0) - (MY_RATINGS.get(a.id) || 0))
+          : MENU_RECIPES.filter(r => currentFocusFilter === "alle" || r.focus === currentFocusFilter);
+        if(term) pool = pool.filter(r => r.title.toLowerCase().includes(term));
+
+        const listEl = document.getElementById("recipeList");
+        if(!pool.length){
+          listEl.innerHTML = currentFocusFilter === "favoritter" && !term
+            ? `<p class="sok-empty">Ingen favoritter ennå. Gi en oppskrift 4 eller 5 stjerner, så dukker den opp her.</p>`
+            : `<p class="sok-empty">Fant ingen oppskrifter som matcher søket.</p>`;
+          return;
+        }
+        listEl.innerHTML = pool.map(r =>
+          `<button class="sok-row" type="button" data-recipe-id="${escapeHtml(r.id)}">
+            <span class="sok-row-thumb"><img src="${escapeHtml(r.image)}" alt="" loading="lazy" /></span>
+            <span class="sok-row-main">
+              <span class="sok-row-title">${escapeHtml(r.title)}${isFavorite(r.id) ? " ❤️" : ""}</span>
+              <span class="sok-row-focus-tag tag-${r.focus}">${escapeHtml(FOCUS_LABELS[r.focus] || r.focus)}</span>
+            </span>
+            <span class="sok-row-arrow">→</span>
+          </button>`
+        ).join("");
+        listEl.querySelectorAll(".sok-row").forEach(btn => {
+          btn.addEventListener("click", () => openRecipeModal(btn.dataset.recipeId));
+        });
+      }
+
+      document.getElementById("searchInput").addEventListener("input", renderRecipeList);
+      loadMyRatings(renderRecipeList);
+      document.querySelectorAll(".sok-filter-chip").forEach(chip => {
+        chip.addEventListener("click", () => {
+          currentFocusFilter = chip.dataset.focus;
+          if (currentFocusFilter === "favoritter") loadMyRatings(renderRecipeList);
+          document.querySelectorAll(".sok-filter-chip").forEach(c => c.classList.toggle("active", c === chip));
+          const searchInput = document.getElementById("searchInput");
+          searchInput.placeholder = currentFocusFilter === "alle"
+            ? "Søk blant alle oppskriftene …"
+            : `Søk i ${FOCUS_LABELS[currentFocusFilter] || chip.textContent} etter …`;
+          renderRecipeList();
+        });
+      });
+
+      // ---- Oppskrift-modal ----
+      let activeRecipe = null;
+      let activeServings = 4;
+
+      function groupIngredientsByComponent(ingredients){
+        const groups = [];
+        const byName = new Map();
+        ingredients.forEach(ing => {
+          const groupName = ing.group || "Ingredienser";
+          if(!byName.has(groupName)){
+            byName.set(groupName, { group: groupName, items: [] });
+            groups.push(byName.get(groupName));
+          }
+          byName.get(groupName).items.push(ing);
+        });
+        return groups;
+      }
+
+      function renderRmodIngredients(){
+        if(!activeRecipe) return;
+        const baseServings = activeRecipe.servings || 4;
+        const scale = activeServings / baseServings;
+        document.getElementById("rmod-servings-count").textContent = activeServings;
+        document.getElementById("rmod-servings-minus").disabled = activeServings <= 1;
+        const groups = groupIngredientsByComponent(activeRecipe.ingredients);
+        const showHeaders = groups.length > 1;
+        document.getElementById("rmod-ingredients").innerHTML = groups.map(g =>
+          (showHeaders ? `<div class="rmod-ingredient-group-title">${escapeHtml(g.group)}</div>` : "") +
+          g.items.map(ing => `<div class="rmod-ingredient">${escapeHtml(formatIngredient(ing, scale))}</div>`).join("")
+        ).join("");
+      }
+      document.getElementById("rmod-servings-minus").addEventListener("click", () => {
+        if(activeServings <= 1) return;
+        activeServings--;
+        renderRmodIngredients();
+      });
+      document.getElementById("rmod-servings-plus").addEventListener("click", () => {
+        if(activeServings >= 24) return;
+        activeServings++;
+        renderRmodIngredients();
+      });
+
+      async function loadRecipeRatingSummary(recipeId){
+        try{
+          const client = await withTimeout(getSupabaseClient(), 15000);
+          const { data, error } = await withTimeout(client
+            .rpc("tl_rating_rows", { p_recipe_id: recipeId, p_member_id: getMovementMember().id || "" }), 15000);
+          if(error) throw error;
+          const rows = data || [];
+          const count = rows.length;
+          const average = count ? rows.reduce((sum, r) => sum + r.stars, 0) / count : 0;
+          const member = getMovementMember();
+          const mine = member.id ? rows.find(r => r.member_id === member.id) : null;
+          return { average, count, myStars: mine ? mine.stars : 0, failed: false };
+        }catch(e){
+          console.warn("Kunne ikke hente stjernevurderinger.", e);
+          return { average: 0, count: 0, myStars: 0, failed: true };
+        }
+      }
+
+      async function submitRecipeRating(recipeId, stars){
+        const member = getMovementMember();
+        if(!member.id) return false;
+        try{
+          const client = await withTimeout(getSupabaseClient(), 15000);
+          const { error } = await withTimeout(client
+            .rpc("tl_rating_save", { p_member_id: member.id, p_member_name: member.name || "", p_recipe_id: recipeId, p_stars: stars }), 15000);
+          if(error) throw error;
+          MY_RATINGS.set(recipeId, stars);
+          return true;
+        }catch(e){
+          console.warn("Kunne ikke lagre stjernevurdering.", e);
+          return false;
+        }
+      }
+
+      function renderRatingStars(recipeId, summary){
+        const container = document.getElementById("rmod-rating");
+        const myStars = summary.myStars || 0;
+        container.innerHTML =
+          `<div class="rmod-rating-stars">${[1,2,3,4,5].map(n =>
+            `<button type="button" class="rmod-rating-star${n <= myStars ? " filled" : ""}" data-star="${n}" aria-label="Gi ${n} stjerne${n === 1 ? "" : "r"}">★</button>`
+          ).join("")}</div>` +
+          `<span class="rmod-rating-summary">${summary.count ? `${summary.average.toFixed(1)} ★ (${summary.count} vurdering${summary.count === 1 ? "" : "er"})` : "Ingen vurderinger ennå"}</span>` +
+      `<button type="button" class="rmod-rating-fav${myStars >= 4 ? " on" : ""}" aria-pressed="${myStars >= 4}">${myStars >= 4 ? "\u2665 Favoritt" : "\u2661 Legg til favoritter"}</button>`;
+        // Favoritt = 4–5 stjerner (samme som «Mine favoritter» og byttelista).
+        // Hjertet gir 5 stjerner; fjernes det, settes 3 (nøytral, ikke «liker ikke»).
+        const favBtn = container.querySelector(".rmod-rating-fav");
+        if (favBtn) favBtn.addEventListener("click", async () => {
+          if (!getMovementMember().id) {
+            container.querySelector(".rmod-rating-summary").textContent = "Åpne siden fra appen for å lagre favoritter.";
+            return;
+          }
+          favBtn.disabled = true;
+          const ok = await submitRecipeRating(recipeId, myStars >= 4 ? 3 : 5);
+          if (ok) {
+            const fresh = await loadRecipeRatingSummary(recipeId);
+            renderRatingStars(recipeId, fresh);
+          } else {
+            favBtn.disabled = false;
+          }
+        });
+        container.querySelectorAll(".rmod-rating-star").forEach(btn => {
+          btn.addEventListener("click", async () => {
+            const stars = Number(btn.dataset.star);
+            if(!getMovementMember().id){
+              container.querySelector(".rmod-rating-summary").textContent = "Åpne siden fra appen for å gi stjerner.";
+              return;
+            }
+            const ok = await submitRecipeRating(recipeId, stars);
+            if(ok){
+              const fresh = await loadRecipeRatingSummary(recipeId);
+              renderRatingStars(recipeId, fresh);
+            }
+          });
+        });
+      }
+
+      function openRecipeModal(recipeId){
+        const recipe = MENU_RECIPES.find(r => r.id === recipeId);
+        if(!recipe) return;
+        activeRecipe = recipe;
+        activeServings = recipe.servings || 4;
+        document.getElementById("rmod-title").textContent = recipe.title;
+        document.getElementById("rmod-rating").innerHTML = "";
+        loadRecipeRatingSummary(recipeId).then(summary => renderRatingStars(recipeId, summary));
+        renderRmodIngredients();
+        document.getElementById("rmod-steps").innerHTML = recipe.steps.map((step, i) =>
+          `<div class="rmod-step"><div class="rmod-step-num">${i + 1}</div><div><p class="rmod-step-title">${escapeHtml(step.title)}</p><p class="rmod-step-text">${escapeHtml(step.text)}</p></div></div>`
+        ).join("");
+
+        const todayValue = toDateValue(new Date());
+        const dateInput = document.getElementById("addDateInput");
+        dateInput.min = todayValue;
+        dateInput.value = todayValue;
+        const statusEl = document.getElementById("addStatus");
+        statusEl.textContent = "";
+        statusEl.className = "tbsa-status";
+        const addBtn = document.getElementById("addToDayBtn");
+        addBtn.disabled = false;
+        addBtn.textContent = "Legg til denne dagen";
+
+        document.getElementById("rmod").classList.add("show");
+      }
+      function closeRecipeModal(){ document.getElementById("rmod").classList.remove("show"); }
+      document.getElementById("rmod-close").addEventListener("click", closeRecipeModal);
+      document.getElementById("rmod").addEventListener("click", (e) => {
+        if(e.target === document.getElementById("rmod")) closeRecipeModal();
+      });
+
+      // ============================================================
+      // Legg retten til på valgt dato: leser member sin movement_plans-rad,
+      // finner HVILKEN allerede lagrede meny (assignedLunches-oppføring) som
+      // dekker den valgte datoen, og bytter inn retten på riktig dag der.
+      // Samme les-endre-skriv-mønster som min-meny.html sin lagring.
+      // ============================================================
+      async function addRecipeToDay(recipeId, dateValue, servings){
+        const member = getMovementMember();
+        if(!member.id) return { ok:false, reason:"no-member" };
+
+        try{
+          const client = await withTimeout(getSupabaseClient(), 15000);
+          const { data: row, error: loadError } = await withTimeout(client
+            .from("movement_plans")
+            .select("state_json")
+            .eq("member_id", member.id)
+            .maybeSingle(), 15000);
+          if(loadError) throw loadError;
+
+          const existing = row && row.state_json
+            ? (typeof row.state_json === "string" ? JSON.parse(row.state_json) : row.state_json)
+            : {};
+
+          const assignedLunches = Array.isArray(existing.assignedLunches) ? existing.assignedLunches.slice() : [];
+
+          const targetDate = parseDateValue(dateValue);
+          let targetMeal = null;
+          let targetIndex = -1;
+          for(const meal of assignedLunches){
+            const start = parseDateValue(meal.startDate);
+            const totalDays = Number(meal.totalDays) || 0;
+            if(!start || !totalDays) continue;
+            const diffDays = Math.round((targetDate - start) / (24 * 60 * 60 * 1000));
+            if(diffDays >= 0 && diffDays < totalDays){
+              targetMeal = meal;
+              targetIndex = diffDays;
+              break;
+            }
+          }
+
+          // Ingen eksisterende meny dekker denne datoen — enten har kunden
+          // ingen meny ennå, eller menyen dekker ikke akkurat denne dagen.
+          // I stedet for å kreve at kunden bygger en hel meny først (i
+          // min-meny.html), lager vi en liten egen ett-dags "meny" for
+          // akkurat denne datoen. Den lever fint side om side med en ordentlig
+          // meny — vanekalender.html rendrer hver assignedLunches-oppføring
+          // uavhengig av de andre, se rebuildVirtualMealItemsFromState().
+          if(!targetMeal){
+            const recipe = MENU_RECIPES.find(r => r.id === recipeId);
+            targetMeal = {
+              id: "enkeltrett-lunsj-" + dateValue,
+              focus: recipe ? recipe.focus : "vanlig",
+              startDate: dateValue,
+              totalDays: 1,
+              servings: servings || 4,
+              servingsAdults: servings || 4,
+              servingsChildren: 0,
+              dayMeals: []
+            };
+            assignedLunches.push(targetMeal);
+            targetIndex = 0;
+          }
+
+          if(!Array.isArray(targetMeal.dayMeals)) targetMeal.dayMeals = [];
+          targetMeal.dayMeals[targetIndex] = { recipeId };
+
+          // ATOMISK skriving (fikset 2026-09-17) — se
+          // movement-plans-atomic-list-rpc.sql i prosjektroten og samme fiks
+          // i sok-oppskrifter.html for full forklaring.
+          const { data: nextStateJson, error: saveError } = await withTimeout(client
+            .rpc("upsert_movement_plan_list_item", {
+              p_member_id: member.id,
+              p_member_name: member.name || "",
+              p_field: "assignedLunches",
+              p_item: targetMeal
+            }), 15000);
+          if(saveError) throw saveError;
+
+          return { ok:true, stateJson: nextStateJson };
+        }catch(e){
+          console.warn("Kunne ikke legge til retten på valgt dag.", e);
+          return { ok:false, reason:"error", error:e };
+        }
+      }
+
+      document.getElementById("addToDayBtn").addEventListener("click", async () => {
+        if(!activeRecipe) return;
+        const dateValue = document.getElementById("addDateInput").value;
+        if(!dateValue) return;
+
+        const btn = document.getElementById("addToDayBtn");
+        const statusEl = document.getElementById("addStatus");
+        btn.disabled = true;
+        btn.textContent = "Legger til …";
+
+        const result = await addRecipeToDay(activeRecipe.id, dateValue, activeServings);
+
+        btn.disabled = false;
+        btn.textContent = "Legg til denne dagen";
+        statusEl.classList.remove("ok", "warn");
+
+        if(result.ok){
+          statusEl.classList.add("ok", "show");
+          statusEl.textContent = "✓ Lagt til! Du blir sendt til vanekalenderen om noen sekunder ...";
+          setTimeout(() => {
+            window.location.href = "index.html" + (window.TL_PT_HASH || "");
+          }, 3000);
+        } else if(result.reason === "no-member"){
+          statusEl.classList.add("warn", "show");
+          statusEl.textContent = "Fant ingen kundeprofil å lagre på. Åpne denne siden fra Tro&Livsstil-appen.";
+        } else {
+          statusEl.classList.add("warn", "show");
+          statusEl.textContent = "Kunne ikke lagre akkurat nå. Prøv igjen om litt.";
+        }
+      });
+
+
+      // ── Egne oppskrifter fra Supabase (tabell tl_recipes) ────────────────
+      // Oppskriftene over ligger fast i siden. Nye oppskrifter (og endringer med
+      // samme id) hentes fra Supabase og flettes inn; active=false skjuler.
+      // Siste svar huskes i nettleseren, så de vises også før nettet svarer.
+      const RECIPE_CACHE_KEY = "tl_recipes_v1";
+      function mergeSharedRecipes(target, rows, kinds) {
+        let changed = false;
+        (rows || []).filter(r => kinds.includes(r.kind)).forEach(r => {
+          const i = target.findIndex(x => x.id === r.id);
+          if (r.active === false) { if (i >= 0) { target.splice(i, 1); changed = true; } return; }
+          const rec = { id: r.id, image: r.image || "", focus: r.focus || "vanlig", protein: r.protein || "vegetar", title: r.title, servings: r.servings || 2, ingredients: Array.isArray(r.ingredients) ? r.ingredients : [], steps: Array.isArray(r.steps) ? r.steps : [] };
+          if (i >= 0) target[i] = rec; else target.push(rec);
+          changed = true;
+        });
+        return changed;
+      }
+      function loadSharedRecipes(apply) {
+        try { const cached = JSON.parse(localStorage.getItem(RECIPE_CACHE_KEY) || "null"); if (Array.isArray(cached)) apply(cached); } catch (e) {}
+        fetch(SUPABASE_URL + "/rest/v1/tl_recipes?select=id,kind,title,focus,protein,servings,image,ingredients,steps,active&order=created_at", {
+          headers: { apikey: SUPABASE_ANON_KEY, Authorization: "Bearer " + SUPABASE_ANON_KEY }
+        })
+          .then(res => res.ok ? res.json() : null)
+          .then(rows => {
+            if (!Array.isArray(rows)) return;
+            try { localStorage.setItem(RECIPE_CACHE_KEY, JSON.stringify(rows)); } catch (e) {}
+            apply(rows);
+          })
+          .catch(() => {});
+      }
+      loadSharedRecipes(rows => { if (mergeSharedRecipes(MENU_RECIPES, rows, ["lunsj"])) { try { renderRecipeList(); } catch (e) {} } });
+
+      renderRecipeList();
+
+      // Dyplenke fra globalt søkefelt: ?open=<oppskrift-id> åpner oppskriften direkte
+      const deepLinkRecipeId = new URLSearchParams(window.location.search).get("open");
+      if(deepLinkRecipeId && MENU_RECIPES.some(r => r.id === deepLinkRecipeId)) openRecipeModal(deepLinkRecipeId);
+    })();
+  </script>
+<script>
+/* Vakthund (samme idé som i vanekalenderen): movement.os kan bytte ut sidens
+   innhold etter at skriptene har kjørt. Da ligger en ny kopi av skriptene her
+   som aldri har startet, og siden står tom til kunden laster på nytt. Vakten
+   finner nye skript merket data-tl-widget="sok-oppskrifter-lunsj" som ikke har kjørt, og
+   starter dem. Kjører nettleseren sidens skript på vanlig måte, tar den nye vakten over. */
+(function () {
+  var KEY = "sok-oppskrifter-lunsj";
+  var counterKey = "__tlWatch_" + KEY;
+  var me = (window[counterKey] = (window[counterKey] || 0) + 1);
+  var sel = 'script[data-tl-widget="' + KEY + '"]';
+  // Husker selve skript-elementene som har kjørt (ikke et merke i HTML-en,
+  // som kan bli med når innholdet kopieres).
+  var known = new WeakSet();
+  document.querySelectorAll(sel).forEach(function (s) { known.add(s); });
+  var timer = setInterval(function () {
+    if (window[counterKey] !== me) { clearInterval(timer); return; }
+    var fresh = Array.prototype.filter.call(document.querySelectorAll(sel), function (s) { return !known.has(s); });
+    if (!fresh.length) return;
+    console.info("Tro & Livsstil (" + KEY + "): innholdet ble byttet ut – starter på nytt.");
+    var ran = {};
+    fresh.forEach(function (orig) {
+      known.add(orig);
+      var code = orig.textContent;
+      if (ran[code]) return; // samme skript to ganger (kopi av kopi) – kjør én gang
+      ran[code] = true;
+      var again = document.createElement("script");
+      again.setAttribute("data-tl-widget", KEY);
+      known.add(again);
+      again.textContent = code;
+      orig.parentNode.insertBefore(again, orig.nextSibling);
+    });
+  }, 700);
+})();
+</script>
+<nav class="pt-nav" aria-label="Meny"><a href="index.html" data-nav class=""><i>🏠</i>Hjem</a><a href="trening.html" data-nav class=""><i>🏋️</i>Trening</a><a href="mat.html" data-nav class="on"><i>🍽️</i>Mat</a><a href="helse.html" data-nav class=""><i>❤️</i>Helse</a></nav>
+<script>
+(function () {
+  // Menyen tar med den personlige koden mellom sidene
+  document.querySelectorAll("[data-nav]").forEach(function (a) { a.href = a.getAttribute("href") + (window.TL_PT_HASH || ""); });
+  var r = document.getElementById("ptRefresh");
+  function refresh() { if (r) r.classList.add("spin"); location.replace(location.pathname + "?r=" + Date.now() + (location.search.indexOf("vis=") >= 0 ? "&vis=trening" : "") + location.hash); }
+  if (r) r.addEventListener("click", refresh);
+  var hiddenAt = 0;
+  document.addEventListener("visibilitychange", function () { if (document.hidden) hiddenAt = Date.now(); else if (hiddenAt && Date.now() - hiddenAt > 15 * 60 * 1000) refresh(); });
+  // Navnet til kunden (lagres når planen lagres)
+  var m = window.MVT_memberData; if (!m || !m.id) return;
+  fetch("https://cpqbdorxilssxylkqdkt.supabase.co/rest/v1/rpc/tl_plan_get", { method: "POST", headers: { apikey: "sb_publishable_37LxJJHdYNa8HpqDOVKpVw_0fJlfDmd", Authorization: "Bearer sb_publishable_37LxJJHdYNa8HpqDOVKpVw_0fJlfDmd", "Content-Type": "application/json" }, body: JSON.stringify({ p_member_id: m.id }) })
+    .then(function (x) { return x.ok ? x.json() : null; }).then(function (row) {
+      var n = row && row.member_name ? String(row.member_name) : ""; if (!n || /^Kunde [0-9a-f]{8}$/i.test(n)) return;
+      m.name = n; try { localStorage.setItem("tl_pt_name:" + m.id, n); } catch (e) {}
+      var h = document.getElementById("ptHello"); if (h) h.textContent = "Hei, " + n.trim().split(/\s+/)[0] + "!";
+    }).catch(function () {});
+})();
+</script>
+</body>
+</html>

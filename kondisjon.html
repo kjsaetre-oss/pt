@@ -1,0 +1,1983 @@
+<!DOCTYPE html>
+<!-- ett-sterkt-hjerte.html: quiz for utholdenhetsprogram (utskilt fra en-sterk-kropp.html) -->
+<html lang="no">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="referrer" content="no-referrer">
+<meta name="theme-color" content="#6f35b5">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="PT Kjetil">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="apple-touch-icon" href="ikon-180.png">
+<link rel="icon" type="image/png" sizes="192x192" href="ikon-192.png">
+<title>Et sterkt hjerte – PT Kjetil</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script>
+// Personlig lenke: app.metabolsktesting.no/#<kunde-ID>/<Fornavn>. Koden står etter # og sendes aldri til nettstedet.
+(function () {
+  var ok = function (v) { return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(String(v || "")); };
+  var raw = String(location.hash || "").replace(/^#\/?/, "").trim(), parts = raw.split("/"), id = parts[0], hashName = "";
+  try { hashName = decodeURIComponent(parts[1] || "").trim().slice(0, 40); } catch (e) {}
+  try {
+    if (ok(id)) { localStorage.setItem("tl_pt_member", id); if (hashName) localStorage.setItem("tl_pt_name:" + id, hashName); }
+    else id = localStorage.getItem("tl_pt_member") || "";
+  } catch (e) {}
+  window.TL_STANDALONE = { brand: "pt" };
+  if (ok(id) && !(window.MVT_memberData && window.MVT_memberData.id)) {
+    var name = ""; try { name = localStorage.getItem("tl_pt_name:" + id) || ""; } catch (e) {}
+    window.MVT_memberData = { id: id, name: name || hashName };
+  }
+  window.TL_TP_OK = ok(id) || !!(window.MVT_memberData && window.MVT_memberData.id);
+  window.TL_PT_HASH = ok(id) ? "#" + id + (hashName ? "/" + encodeURIComponent(hashName) : "") : "";
+})();
+</script><style>
+  html, body { margin: 0; background: #f4efe8; }
+  body.tl-standalone { padding: 0 0 calc(76px + env(safe-area-inset-bottom)) !important; -webkit-text-size-adjust: 100%; }
+  .pt-head { position: sticky; top: 0; z-index: 50; display: flex; align-items: center; gap: 10px; padding: calc(env(safe-area-inset-top) + 10px) 14px 10px;
+    background: rgba(244,239,232,.94); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-bottom: 1px solid #ece4d8; color: #2b2235; font-family: Inter, -apple-system, sans-serif; }
+  .pt-logo { width: 32px; height: 32px; border-radius: 10px; background: linear-gradient(140deg, #8c57cb, #6f35b5); color: #fff; display: grid; place-items: center; font: 800 13px "Outfit", sans-serif; flex: none; }
+  .pt-head b { font: 800 17px "Outfit", -apple-system, sans-serif; display: block; line-height: 1.1; } .pt-head small { display: block; font-size: 10.5px; color: #7a6f86; }
+  .pt-refresh { margin-left: auto; flex: none; width: 34px; height: 34px; border-radius: 50%; border: 1px solid #ece4d8; background: #fffdfa; color: #6f35b5; font: 700 18px/1 -apple-system, sans-serif; display: grid; place-items: center; padding: 0; }
+  .pt-refresh.spin { animation: ptSpin .8s linear infinite; } @keyframes ptSpin { to { transform: rotate(360deg); } }
+  .pt-av { width: 34px; height: 34px; border-radius: 50%; background: #ddd url("bilder/kjetil-lindefjell-saetre.jpg") center/cover; border: 2px solid #6f35b5; flex: none; }
+  .tl-brand-pt .lock-btn { display: none !important; }   /* redigeringslås for coachen i Verd å vite-artikler */
+  .pt-back { width: 32px; height: 32px; border-radius: 10px; background: #fffdfa; border: 1px solid #ece4d8; color: #6f35b5; display: grid; place-items: center; font: 800 22px/1 -apple-system, sans-serif; text-decoration: none; flex: none; }
+  /* Startsider for Trening, Mat og Helse */
+  .pt-hub { padding: 14px 14px 24px; display: grid; gap: 12px; font-family: Inter, -apple-system, sans-serif; color: #2b2235; max-width: 560px; margin: 0 auto; }
+  .pt-hub h1 { margin: 2px 2px 0; font: 800 28px/1.1 "Outfit", -apple-system, sans-serif; } .pt-hub > p { margin: -6px 2px 2px; color: #7a6f86; font-size: 13.5px; line-height: 1.45; }
+  .pt-card { position: relative; display: flex; flex-direction: column; justify-content: flex-end; min-height: 150px; padding: 16px; border-radius: 22px; color: #fff; text-decoration: none; overflow: hidden;
+    background: #2b2235 center/cover no-repeat; box-shadow: 0 14px 30px -18px rgba(43,34,53,.6); }
+  .pt-card::before { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(20,12,32,.05) 0%, rgba(20,12,32,.45) 45%, rgba(20,12,32,.88) 100%); }
+  .pt-card > * { position: relative; } .pt-card small { font: 800 10.5px Inter, sans-serif; letter-spacing: .12em; text-transform: uppercase; opacity: .85; }
+  .pt-card b { font: 800 21px/1.15 "Outfit", -apple-system, sans-serif; margin-top: 2px; } .pt-card span { font-size: 13px; opacity: .88; margin-top: 3px; line-height: 1.4; }
+  .pt-card.big { min-height: 190px; } .pt-card .go { position: absolute; right: 14px; top: 14px; width: 34px; height: 34px; border-radius: 50%; background: rgba(255,255,255,.18); display: grid; place-items: center; font-size: 18px; }
+  .pt-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; } .pt-row .pt-card { min-height: 140px; } .pt-row .pt-card b { font-size: 17px; }
+  .pt-nav { position: fixed; left: 0; right: 0; bottom: 0; z-index: 40; display: grid; grid-template-columns: repeat(4, 1fr); background: rgba(255,253,250,.97);
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-top: 1px solid #ece4d8; padding: 6px 4px calc(6px + env(safe-area-inset-bottom)); box-shadow: 0 -8px 24px -16px rgba(43,34,53,.35); }
+  .pt-nav a { display: grid; justify-items: center; gap: 2px; padding: 4px 2px; font: 700 10.5px Inter, -apple-system, sans-serif; color: #7a6f86; text-decoration: none; }
+  .pt-nav a i { font-style: normal; font-size: 20px; line-height: 1.1; filter: grayscale(1); opacity: .65; } .pt-nav a.on { color: #6f35b5; } .pt-nav a.on i { filter: none; opacity: 1; }
+  .pt-nolink { display: none; max-width: 420px; margin: 60px auto; padding: 0 24px; text-align: center; font: 16px/1.5 -apple-system, sans-serif; color: #3b3640; }
+  body.tp-missing .pt-nolink { display: block; } body.tp-missing .tp-app, body.tp-missing .pt-nav { display: none; }
+  .pt-hero { margin: 12px 14px 0; border-radius: 22px; background: #fffdfa; border: 1px solid #ece4d8; padding: 14px 16px; font-family: Inter, -apple-system, sans-serif; color: #2b2235; }
+  .pt-hero h1 { margin: 0; font: 800 26px/1.1 "Outfit", -apple-system, sans-serif; } .pt-hero p { margin: 4px 0 0; font-size: 13px; color: #7a6f86; }
+  /* Fokus og mål (samme kode som bordtennis, lilla farger) */
+
+</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <style>
+    :root{
+      --tbsa-bg:#ffffff;
+      --tbsa-bg-2:#f8f4ee;
+      --tbsa-line:rgba(28,20,42,.08);
+      --tbsa-line-2:rgba(28,20,42,.16);
+      --tbsa-text:#1f1315;
+      --tbsa-muted:#7a6560;
+      --tbsa-accent:#6b1f35;
+      --tbsa-accent-2:#b5772f;
+      --tbsa-accent-3:#330e18;
+      --tbsa-shadow:0 20px 46px rgba(107,31,53,.12);
+      --tbsa-shadow-soft:0 10px 22px rgba(107,31,53,.08);
+      --tbsa-warn-bg:rgba(214,90,110,.10);
+      --tbsa-warn-line:rgba(214,90,110,.28);
+      --tbsa-warn-text:#9c2f45;
+      --tbsa-ok-bg:rgba(60,150,120,.12);
+      --tbsa-ok-line:rgba(60,150,120,.32);
+      --tbsa-ok-text:#1f6b52;
+    }
+    *{ box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+    html,body{ margin:0; padding:0; overscroll-behavior:none; font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; background:#ffffff; color:var(--tbsa-text); -webkit-font-smoothing:antialiased; }
+    body{ padding:0; }
+    /* Siden vises i en iframe i movement.os. Tidligere forsøk med
+       height:100%/100dvh + position:fixed/absolute på en egen scroll-boks
+       skapte nye feil hver gang (låst side, for bred side, avkuttet
+       innhold) — trolig fordi iframets egen viewport-høyde ikke alltid er
+       pålitelig å regne ut fra CSS inni selve iframet. Enkleste, mest
+       robuste løsning: la siden scrolle helt normalt (slik den alltid har
+       gjort), og bruk bare overscroll-behavior for å hindre at scrollingen
+       "smitter" videre til movement.os-siden rundt når man når toppen/bunnen. */
+    .tbsa-scroll{ overscroll-behavior-y:contain; }
+    button:focus-visible{ outline:2px solid rgba(107,31,53,.5); outline-offset:2px; }
+    @keyframes tbsaCardIn{ from{ opacity:0; transform:translateY(10px); } to{ opacity:1; transform:translateY(0); } }
+    @keyframes tbsaPanelIn{ from{ opacity:0; transform:translateY(8px); } to{ opacity:1; transform:translateY(0); } }
+    .tbsa-hidden{ display:none !important; }
+    .tbsa-shell{ max-width:100%; width:100%; margin:0; border-radius:0; background:transparent; overflow:hidden; padding:14px 16px 32px; }
+    .tbsa-card{
+      position:relative; border-radius:28px; padding:14px;
+      background:
+        radial-gradient(circle at top right, rgba(181,119,47,.08), transparent 26%),
+        radial-gradient(circle at top left, rgba(107,31,53,.07), transparent 24%),
+        linear-gradient(180deg, #ffffff, var(--tbsa-bg-2));
+      border:1px solid var(--tbsa-line);
+      box-shadow:var(--tbsa-shadow);
+      overflow:hidden;
+      animation:tbsaCardIn .5s cubic-bezier(.16,1,.3,1);
+    }
+    .tbsa-top{ display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:8px; }
+    .tbsa-chip{
+      display:inline-flex; align-items:center; gap:8px; padding:8px 11px; border-radius:999px;
+      background:rgba(107,31,53,.07); border:1px solid rgba(107,31,53,.16); color:#3f1f28;
+      font-size:11px; font-weight:900; text-transform:uppercase; letter-spacing:.05em;
+    }
+    .tbsa-chip-dot{ width:8px; height:8px; border-radius:50%; background:linear-gradient(180deg, var(--tbsa-accent), var(--tbsa-accent-3)); box-shadow:0 0 0 5px rgba(107,31,53,.12); }
+    .tbsa-option-icon{ overflow:hidden; }
+    .tbsa-option-icon img{ width:100%; height:100%; object-fit:cover; object-position:center 30%; display:block; border-radius:16px; }
+    .tbsa-progress{ display:grid; grid-auto-flow:column; grid-auto-columns:1fr; gap:5px; margin:2px 2px 10px; }
+    .tbsa-progress div{ height:6px; border-radius:999px; background:rgba(35,22,49,.08); transition:.35s cubic-bezier(.16,1,.3,1); }
+    .tbsa-progress div.on{ background:linear-gradient(90deg, var(--tbsa-accent), var(--tbsa-accent-2)); box-shadow:0 2px 6px rgba(107,31,53,.22); }
+    .tbsa-panel{ display:none; gap:9px; }
+    .tbsa-panel.active{ display:grid; animation:tbsaPanelIn .32s cubic-bezier(.16,1,.3,1); }
+    .tbsa-note{ margin:2px 0 4px; text-align:center; color:#5c4540; font-size:.79rem; line-height:1.4; font-weight:800; }
+    .tbp-coach-note{
+      display:none; gap:9px; align-items:flex-start; margin:2px 0 12px; padding:11px 13px;
+      border-radius:16px; background:rgba(107,31,53,.07); border:1px solid rgba(107,31,53,.16);
+      font-size:.82rem; line-height:1.45; color:#40232a;
+    }
+    .tbp-coach-note.show{ display:flex; }
+    .tbp-coach-avatar{ width:34px; height:34px; border-radius:50%; object-fit:cover; flex-shrink:0; box-shadow:0 2px 6px rgba(107,31,53,.25); }
+    .tbsa-option{
+      width:100%; display:flex; align-items:center; gap:14px; text-align:left; border:none; cursor:pointer;
+      border-radius:20px; padding:11px 16px 11px 11px; background:#ffffff;
+      border:1px solid var(--tbsa-line); color:#241419; box-shadow:var(--tbsa-shadow-soft); transition:.18s cubic-bezier(.16,1,.3,1);
+    }
+    .tbsa-option:hover{ transform:translateY(-2px); border-color:var(--tbsa-line-2); box-shadow:0 16px 30px rgba(107,31,53,.14); }
+    .tbsa-option:active{ transform:translateY(0) scale(.985); }
+    .tbsa-option.selected{ border-color:rgba(181,119,47,.5); background:linear-gradient(135deg,rgba(107,31,53,.08), rgba(255,255,255,.4)); box-shadow:0 14px 28px rgba(107,31,53,.14); }
+    .tbsa-option.selected .tbsa-option-arrow{ background:linear-gradient(135deg,#6b1f35,#93304f); border-color:transparent; color:#fff; font-size:0; }
+    .tbsa-option.selected .tbsa-option-arrow::after{ content:"\2713"; font-size:14px; font-weight:900; }
+    .tbsa-option.selected .tbsa-option-icon{ transform:scale(1.06); box-shadow:0 6px 14px rgba(107,31,53,.18); }
+    .tbsa-option-icon{ width:64px; height:64px; border-radius:18px; display:grid; place-items:center; flex-shrink:0; font-weight:900; font-size:1.3rem; border:1px solid var(--tbsa-line); transition:.2s ease; }
+    .tbsa-option-icon img{ transition:.25s ease; }
+    .tbsa-option:hover .tbsa-option-icon img{ transform:scale(1.06); }
+    .tbsa-body{ background:linear-gradient(180deg, rgba(110,25,40,.16), rgba(110,25,40,.06)); }
+    .tbsa-db{ background:linear-gradient(180deg, rgba(107,31,53,.14), rgba(107,31,53,.05)); }
+    .tbsa-gold{ background:linear-gradient(180deg, rgba(216,196,160,.32), rgba(216,196,160,.12)); }
+    .tbsa-run{ background:linear-gradient(180deg, rgba(90,20,30,.20), rgba(90,20,30,.07)); }
+    .tbsa-option-copy{ display:grid; gap:3px; flex:1; min-width:0; }
+    .tbsa-option-title{ font-size:1rem; font-weight:900; letter-spacing:-.02em; }
+    .tbsa-option-text{ color:var(--tbsa-muted); font-size:.8rem; line-height:1.35; }
+    .tbsa-option-arrow{ width:32px; height:32px; border-radius:999px; display:grid; place-items:center; background:rgba(107,31,53,.08); border:1px solid var(--tbsa-line); flex-shrink:0; transition:.2s ease; color:#6b1f35; font-size:.9rem; }
+    .tbsa-actions{ display:flex; gap:10px; margin-top:2px; }
+    .tbsa-btn{ min-height:46px; border:none; border-radius:15px; font:inherit; font-weight:900; cursor:pointer; transition:.18s cubic-bezier(.16,1,.3,1); }
+    .tbsa-btn:hover{ transform:translateY(-1px); }
+    .tbsa-btn:active{ transform:scale(.97); }
+    .tbsa-btn:disabled{ opacity:.45; cursor:not-allowed; transform:none; }
+    .tbsa-btn-primary{ flex:1; color:#fff; background:linear-gradient(90deg, #6b1f35, #93304f); box-shadow:0 14px 26px rgba(107,31,53,.28); }
+    .tbsa-btn-primary:hover{ background:linear-gradient(90deg, #8a2c47, #c15a72); box-shadow:0 16px 30px rgba(107,31,53,.32); }
+    .tbsa-btn-primary:active{ box-shadow:0 8px 16px rgba(107,31,53,.26); }
+    .tbsa-btn-secondary{ background:#ffffff; color:#241419; border:1px solid var(--tbsa-line); padding:0 16px; }
+    .tbsa-btn-secondary:hover{ background:#f7ede2; }
+    .tbsa-btn-full{ width:100%; }
+    .tbsa-status{
+      border-radius:16px; padding:11px 12px; border:1px solid var(--tbsa-line);
+      background:#f7ede2;
+      font-size:.82rem; font-weight:800; line-height:1.45; color:#3f1f28;
+    }
+    .tbsa-status.ok{ background:var(--tbsa-ok-bg); border-color:var(--tbsa-ok-line); color:var(--tbsa-ok-text); }
+    .tbsa-status.warn{ background:var(--tbsa-warn-bg); border-color:var(--tbsa-warn-line); color:var(--tbsa-warn-text); }
+
+    .tbp-test-q{ margin-bottom:10px; }
+    .tbp-test-label{ margin:0 0 6px; font-size:.84rem; font-weight:800; color:#3f1f28; }
+    .tbp-test-opts{ display:flex; gap:6px; flex-wrap:wrap; }
+    .tbp-test-opt{
+      flex:1; min-height:42px; border:1px solid var(--tbsa-line); border-radius:12px;
+      background:#ffffff; color:#5c4540; font:inherit; font-size:.78rem; font-weight:800; cursor:pointer; transition:.16s ease;
+    }
+    .tbp-test-opt:hover{ border-color:var(--tbsa-line-2); }
+    .tbp-test-opt:active{ transform:scale(.96); }
+    .tbp-test-opt.selected{ background:linear-gradient(90deg,#6b1f35,#93304f); color:#fff; border-color:transparent; box-shadow:0 8px 16px rgba(107,31,53,.22); }
+
+    .tbsa-days{ display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; margin-top:2px; }
+    .tbsa-day{
+      min-height:46px; border:none; border-radius:15px; background:#ffffff;
+      border:1px solid var(--tbsa-line); color:#241419; font:inherit; font-weight:800; cursor:pointer; transition:.18s cubic-bezier(.16,1,.3,1);
+    }
+    .tbsa-day:hover{ transform:translateY(-1px); border-color:var(--tbsa-line-2); }
+    .tbsa-day:active{ transform:scale(.96); }
+    .tbsa-day.sel{ background:linear-gradient(180deg, rgba(107,31,53,.16), rgba(216,196,160,.14)); border-color:rgba(181,119,47,.5); box-shadow:0 8px 18px rgba(107,31,53,.16); }
+    .tbsa-day.off{ opacity:.35; cursor:not-allowed; }
+    .tbsa-day.tag-styrke{ background:linear-gradient(180deg, rgba(107,31,53,.20), rgba(107,31,53,.08)); border-color:rgba(107,31,53,.55); box-shadow:0 8px 18px rgba(107,31,53,.18); }
+    .tbsa-day.tag-styrke::after{ content:" 🏋️"; }
+    .tbsa-day.tag-utholdenhet{ background:linear-gradient(180deg, rgba(181,119,47,.24), rgba(181,119,47,.10)); border-color:rgba(181,119,47,.6); box-shadow:0 8px 18px rgba(181,119,47,.2); }
+    .tbsa-day.tag-utholdenhet::after{ content:" 🏃"; }
+
+    /* Resultat-program */
+    .tbp-section-title{
+      display:flex; align-items:center; gap:8px; margin:14px 0 8px; font-size:.84rem;
+      font-weight:900; text-transform:uppercase; letter-spacing:.05em; color:var(--tbsa-accent-2);
+    }
+    .tbp-section-title:first-child{ margin-top:0; }
+    .tbp-result-head{ display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:6px; }
+    .tbp-result-head h3{ margin:0; font-size:1.0rem; letter-spacing:-.02em; color:#241419; }
+    .tbp-result-sub{ margin:0 0 10px; color:var(--tbsa-muted); font-size:.82rem; }
+    .tbp-roadmap{ display:grid; gap:4px; margin:0 0 16px; padding:12px 13px; border-radius:16px; background:var(--tbsa-bg-2); border:1px solid var(--tbsa-line); }
+    .tbp-roadmap-title{ font-size:.7rem; font-weight:900; text-transform:uppercase; letter-spacing:.05em; color:var(--tbsa-accent-2); margin:0 0 4px; }
+    .tbp-roadmap-row{ display:flex; justify-content:space-between; gap:10px; font-size:.8rem; padding:3px 0; }
+    .tbp-roadmap-row .wk{ font-weight:800; color:#241419; flex-shrink:0; }
+    .tbp-roadmap-row .desc{ color:var(--tbsa-muted); text-align:right; }
+    .tbp-ex-card{
+      display:flex; gap:11px; align-items:flex-start; border-radius:18px; padding:11px;
+      background:#ffffff;
+      border:1px solid var(--tbsa-line); margin-bottom:8px; transition:.18s ease;
+    }
+    .tbp-ex-card:hover{ transform:translateY(-1px); box-shadow:0 10px 20px rgba(107,31,53,.10); }
+    .tbp-ex-thumb{ width:80px; min-width:80px; height:56px; flex-shrink:0; border-radius:11px; background:#f2e2d3 center/cover no-repeat; position:relative; overflow:hidden; }
+    .tbp-ex-thumb.has-video{ cursor:pointer; }
+    .tbp-ex-play{ position:absolute; inset:0; background:rgba(0,0,0,.38); display:flex; align-items:center; justify-content:center; transition:background .15s; }
+    .tbp-ex-thumb.has-video:hover .tbp-ex-play{ background:rgba(0,0,0,.55); }
+    .tbp-ex-play svg{ width:28px; height:28px; filter:drop-shadow(0 1px 3px rgba(0,0,0,.5)); }
+    .tbp-ex-noimg{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:1.5rem; opacity:.5; }
+    .tbp-ex-info{ flex:1; min-width:0; }
+    .tbp-ex-name{ margin:0 0 3px; font-size:.88rem; font-weight:800; color:#241419; }
+    .tbp-ex-meta{ display:flex; gap:6px; flex-wrap:wrap; font-size:.7rem; color:var(--tbsa-muted); font-weight:700; }
+    .tbp-ex-meta span{ background:rgba(107,31,53,.07); padding:2px 8px; border-radius:999px; }
+    .tbp-ex-tip{ margin:6px 0 0; font-size:.76rem; line-height:1.4; color:#6b5650; }
+    .tbp-ex-type{ display:inline-block; margin:0 0 4px; font-size:.66rem; font-weight:900; text-transform:uppercase; letter-spacing:.04em; padding:2px 8px; border-radius:999px; }
+    .tbp-ex-type.warm{ background:rgba(107,31,53,.10); color:var(--tbsa-accent); }
+    .tbp-ex-type.hard{ background:var(--tbsa-warn-bg); color:var(--tbsa-warn-text); }
+    .tbp-ex-type.easy{ background:var(--tbsa-ok-bg); color:var(--tbsa-ok-text); }
+    .tbp-saved-note{
+      border-radius:16px; padding:12px 13px; margin-top:4px;
+      background:rgba(60,150,120,.10); border:1px solid rgba(60,150,120,.3);
+      color:#1f6b52; font-size:.84rem; font-weight:700; line-height:1.5; display:none;
+    }
+    .tbp-saved-note.show{ display:block; }
+    .tbp-saved-note.warn{ background:var(--tbsa-warn-bg); border-color:var(--tbsa-warn-line); color:var(--tbsa-warn-text); }
+  </style>
+</head>
+<body class="tl-standalone tl-brand-pt">
+<header class="pt-head"><a class="pt-back" data-nav href="trening.html" aria-label="Tilbake">‹</a><span><b>Et sterkt hjerte</b><small>PT Kjetil</small></span><button type="button" class="pt-refresh" id="ptRefresh" aria-label="Oppdater">↻</button><span class="pt-av" aria-hidden="true"></span></header>
+<div class="pt-nolink"><h1 style="font-family:Outfit,sans-serif">PT Kjetil</h1><p>Denne siden åpnes med den personlige lenken du har fått fra Kjetil.<br>Spør ham om å få lenken på nytt.</p></div>
+<script>if (!window.TL_TP_OK) document.body.classList.add("tp-missing");</script>
+
+  <div class="tbsa-scroll">
+  <div class="tbsa-shell">
+    <div class="tbsa-card">
+      <div class="tbsa-top">
+        <div class="tbsa-chip"><span class="tbsa-chip-dot"></span><span id="tbpStep">Steg 1</span></div>
+      </div>
+
+      <div class="tbsa-progress" id="tbpProgress"></div>
+
+      <!-- Steg: stil (utholdenhet) -->
+      <div class="tbsa-panel active" data-step="enduranceStyle">
+        <p class="tbsa-note">Hvordan vil du styrke hjertet ditt?</p>
+        <button class="tbsa-option" type="button" data-group="enduranceStyle" data-value="Løping">
+          <span class="tbsa-option-icon tbsa-run"><img src="https://images.pexels.com/photos/3114/woman-jogger-jogging-sport.jpg?auto=compress&cs=tinysrgb&h=200&fit=crop&w=200" alt="Løping"></span>
+          <span class="tbsa-option-copy">
+            <span class="tbsa-option-title">Løping</span>
+          </span>
+          <span class="tbsa-option-arrow">→</span>
+        </button>
+        <button class="tbsa-option" type="button" data-group="enduranceStyle" data-value="Gå tur">
+          <span class="tbsa-option-icon tbsa-run"><img src="https://images.pexels.com/photos/8539234/pexels-photo-8539234.jpeg?auto=compress&cs=tinysrgb&h=200&fit=crop&w=200" alt="Gå tur"></span>
+          <span class="tbsa-option-copy">
+            <span class="tbsa-option-title">Gå tur</span>
+          </span>
+          <span class="tbsa-option-arrow">→</span>
+        </button>
+        <button class="tbsa-option" type="button" data-group="enduranceStyle" data-value="Svømming">
+          <span class="tbsa-option-icon tbsa-run"><img src="https://images.pexels.com/photos/16516753/pexels-photo-16516753.jpeg?auto=compress&cs=tinysrgb&h=200&fit=crop&w=200" alt="Svømming"></span>
+          <span class="tbsa-option-copy">
+            <span class="tbsa-option-title">Svømming</span>
+          </span>
+          <span class="tbsa-option-arrow">→</span>
+        </button>
+        <button class="tbsa-option" type="button" data-group="enduranceStyle" data-value="Spinning">
+          <span class="tbsa-option-icon tbsa-run"><img src="https://images.pexels.com/photos/4162543/pexels-photo-4162543.jpeg?auto=compress&cs=tinysrgb&h=200&fit=crop&w=200" alt="Spinning"></span>
+          <span class="tbsa-option-copy">
+            <span class="tbsa-option-title">Spinning</span>
+          </span>
+          <span class="tbsa-option-arrow">→</span>
+        </button>
+        <button class="tbsa-option" type="button" data-group="enduranceStyle" data-value="Hjemme">
+          <span class="tbsa-option-icon tbsa-run"><img src="https://images.pexels.com/photos/4148919/pexels-photo-4148919.jpeg?auto=compress&cs=tinysrgb&h=200&fit=crop&w=200" alt="Hjemme cardio"></span>
+          <span class="tbsa-option-copy">
+            <span class="tbsa-option-title">Hjemme cardio</span>
+          </span>
+          <span class="tbsa-option-arrow">→</span>
+        </button>
+        <button class="tbsa-option" type="button" data-group="enduranceStyle" data-value="Hoppetau">
+          <span class="tbsa-option-icon tbsa-run"><img src="https://images.pexels.com/photos/8846350/pexels-photo-8846350.jpeg?auto=compress&cs=tinysrgb&h=200&fit=crop&w=200" alt="Hoppetau"></span>
+          <span class="tbsa-option-copy">
+            <span class="tbsa-option-title">Hoppetau</span>
+          </span>
+          <span class="tbsa-option-arrow">→</span>
+        </button>
+      </div>
+
+      <!-- Steg: nivåtest -->
+      <div class="tbsa-panel" data-step="levelTest">
+        <p class="tbsa-note">Noen raske spørsmål, så vi treffer riktig nivå fra start.</p>
+
+        <button class="tbsa-option" type="button" data-group="levelSelf" data-level="1">
+          <span class="tbsa-option-icon tbsa-body"><img src="https://images.pexels.com/photos/6246251/pexels-photo-6246251.jpeg?auto=compress&cs=tinysrgb&h=200&fit=crop&w=200" alt="Nybegynner"></span>
+          <span class="tbsa-option-copy"><span class="tbsa-option-title">Nybegynner</span></span>
+          <span class="tbsa-option-arrow">→</span>
+        </button>
+        <button class="tbsa-option" type="button" data-group="levelSelf" data-level="2">
+          <span class="tbsa-option-icon tbsa-body"><img src="https://images.pexels.com/photos/8846273/pexels-photo-8846273.jpeg?auto=compress&cs=tinysrgb&h=200&fit=crop&w=200" alt="Trener av og til"></span>
+          <span class="tbsa-option-copy"><span class="tbsa-option-title">Trener av og til</span></span>
+          <span class="tbsa-option-arrow">→</span>
+        </button>
+        <button class="tbsa-option" type="button" data-group="levelSelf" data-level="3">
+          <span class="tbsa-option-icon tbsa-db"><img src="https://images.pexels.com/photos/16513597/pexels-photo-16513597.jpeg?auto=compress&cs=tinysrgb&h=200&fit=crop&w=200" alt="Trener jevnlig"></span>
+          <span class="tbsa-option-copy"><span class="tbsa-option-title">Trener jevnlig</span></span>
+          <span class="tbsa-option-arrow">→</span>
+        </button>
+        <button class="tbsa-option" type="button" data-group="levelSelf" data-level="4">
+          <span class="tbsa-option-icon tbsa-gold"><img src="https://images.pexels.com/photos/4162485/pexels-photo-4162485.jpeg?auto=compress&cs=tinysrgb&h=200&fit=crop&w=200" alt="Godt trent"></span>
+          <span class="tbsa-option-copy"><span class="tbsa-option-title">Godt trent</span></span>
+          <span class="tbsa-option-arrow">→</span>
+        </button>
+        <button class="tbsa-option" type="button" data-group="levelSelf" data-level="5">
+          <span class="tbsa-option-icon tbsa-run"><img src="https://images.pexels.com/photos/8874368/pexels-photo-8874368.jpeg?auto=compress&cs=tinysrgb&h=200&fit=crop&w=200" alt="Erfaren og systematisk"></span>
+          <span class="tbsa-option-copy"><span class="tbsa-option-title">Erfaren og systematisk</span></span>
+          <span class="tbsa-option-arrow">→</span>
+        </button>
+
+        <div class="tbsa-actions">
+          <button class="tbsa-btn tbsa-btn-secondary" type="button" data-back="enduranceStyle">Tilbake</button>
+        </div>
+      </div>
+
+      <!-- Steg: velg dager -->
+      <div class="tbsa-panel" data-step="days">
+        <p class="tbsa-note" id="tbpDaysNote">Velg dager.</p>
+        <div class="tbp-coach-note" id="tbpDaysCoach"><img class="tbp-coach-avatar" src="data:image/png;base64,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" alt="Coach"><span id="tbpDaysCoachText"></span></div>
+        <div class="tbsa-days" id="tbpDaysGrid">
+          <button class="tbsa-day" type="button" data-day="mon">Mandag</button>
+          <button class="tbsa-day" type="button" data-day="tue">Tirsdag</button>
+          <button class="tbsa-day" type="button" data-day="wed">Onsdag</button>
+          <button class="tbsa-day" type="button" data-day="thu">Torsdag</button>
+          <button class="tbsa-day" type="button" data-day="fri">Fredag</button>
+          <button class="tbsa-day" type="button" data-day="sat">Lørdag</button>
+          <button class="tbsa-day" type="button" data-day="sun">Søndag</button>
+        </div>
+        <div class="tbsa-status" id="tbpDaysStatus">Velg dager for å gå videre.</div>
+        <div class="tbsa-actions">
+          <button class="tbsa-btn tbsa-btn-secondary" type="button" data-back="levelTest">Tilbake</button>
+          <button class="tbsa-btn tbsa-btn-primary" type="button" id="tbpGoNextAfterDays" disabled>Neste</button>
+        </div>
+      </div>
+
+      <!-- Steg: resultat -->
+      <div class="tbsa-panel" data-step="result">
+        <div class="tbp-result-head">
+          <h3 id="tbpResultTitle">Ditt program</h3>
+        </div>
+        <p class="tbp-result-sub" id="tbpResultSub">Tilpasset deg.</p>
+        <div class="tbp-roadmap" id="tbpRoadmap"></div>
+        <div id="tbpResultList"></div>
+        <div class="tbsa-actions">
+          <button class="tbsa-btn tbsa-btn-secondary" type="button" id="tbpResultBack">Bytt valg</button>
+          <button class="tbsa-btn tbsa-btn-primary" type="button" id="tbpUseProgram">Legg i vanekalenderen</button>
+        </div>
+        <div class="tbp-saved-note" id="tbpSavedNote"></div>
+      </div>
+    </div>
+  </div>
+  </div>
+
+  <script data-tl-widget="ett-sterkt-hjerte">
+    (function(){
+      const SUPABASE_URL = window.TLX_SUPABASE_URL || "https://cpqbdorxilssxylkqdkt.supabase.co";
+      const SUPABASE_ANON_KEY = window.TLX_SUPABASE_ANON_KEY || "sb_publishable_37LxJJHdYNa8HpqDOVKpVw_0fJlfDmd";
+
+      // Uten dette kan en treg/hengende mobilforbindelse la Supabase-kallet
+      // aldri verken lykkes eller feile — knappen blir stående på "Lagrer ..."
+      // permanent, uten feilmelding, og kunden opplever at "ingenting skjer"
+      // når de prøver å legge til et treningsprogram. Tidsavbrudd sørger for
+      // at kallet alltid ender i enten suksess eller en synlig feilmelding.
+      function withTimeout(promise, ms){
+        return Promise.race([
+          promise,
+          new Promise((_, reject) => setTimeout(() => reject(new Error("Tidsavbrudd — ingen respons fra serveren")), ms))
+        ]);
+      }
+
+      async function getSupabaseClient(){
+        if (window.dppSupabaseClient) return window.dppSupabaseClient;
+        if (!window.supabase || !window.supabase.createClient) {
+          await new Promise((resolve, reject) => {
+            const existing = document.querySelector('script[data-dpp-supabase="1"]');
+            if (existing) {
+              existing.addEventListener("load", resolve, { once: true });
+              existing.addEventListener("error", () => reject(new Error("Kunne ikke laste Supabase-biblioteket")), { once: true });
+              return;
+            }
+            const s = document.createElement("script");
+            s.src = "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2";
+            s.async = true;
+            s.setAttribute("data-dpp-supabase", "1");
+            s.onload = resolve;
+            s.onerror = () => reject(new Error("Kunne ikke laste Supabase-biblioteket"));
+            document.head.appendChild(s);
+          });
+        }
+        if (!window.supabase || !window.supabase.createClient) throw new Error("Supabase-biblioteket ble ikke lastet");
+        window.dppSupabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        return window.dppSupabaseClient;
+      }
+
+      function getMovementMember(){
+        const member = window.MVT_memberData || {};
+        return { id: member.id || "", name: member.name || "" };
+      }
+
+      // Oppvarmings-/nedtrappingsandeler: hoveddelen bør utgjøre minst 50% av
+      // øktvarigheten. Gamle 35/35 = bare 30% hoveddel i en 30-min økt.
+      // Nedtrapping er kortere enn oppvarming — aerob kapasitet trenger
+      // mer tid til å nå arbeidsintensitet enn til å roe ned.
+      const ENDURANCE_LEVEL_PROFILE = {
+        1: { warmupPct: 0.20, coolPct: 0.15, intensity: "Svært rolig — du skal klare å prate hele setningen" },
+        2: { warmupPct: 0.18, coolPct: 0.13, intensity: "Rolig — kan prate, men kjenner belastningen" },
+        3: { warmupPct: 0.15, coolPct: 0.12, intensity: "Moderat — litt anstrengt, korte setninger" },
+        4: { warmupPct: 0.15, coolPct: 0.10, intensity: "Intervaller — 1 min hard, 1 min rolig" },
+        5: { warmupPct: 0.12, coolPct: 0.10, intensity: "Høyintensitetsintervaller — 2 min hard, 1 min rolig" }
+      };
+
+      // ============================================================
+      // Løpeprogram — 12 uker, bygget på ekte, navngitte kilder i stedet for
+      // en oppspunnet intervall-formel. Samme motor (kopiert) finnes i
+      // vanekalender.html sin resolveRunIntervalExercises() — hold i sync.
+      //
+      // Nivå 1 (Nybegynner): NHS «Couch to 5K» — offisiell britisk NHS-plan,
+      //   uke 1-9 er den eksakte, publiserte økt-strukturen (nhs.uk/better-
+      //   health/get-active/get-running-with-couch-to-5k). Uke 10-12 holder
+      //   uke 9-nivået (sammenhengende 30 min løp), som er NHS sin egen
+      //   anbefaling for hva man gjør etter fullført program.
+      // Nivå 2-3 (Trener av og til / Trener jevnlig): NHS Charities Together
+      //   sin «10km Training Plan – Beginner» (utviklet av løpecoachene i
+      //   Running With Us). Nivå 2 bruker de roligere ukene og holder på et
+      //   overkommelig nivå; nivå 3 starter lenger ut i planen og når terskel-
+      //   intervaller og fartlek-stige.
+      // Nivå 4-5 (Godt trent / Erfaren og systematisk): strukturen er hentet
+      //   fra Hal Higdon sin «Advanced 10K»-plan, som bygger intervalldagen
+      //   fra 6×400m til 12×400m over sesongen. Appen har ingen GPS/distanse,
+      //   så 400m-repetisjonene er oversatt til tidsbaserte harde drag (en
+      //   vanlig praksis for tidsstyrt trening) — repetisjons-opptrappingen
+      //   (6 → 12) er hentet direkte fra Hal Higdon, resten (rolig/terskel-
+      //   /langtur-dagene) er lagt til for et helhetlig treningsuke, ikke
+      //   bare rene intervalløkter.
+      // ============================================================
+
+      function formatMinSec(sec){
+        if(sec < 60) return `${sec} sek`;
+        const min = sec / 60;
+        return `${String(min).replace(".", ",")} min`;
+      }
+
+      function W(min, label){ return { k: "walk", sec: Math.round(min * 60), label: label || "Gange" }; }
+      function R(min, label){ return { k: "run", sec: Math.round(min * 60), label: label || "Løp" }; }
+      function REPS(count, workMin, restMin, label, restLabel){
+        return { k: "reps", count, workSec: Math.round(workMin * 60), restSec: Math.round(restMin * 60), label: label || "Intervaller", restLabel: restLabel || "Gå/jogg" };
+      }
+      function LADDER(mins, jogSec, label){ return { k: "ladder", mins, jogSec, label: label || "Fartlek-stige" }; }
+
+      // Ekte løpe-/gangefoto (Pexels) — vises som bakgrunnsbilde på øktkortet
+      // i stedet for kun emoji, så kunden ser hva slags økt det er med en gang.
+      const RUN_PHOTOS = {
+        walk: "https://images.pexels.com/photos/8539234/pexels-photo-8539234.jpeg?auto=compress&cs=tinysrgb&h=200&fit=crop&w=300",
+        run: "https://images.pexels.com/photos/3114/woman-jogger-jogging-sport.jpg?auto=compress&cs=tinysrgb&h=200&fit=crop&w=300",
+        hard: "https://images.pexels.com/photos/8691698/pexels-photo-8691698.jpeg?auto=compress&cs=tinysrgb&h=200&fit=crop&w=300"
+      };
+
+      // Tempo-forklaring per øktkort. Styrt av kortets navn siden det er det
+      // eneste som faktisk skiller f.eks. et rolig løp fra et terskelløp i
+      // dataene. Konkret pust/tempo-beskrivelse, ikke heiarop.
+      function coachTipForWalk(){
+        return "Tempo: rolig gange.";
+      }
+      function coachTipForRun(label){
+        const l = label.toLowerCase();
+        if(l.includes("siste")) return "Tempo: samme tempo som de andre dragene i økten — men denne gangen går du rett videre til nedtrapping etterpå, uten en ny gangepause.";
+        if(l.includes("selvtest")) return "Tempo: så fort du klarer å holde uten stopp hele veien.";
+        if(l.includes("nær terskel")) return "Tempo: anstrengt — pust tungt, korte setninger.";
+        if(l.includes("steady")) return "Tempo: litt over rolig — merkbart arbeid, men kontrollert.";
+        if(l.includes("terskeltur")) return "Tempo: bestemt og anstrengende, men holdbart gjennom hele økten.";
+        if(l.includes("langtur")) return "Tempo: rolig og jevnt — du skal kunne prate i korte setninger.";
+        if(l.includes("oppvarmingsjogg")) return "Tempo: lett jogg.";
+        if(l.includes("oppvarmingsløp") || l.includes("nedtrappingsløp")) return "Tempo: rolig løpetempo.";
+        if(l.includes("rolig")) return "Tempo: snakketempo — du skal kunne prate i hele setninger.";
+        if(l.includes("sammenhengende")) return "Tempo: jevnt og behagelig gjennom hele løpeturen.";
+        return "Tempo: jevnt og kontrollert.";
+      }
+      function coachTipForReps(label, restLabel){
+        const l = label.toLowerCase();
+        if(l === "intervaller") return "Tempo: rolig løp i draget — du blir naturlig litt andpusten, det er helt normalt. Rolig gange i pausen til pusten roer seg.";
+        if(l.includes("terskel")) return "Tempo: bestemt og anstrengt i draget. Rolig puls i pausen.";
+        if(l.includes("intervall")) return "Tempo: høyt i draget. Rolig jogg i pausen, ikke stopp helt.";
+        return `Tempo: jevnt i draget, ${restLabel.toLowerCase()} rolig i pausen.`;
+      }
+      function coachTipForLadder(){
+        return "Tempo: hold samme følelse av anstrengelse i hvert drag, selv om lengden minker — 6-minutteren skal kjennes like hardt som den siste 1-minutteren, bare kortere.";
+      }
+
+      // Kort etikett til meta-pillen (øverst på kortet) — samme inndeling som
+      // coachTipForRun, men forkortet til 1-2 ord i stedet for hel setning.
+      function shortEffortForRun(label){
+        const l = label.toLowerCase();
+        if(l.includes("selvtest")) return "Så fort du klarer";
+        if(l.includes("nær terskel")) return "Anstrengt";
+        if(l.includes("steady")) return "Steady";
+        if(l.includes("terskeltur")) return "Terskel";
+        if(l.includes("oppvarmingsjogg")) return "Lett jogg";
+        if(l.includes("rolig") || l.includes("langtur") || l.includes("oppvarmingsløp") || l.includes("nedtrappingsløp")) return "Rolig";
+        return "Jevnt tempo";
+      }
+
+      // Kort merkelapp for øktypen (vises som fargelapp øverst på kortet) —
+      // så kunden kan skanne uka raskt uten å lese tempo-teksten på hvert
+      // kort. typeClass styrer fargen: warm=oppvarming/nedtrapping (lilla),
+      // hard=intervall/terskel/fartlek (rød), easy=rolig/steady/langtur (grønn).
+      function sessionTypeChip(block, isLast){
+        if(block.k === "walk") return { type: isLast ? "Nedtrapping" : "Oppvarming", typeClass: "warm" };
+        if(block.k === "ladder") return { type: "Fartlek", typeClass: "hard" };
+        if(block.k === "reps"){
+          const l = block.label.toLowerCase();
+          return { type: l.includes("terskel") ? "Terskel" : "Intervall", typeClass: "hard" };
+        }
+        const l = block.label.toLowerCase();
+        if(l.includes("siste")) return { type: "Avslutning", typeClass: "easy" };
+        if(l.includes("selvtest")) return { type: "Test", typeClass: "hard" };
+        if(l.includes("nær terskel") || l.includes("terskeltur")) return { type: "Terskel", typeClass: "hard" };
+        if(l.includes("steady")) return { type: "Steady", typeClass: "easy" };
+        if(l.includes("langtur")) return { type: "Langtur", typeClass: "easy" };
+        if(l.includes("oppvarmingsjogg") || l.includes("oppvarmingsløp")) return { type: "Oppvarming", typeClass: "warm" };
+        if(l.includes("nedtrappingsløp")) return { type: "Nedtrapping", typeClass: "warm" };
+        return { type: "Rolig", typeClass: "easy" };
+      }
+
+      // Tittel for en hel økt (brukt i dags-oversikten på resultatskjermen) —
+      // plukker den ene blokken som ikke er oppvarming/nedtrapping, siden det
+      // er den som faktisk definerer hva slags økt dette er.
+      function sessionTitle(session){
+        const main = session.find(b => sessionTypeChip(b, false).typeClass !== "warm");
+        return main ? sessionTypeChip(main, false).type : "Løpeøkt";
+      }
+
+      // Ett-linjes sammendrag av en gitt uke, brukt i 12-ukers kjøreplanen —
+      // f.eks. "Intervall" for en uke med kun én økttype, eller
+      // "Intervall · Terskel · Langtur" for en uke med flere.
+      function weekRoadmapSummary(level, week){
+        return getRunProgramWeekSessions(level, week).map(sessionTitle).join(" · ");
+      }
+
+      // Slår sammen etterfølgende uker med identisk sammendrag til én rad
+      // (f.eks. "Uke 7-12" i stedet for seks like rader) — så kjøreplanen
+      // holder seg kort og lesbar selv når mange uker er like.
+      function buildRoadmapRows(level){
+        const rows = [];
+        let i = 1;
+        while(i <= PROGRAM_TOTAL_WEEKS){
+          const summary = weekRoadmapSummary(level, i);
+          let j = i;
+          while(j + 1 <= PROGRAM_TOTAL_WEEKS && weekRoadmapSummary(level, j + 1) === summary) j++;
+          rows.push({ label: j > i ? `Uke ${i}-${j}` : `Uke ${i}`, summary });
+          i = j + 1;
+        }
+        return rows;
+      }
+
+      function renderRoadmap(level){
+        const rows = buildRoadmapRows(level);
+        refs.roadmap.innerHTML = `<p class="tbp-roadmap-title">Slik utvikler programmet seg over ${PROGRAM_TOTAL_WEEKS} uker</p>` +
+          rows.map(r => `<div class="tbp-roadmap-row"><span class="wk">${escapeHtml(r.label)}</span><span class="desc">${escapeHtml(r.summary)}</span></div>`).join("");
+      }
+
+      // Samme kjøreplan-prinsipp som Løping over, men for svømmekortene, som
+      // allerede er ferdigbygde kort (ikke "blokker") — plukker bare ut
+      // hovedøktens type-navn direkte fra kortet.
+      function swimSessionTitle(session){
+        const main = session.find(c => c.typeClass !== "warm");
+        return main ? main.type : "Svømmeøkt";
+      }
+      // Øktypene (Fitness/Teknikk/Utholdenhet) er de samme hver uke — det som
+      // faktisk endrer seg er hvor lang utholdenhetsøkten er, ettersom
+      // programmet flytter seg gjennom guidens 7 ekte uker. Viser derfor
+      // guide-uken + utholdenhetslengden, ikke øktypene, så rekkeplanen
+      // faktisk viser progresjonen.
+      function swimWeekRoadmapSummary(level, week){
+        const w = Math.min(12, Math.max(1, week));
+        const vw = (SWIM_LEVEL_SRC_MAP[level] || SWIM_LEVEL_SRC_MAP[1])[w - 1];
+        const d = OSS_SWIM_WEEKS[vw];
+        return `Guide-uke ${vw} · Sammenhengende svøm ${d.enduranceMin} min`;
+      }
+      function buildSwimRoadmapRows(level){
+        const rows = [];
+        let i = 1;
+        while(i <= PROGRAM_TOTAL_WEEKS){
+          const summary = swimWeekRoadmapSummary(level, i);
+          let j = i;
+          while(j + 1 <= PROGRAM_TOTAL_WEEKS && swimWeekRoadmapSummary(level, j + 1) === summary) j++;
+          rows.push({ label: j > i ? `Uke ${i}-${j}` : `Uke ${i}`, summary });
+          i = j + 1;
+        }
+        return rows;
+      }
+      function renderSwimRoadmap(level){
+        const rows = buildSwimRoadmapRows(level);
+        refs.roadmap.innerHTML = `<p class="tbp-roadmap-title">Slik utvikler programmet seg over ${PROGRAM_TOTAL_WEEKS} uker</p>` +
+          rows.map(r => `<div class="tbp-roadmap-row"><span class="wk">${escapeHtml(r.label)}</span><span class="desc">${escapeHtml(r.summary)}</span></div>`).join("");
+      }
+
+      // Samme prinsipp som swimSessionTitle — spinningkortene er allerede
+      // ferdigbygde, og øktypene (Speed/Ladder/Climbing/Sunday) er de samme
+      // hver uke. Det som endrer seg er fasen (30 min vs. 60 min-mal) og om
+      // 5. maks-innsats-økt er lagt til (uke 9-11) — vis det i stedet.
+      function spinSessionTitle(session){
+        const main = session.find(c => c.typeClass !== "warm");
+        return main ? main.type : "Spinningøkt";
+      }
+      function spinWeekRoadmapSummary(level, week){
+        const w = Math.min(12, Math.max(1, week));
+        const pw = (SPIN_LEVEL_SRC_MAP[level] || SPIN_LEVEL_SRC_MAP[1])[w - 1];
+        const phase = spinPhaseForWeek(pw);
+        const count = spinSessionCountForWeek(pw);
+        return `Plan-uke ${pw} · ${phase === "long" ? "60 min" : "30 min"}-økter${count === 5 ? " + maks-test" : ""}`;
+      }
+      function buildSpinRoadmapRows(level){
+        const rows = [];
+        let i = 1;
+        while(i <= PROGRAM_TOTAL_WEEKS){
+          const summary = spinWeekRoadmapSummary(level, i);
+          let j = i;
+          while(j + 1 <= PROGRAM_TOTAL_WEEKS && spinWeekRoadmapSummary(level, j + 1) === summary) j++;
+          rows.push({ label: j > i ? `Uke ${i}-${j}` : `Uke ${i}`, summary });
+          i = j + 1;
+        }
+        return rows;
+      }
+      function renderSpinRoadmap(level){
+        const rows = buildSpinRoadmapRows(level);
+        refs.roadmap.innerHTML = `<p class="tbp-roadmap-title">Slik utvikler programmet seg over ${PROGRAM_TOTAL_WEEKS} uker</p>` +
+          rows.map(r => `<div class="tbp-roadmap-row"><span class="wk">${escapeHtml(r.label)}</span><span class="desc">${escapeHtml(r.summary)}</span></div>`).join("");
+      }
+
+      // Samme prinsipp som swim/spin over — gåturkortene er ferdigbygde og
+      // øktypene (Gåtur/Intervalltur/Motbakketur) er konstante hver uke.
+      // Viser derfor varighet + intervallmønster + motbakke-nivå i stedet.
+      function walkSessionTitle(session){
+        const main = session[0];
+        return main ? main.type : "Gåtur";
+      }
+      function walkWeekRoadmapSummary(level, week){
+        const w = Math.min(12, Math.max(1, week));
+        const pw = (WALK_LEVEL_SRC_MAP[level] || WALK_LEVEL_SRC_MAP[1])[w - 1];
+        const min = WALK_BASE_MIN[pw - 1];
+        const patternId = WALK_INTERVAL_BY_WEEK[pw] || null;
+        const hillLevel = walkHillLevelForWeek(pw);
+        return `${min} min · ${patternId ? `Intervall #${patternId}` : "Ingen intervall enda"} · ${hillLevel ? `Motbakke (${hillLevel})` : "Ingen motbakke enda"}`;
+      }
+      function buildWalkRoadmapRows(level){
+        const rows = [];
+        let i = 1;
+        while(i <= PROGRAM_TOTAL_WEEKS){
+          const summary = walkWeekRoadmapSummary(level, i);
+          let j = i;
+          while(j + 1 <= PROGRAM_TOTAL_WEEKS && walkWeekRoadmapSummary(level, j + 1) === summary) j++;
+          rows.push({ label: j > i ? `Uke ${i}-${j}` : `Uke ${i}`, summary });
+          i = j + 1;
+        }
+        return rows;
+      }
+      function renderWalkRoadmap(level){
+        const rows = buildWalkRoadmapRows(level);
+        refs.roadmap.innerHTML = `<p class="tbp-roadmap-title">Slik utvikler programmet seg over ${PROGRAM_TOTAL_WEEKS} uker</p>` +
+          rows.map(r => `<div class="tbp-roadmap-row"><span class="wk">${escapeHtml(r.label)}</span><span class="desc">${escapeHtml(r.summary)}</span></div>`).join("");
+      }
+
+      // Samme prinsipp som swim/spin/walk over.
+      function jumpropeSessionTitle(session){
+        const main = session[0];
+        return main ? main.type : "Hoppetau";
+      }
+      function jumpropeContinuousSummary(continuous){
+        if(continuous.kind === "single") return `${continuous.min} min sammenhengende`;
+        if(continuous.kind === "reps") return `${continuous.reps}×${formatMinSec(continuous.workSec)} sammenhengende`;
+        return "Åpen test";
+      }
+      function jumpropeWeekRoadmapSummary(level, week){
+        const w = Math.min(12, Math.max(1, week));
+        const sw = (JUMPROPE_LEVEL_SRC_MAP[level] || JUMPROPE_LEVEL_SRC_MAP[1])[w - 1];
+        const d = JUMPROPE_WEEKS[sw];
+        return `Kilde-uke ${sw} · Intervall ${d.interval.reps}×${d.interval.workSec}s/${d.interval.restSec}s · ${jumpropeContinuousSummary(d.continuous)}`;
+      }
+      function buildJumpropeRoadmapRows(level){
+        const rows = [];
+        let i = 1;
+        while(i <= PROGRAM_TOTAL_WEEKS){
+          const summary = jumpropeWeekRoadmapSummary(level, i);
+          let j = i;
+          while(j + 1 <= PROGRAM_TOTAL_WEEKS && jumpropeWeekRoadmapSummary(level, j + 1) === summary) j++;
+          rows.push({ label: j > i ? `Uke ${i}-${j}` : `Uke ${i}`, summary });
+          i = j + 1;
+        }
+        return rows;
+      }
+      function renderJumpropeRoadmap(level){
+        const rows = buildJumpropeRoadmapRows(level);
+        refs.roadmap.innerHTML = `<p class="tbp-roadmap-title">Slik utvikler programmet seg over ${PROGRAM_TOTAL_WEEKS} uker</p>` +
+          rows.map(r => `<div class="tbp-roadmap-row"><span class="wk">${escapeHtml(r.label)}</span><span class="desc">${escapeHtml(r.summary)}</span></div>`).join("");
+      }
+
+      // Samme prinsipp som resten over.
+      function homeSessionTitle(session){
+        const rounds = session.filter(c => c.type === "Sirkel").length;
+        return `${rounds} runde${rounds > 1 ? "r" : ""}`;
+      }
+      function homeWeekRoadmapSummary(level, week){
+        const w = Math.min(12, Math.max(1, week));
+        const rounds = (HOME_LEVEL_SRC_MAP[level] || HOME_LEVEL_SRC_MAP[1])[w - 1];
+        const totalMin = Math.round((rounds * homeCircuitDurationSec() + (rounds - 1) * 60) / 60);
+        return `${rounds} runde${rounds > 1 ? "r" : ""} av sirkelen (≈${totalMin} min)`;
+      }
+      function buildHomeRoadmapRows(level){
+        const rows = [];
+        let i = 1;
+        while(i <= PROGRAM_TOTAL_WEEKS){
+          const summary = homeWeekRoadmapSummary(level, i);
+          let j = i;
+          while(j + 1 <= PROGRAM_TOTAL_WEEKS && homeWeekRoadmapSummary(level, j + 1) === summary) j++;
+          rows.push({ label: j > i ? `Uke ${i}-${j}` : `Uke ${i}`, summary });
+          i = j + 1;
+        }
+        return rows;
+      }
+      function renderHomeRoadmap(level){
+        const rows = buildHomeRoadmapRows(level);
+        refs.roadmap.innerHTML = `<p class="tbp-roadmap-title">Slik utvikler programmet seg over ${PROGRAM_TOTAL_WEEKS} uker</p>` +
+          rows.map(r => `<div class="tbp-roadmap-row"><span class="wk">${escapeHtml(r.label)}</span><span class="desc">${escapeHtml(r.summary)}</span></div>`).join("");
+      }
+
+      function blockToCard(block, isLast){
+        const { type, typeClass } = sessionTypeChip(block, isLast);
+        if(block.k === "walk"){
+          return { name: block.label, emoji: "🚶", img: RUN_PHOTOS.walk, sets: 1, reps: formatMinSec(block.sec), rest: "Rolig gange", tip: coachTipForWalk(), type, typeClass, durationSeconds: block.sec, videoUrl: "" };
+        }
+        if(block.k === "run"){
+          return { name: block.label, emoji: "🏃", img: RUN_PHOTOS.run, sets: 1, reps: formatMinSec(block.sec), rest: shortEffortForRun(block.label), tip: coachTipForRun(block.label), type, typeClass, durationSeconds: block.sec, videoUrl: "" };
+        }
+        if(block.k === "reps"){
+          return { name: block.label, emoji: "🏃", img: RUN_PHOTOS.hard, sets: block.count, reps: `Løp ${formatMinSec(block.workSec)}`, rest: `${block.restLabel} ${formatMinSec(block.restSec)}`, tip: coachTipForReps(block.label, block.restLabel), type, typeClass, durationSeconds: block.count * (block.workSec + block.restSec), videoUrl: "" };
+        }
+        // ladder — sets holdes på 1 (ikke antall drag) for at "X runder"-pillen
+        // ikke skal antyde at dragene er like lange; reps-teksten viser den
+        // faktiske, nedadgående stigen i stedet.
+        return { name: block.label, emoji: "🏃", img: RUN_PHOTOS.hard, sets: 1, reps: `${block.mins.join("-")} min hardt`, rest: `${formatMinSec(block.jogSec)} jogg mellom`, tip: coachTipForLadder(), type, typeClass, durationSeconds: block.mins.reduce((a, b) => a + b * 60, 0), videoUrl: "" };
+      }
+
+      function sessionToExercises(session){ return session.map((block, i) => blockToCard(block, i === session.length - 1)); }
+
+      // ---- Nivå 1: NHS Couch to 5K (ekte, uke 1-9) + vedlikehold uke 10-12 --
+      // "Gå" oppgis eksplisitt som restLabel (ikke standard "Gå/jogg") — ekte
+      // C25K bruker kun gange i pausen for nybegynnere, aldri jogg.
+      // Der NHS sitt "siste løp" har nøyaktig samme lengde som resten av
+      // dragene i den samme økten, er det slått sammen til én rundetelling
+      // (f.eks. 8 runder i stedet for "7 runder + ett siste løp") — det ser
+      // uansett helt likt ut for kunden, og er enklere å lese. Uke 3, 4 og
+      // uke 6 sin første variant har et siste løp med AVVIKENDE lengde fra
+      // dragene rett før (f.eks. 3 min etter en serie 1,5-min-drag) — disse
+      // kan ikke slås sammen uten å gi feil lengde, og beholder derfor et eget
+      // "Siste løp"-kort (økten sin coach-tekst forklarer hvorfor).
+      const RUN_PROGRAM_LEVEL1_WEEKS = [
+        [[W(5), REPS(8, 1, 1.5, "Intervaller", "Gå"), W(5)]],
+        [[W(5), REPS(6, 1.5, 2, "Intervaller", "Gå"), W(5)]],
+        [[W(5), REPS(1, 1.5, 1.5, "Intervaller", "Gå"), REPS(1, 3, 3, "Intervaller", "Gå"), REPS(1, 1.5, 1.5, "Intervaller", "Gå"), R(3, "Siste løp"), W(5)]],
+        [[W(5), REPS(1, 3, 1.5, "Intervaller", "Gå"), REPS(1, 5, 2.5, "Intervaller", "Gå"), REPS(1, 3, 1.5, "Intervaller", "Gå"), R(5, "Siste løp"), W(5)]],
+        [
+          [W(5), REPS(3, 5, 3, "Intervaller", "Gå"), W(5)],
+          [W(5), REPS(2, 8, 5, "Intervaller", "Gå"), W(5)],
+          [W(5), R(20, "Langtur"), W(5)]
+        ],
+        [
+          [W(5), REPS(1, 5, 3, "Intervaller", "Gå"), REPS(1, 8, 3, "Intervaller", "Gå"), R(5, "Siste løp"), W(5)],
+          [W(5), REPS(2, 10, 3, "Intervaller", "Gå"), W(5)],
+          [W(5), R(25, "Langtur"), W(5)]
+        ],
+        // Uke 7-12: NHS sin offisielle plan er bare sammenhengende løp herfra
+        // (du er "ferdig" med Couch to 5K), men det gir ren langkjøring uke
+        // etter uke uten variasjon. Holder derfor alltid en intervalldag og
+        // en langtur i kombinasjon — egen, mildere intervall-progresjon lagt
+        // til av oss (ikke fra NHS), som en naturlig fortsettelse etter
+        // uke 6 sine drag.
+        [
+          [W(5), REPS(4, 4, 1, "Intervaller", "Gå"), W(5)],
+          [W(5), R(25, "Langtur"), W(5)]
+        ],
+        [
+          [W(5), REPS(4, 5, 1, "Intervaller", "Gå"), W(5)],
+          [W(5), R(28, "Langtur"), W(5)]
+        ],
+        [
+          [W(5), REPS(3, 6, 1, "Intervaller", "Gå"), W(5)],
+          [W(5), R(30, "Langtur"), W(5)]
+        ],
+        [
+          [W(5), REPS(3, 6, 1, "Intervaller", "Gå"), W(5)],
+          [W(5), R(30, "Langtur"), W(5)]
+        ],
+        [
+          [W(5), REPS(3, 6, 1, "Intervaller", "Gå"), W(5)],
+          [W(5), R(30, "Langtur"), W(5)]
+        ],
+        [
+          [W(5), REPS(3, 6, 1, "Intervaller", "Gå"), W(5)],
+          [W(5), R(30, "Langtur"), W(5)]
+        ]
+      ];
+
+      // ---- Nivå 2-3: NHS Charities Together / Running With Us «10km Beginner»
+      // (ekte ukedata, indeksert 1-9). Nivå 2 og 3 plukker forskjellige uker
+      // fra samme kilde-tabell (se *_SRC_MAP under).
+      const NHSC_WEEKS = {
+        1: [[REPS(2, 10, 5, "Løp/gå")], [REPS(2, 12, 3, "Løp/gå")], [REPS(2, 15, 5, "Løp/gå")]],
+        2: [[R(20, "Rolig løpetur")], [R(20, "Rolig løpetur")], [R(30, "Rolig løpetur")]],
+        3: [[R(10, "Oppvarmingsløp"), REPS(3, 3, 2, "Terskelintervall", "Gå/jogg")], [R(30, "Rolig løpetur")], [R(40, "Rolig løpetur")]],
+        4: [[R(10, "Oppvarmingsløp"), REPS(3, 4, 2, "Terskelintervall", "Gå/jogg"), R(10, "Nedtrappingsløp")], [R(10, "Rolig løp"), R(10, "Steady løp"), R(10, "Rolig løp")], [R(40, "Rolig løpetur")]],
+        5: [[R(30, "Rolig løpetur")], [R(40, "Rolig løpetur")], [R(25, "Selvtest — løp så fort du greier")], [R(30, "Rolig løpetur")]],
+        6: [[REPS(3, 5, 2, "Terskelintervall", "Jogg")], [R(35, "Rolig løpetur")], [R(50, "Rolig løpetur")]],
+        7: [[REPS(4, 5, 1.5, "Terskelintervall", "Jogg")], [R(10, "Rolig løp"), R(10, "Steady løp"), R(10, "Nær terskel")], [R(55, "Rolig løpetur")]],
+        8: [[REPS(4, 6, 2, "Terskelintervall", "Jogg")], [R(20, "Rolig løp"), R(20, "Steady løp")], [R(65, "Rolig løpetur")]],
+        9: [[LADDER([6, 5, 4, 3, 2, 1], 90, "Fartlek-stige")], [R(15, "Rolig løp"), R(15, "Steady løp"), R(15, "Nær terskel")], [R(40, "Rolig løpetur")]]
+      };
+      const LEVEL2_SRC_MAP = [1, 2, 3, 4, 5, 6, 7, 7, 7, 7, 7, 7];
+      const LEVEL3_SRC_MAP = [2, 3, 4, 5, 6, 7, 8, 9, 9, 9, 9, 9];
+
+      // ---- Nivå 4-5: strukturert etter Hal Higdon «Advanced 10K» sin
+      // repetisjons-opptrapping (6×400m → 12×400m), oversatt til tid siden
+      // appen ikke måler distanse. Rolig/terskel-/langtur-dagene er lagt til
+      // for en hel treningsuke — ikke bare rene intervalløkter.
+      function buildLevel4Week(w){
+        const t = (w - 1) / 11;
+        const reps = Math.round(6 + t * 4);
+        const easyMin = Math.round(20 + t * 15);
+        const longMin = Math.round(30 + t * 30);
+        return [
+          [R(8, "Oppvarmingsjogg"), REPS(reps, 1.25, 1.25, "Intervall", "Jogg"), W(5)],
+          [R(easyMin, "Rolig løpetur")],
+          [R(longMin, "Langtur")]
+        ];
+      }
+      function buildLevel5Week(w){
+        const t = (w - 1) / 11;
+        const reps = Math.round(6 + t * 6);
+        const restSec = Math.round(90 - t * 45);
+        const tempoMin = Math.round(25 + t * 20);
+        const longMin = Math.round(40 + t * 30);
+        return [
+          [R(8, "Oppvarmingsjogg"), REPS(reps, 1.5, restSec / 60, "Intervall", "Jogg"), W(5)],
+          [R(tempoMin, "Terskeltur")],
+          [R(longMin, "Langtur")]
+        ];
+      }
+
+      function getRunProgramWeekSessions(level, week){
+        const w = Math.min(12, Math.max(1, week));
+        if(level === 1) return RUN_PROGRAM_LEVEL1_WEEKS[w - 1];
+        if(level === 2) return NHSC_WEEKS[LEVEL2_SRC_MAP[w - 1]];
+        if(level === 3) return NHSC_WEEKS[LEVEL3_SRC_MAP[w - 1]];
+        if(level === 4) return buildLevel4Week(w);
+        return buildLevel5Week(w);
+      }
+
+      // ============================================================
+      // Svømmeprogram — bygget på ekte, navngitt kilde: «Swimming 5k Training
+      // Guide» av Kate Rew (Outdoor Swimming Society) og Dan Bullock
+      // (Swimfortri), oss sin offentlige «Couch to 5k»-svømmeguide
+      // (outdoorswimmingsociety.com/the-oss-couch-to-5k). Guiden har 7 uker
+      // med ekte, publiserte økter (3 økter/uke: Fitness, Teknikk,
+      // Utholdenhet) — alle 7 ukers tall under er hentet direkte derfra.
+      // Samme motor (kopiert) finnes i vanekalender.html — hold i sync.
+      //
+      // Nivåene bruker alle disse samme 7 ekte ukene, bare med forskjellig
+      // starttempo (nivå 1 følger guiden uke for uke fra uke 1, nivå 5
+      // starter allerede på guidens uke 5) — INGEN av tallene er oppspunnet
+      // eller ekstrapolert utover det guiden faktisk sier, i motsetning til
+      // løpeprogrammets nivå 4-5 (som oversetter Hal Higdon sin
+      // repetisjons-opptrapping). Når en uke i programmet når guidens siste
+      // uke (7), holdes den for resten av 12-ukersperioden — samme prinsipp
+      // som løpeprogrammets nivå 1 (holder NHS sin uke 9).
+      // ============================================================
+      const SWIM_PHOTOS = {
+        main: "https://images.pexels.com/photos/16516753/pexels-photo-16516753.jpeg?auto=compress&cs=tinysrgb&h=200&fit=crop&w=300"
+      };
+
+      // 4 drill som roterer gjennom programmet, nøyaktig som i guiden: uke 1
+      // og 5 = Clenched Fist, uke 2 og 6 = Extension Switch, uke 3 og 7 =
+      // Torpedo, uke 4 = Glute Kick.
+      const SWIM_DRILL_CYCLE = [
+        { name: "Clenched Fist-drill", tip: "Svøm med knyttet neve for å bedre grepet og følelsen for vannet — det gjør at vannet kjennes «fastere» når du drar med hånd og underarm." },
+        { name: "Extension Switch-drill", tip: "Fokuser på kroppsposisjon og strømlinjeform, og på å puste til begge sider — husk å bytte side i drillen." },
+        { name: "Torpedo-drill", tip: "Jobb med rotasjonen i svømmingen — bedre rotasjon gir lengre drag, bedre strømlinjeform og lettere pust til begge sider." },
+        { name: "Glute Kick-drill", tip: "Jobb med beinsparket — spark fra hoften/setet i stedet for kneet, så beina ikke synker." }
+      ];
+      function swimDrillForWeek(vw){ return SWIM_DRILL_CYCLE[(vw - 1) % 4]; }
+
+      // Ekte, publiserte tall fra guidens 7 uker (fitnessMin/fEasy/fMed =
+      // fartlek-mønsteret i FITNESS-økten, techMin/tStrokeSec/tDrillSec =
+      // mønsteret i TEKNIKK-økten, enduranceMin = sammenhengende svøm i
+      // UTHOLDENHET-økten). Guiden legger i tillegg 9 min oppvarming + 3 min
+      // nedtrapping til FØR/ETTER hver av de tre øktene (se swimWarmCard/
+      // swimCoolCard) — fast for alle uker, ikke bare de 7 ekte.
+      const OSS_SWIM_WEEKS = {
+        1: { fitnessMin: 12, fEasy: 2, fMed: 1, techMin: 10, tStrokeSec: 90, tDrillSec: 30, enduranceMin: 12 },
+        2: { fitnessMin: 16, fEasy: 2, fMed: 2, techMin: 12, tStrokeSec: 90, tDrillSec: 30, enduranceMin: 15 },
+        3: { fitnessMin: 18, fEasy: 1, fMed: 2, techMin: 16, tStrokeSec: 90, tDrillSec: 15, enduranceMin: 20 },
+        4: { fitnessMin: 20, fEasy: 1, fMed: 3, techMin: 16, tStrokeSec: 120, tDrillSec: 10, enduranceMin: 25 },
+        5: { fitnessMin: 24, fEasy: 2, fMed: 2, techMin: 18, tStrokeSec: 120, tDrillSec: 30, enduranceMin: 30 },
+        6: { fitnessMin: 30, fEasy: 1, fMed: 2, techMin: 24, tStrokeSec: 90, tDrillSec: 30, enduranceMin: 40 },
+        7: { fitnessMin: 32, fEasy: 1, fMed: 3, techMin: 32, tStrokeSec: 210, tDrillSec: 15, enduranceMin: 50 }
+      };
+
+      // Nivå → hvilken av de 7 ekte ukene programukene mappes til. Alle 5
+      // ender opp med å holde uke 7 (guidens tyngste, ekte uke) — de skiller
+      // seg bare i hvor fort de kommer dit, basert på nivåtesten.
+      const SWIM_LEVEL_SRC_MAP = {
+        1: [1, 2, 3, 4, 5, 6, 7, 7, 7, 7, 7, 7],
+        2: [2, 3, 4, 5, 6, 7, 7, 7, 7, 7, 7, 7],
+        3: [3, 4, 5, 6, 7, 7, 7, 7, 7, 7, 7, 7],
+        4: [4, 5, 6, 7, 7, 7, 7, 7, 7, 7, 7, 7],
+        5: [5, 6, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7]
+      };
+
+      function swimWarmCard(){
+        return { name: "Oppvarming – Svømming", emoji: "🏊", img: SWIM_PHOTOS.main, sets: 1, reps: "9 min", rest: "Rolig innsvømming", tip: "Bruk de første 6 minuttene på å bli komfortabel i vannet og finne rytmen. De siste 3 minuttene: 10 tak rolig, 20 tak litt raskere — gjentatt — for å heve pulsen gradvis.", type: "Oppvarming", typeClass: "warm", durationSeconds: 540, videoUrl: "" };
+      }
+      function swimCoolCard(){
+        return { name: "Nedtrapping – Svømming", emoji: "🏊", img: SWIM_PHOTOS.main, sets: 1, reps: "3 min", rest: "Rolig svømming", tip: "Rolig og avslappet svømming (gjerne ryggsvømming, hvis trygt der du svømmer) for å roe ned skuldrene etter økten.", type: "Nedtrapping", typeClass: "warm", durationSeconds: 180, videoUrl: "" };
+      }
+      function swimFartCard(min, easyMin, medMin){
+        const cycleMin = easyMin + medMin;
+        const reps = Math.round(min / cycleMin);
+        return { name: "Fartlek – rolig/medium", emoji: "🏊", img: SWIM_PHOTOS.main, sets: reps, reps: formatMinSec(min * 60), rest: `${easyMin} min rolig → ${medMin} min medium, gjentatt`, tip: "Tempo: rolig = snakketempo. Medium = merkbart arbeid, men kontrollert — ikke press på svømmetaket.", type: "Fartlek", typeClass: "hard", durationSeconds: min * 60, videoUrl: "" };
+      }
+      function swimDrillCard(min, strokeSec, drillSec, vw){
+        const drill = swimDrillForWeek(vw);
+        return { name: drill.name, emoji: "🏊", img: SWIM_PHOTOS.main, sets: 1, reps: formatMinSec(min * 60), rest: `${strokeSec} sek svøm → ${drillSec} sek drill, gjentatt`, tip: drill.tip, type: "Teknikk", typeClass: "easy", durationSeconds: min * 60, videoUrl: "" };
+      }
+      function swimContCard(min){
+        return { name: "Sammenhengende svøm", emoji: "🏊", img: SWIM_PHOTOS.main, sets: 1, reps: formatMinSec(min * 60), rest: "Rolig og jevnt", tip: "Fokuser på å puste til begge sider og ha jevnt drag med hånd og underarm — det er farten og distansen som teller minst her, roen i taket som teller mest.", type: "Utholdenhet", typeClass: "easy", durationSeconds: min * 60, videoUrl: "" };
+      }
+
+      function buildSwimWeekSessions(vw){
+        const d = OSS_SWIM_WEEKS[vw];
+        return [
+          [swimWarmCard(), swimFartCard(d.fitnessMin, d.fEasy, d.fMed), swimCoolCard()],
+          [swimWarmCard(), swimDrillCard(d.techMin, d.tStrokeSec, d.tDrillSec, vw), swimCoolCard()],
+          [swimWarmCard(), swimContCard(d.enduranceMin), swimCoolCard()]
+        ];
+      }
+
+      function getSwimProgramWeekSessions(level, week){
+        const w = Math.min(12, Math.max(1, week));
+        const vw = (SWIM_LEVEL_SRC_MAP[level] || SWIM_LEVEL_SRC_MAP[1])[w - 1];
+        return buildSwimWeekSessions(vw);
+      }
+
+      // ============================================================
+      // Spinning-program — bygget på to ekte, navngitte kilder:
+      // 1) CSS Fitness sin offentlige, gratis «12-Week Indoor Cycling
+      //    Training Plan» (cssfitness.co.uk) — selve 12-ukers strukturen
+      //    (Speed Intervals / Ladder Intervals / Climbing Bursts / Sunday
+      //    Ride, uke 1-4 på 30 min, uke 5-8 på 60 min, uke 9-11 + en 5.
+      //    maks-innsats-økt, uke 12 tilbake til 30 min som avslutningsuke).
+      // 2) Spinning® sine offisielle «5 Energy Zones» (Mad Dogg Athletics,
+      //    opphavet til selve Spinning-konseptet) — brukt til å beskrive
+      //    innsatsnivåene i coach-tekstene (Recovery/Endurance/Tempo/VO2
+      //    Max/Anaerobic, med RPM- og %-makspuls-intervaller).
+      // Samme motor (kopiert) finnes i vanekalender.html — hold i sync.
+      //
+      // Nivåene starter på forskjellige punkt i den SAMME ekte 12-ukers
+      // planen (nivå 1 følger den nøyaktig fra uke 1, nivå 5 starter
+      // allerede på uke 7) — ingen oppspunnede tall, akkurat som
+      // svømmeprogrammet.
+      // ============================================================
+      const SPIN_PHOTOS = { main: "https://images.pexels.com/photos/4162543/pexels-photo-4162543.jpeg?auto=compress&cs=tinysrgb&h=200&fit=crop&w=300" };
+
+      const SPIN_ZONE_TIP = {
+        recovery: "Recovery-sone (Spinning® Energy Zones): lett tråkk, 50–65 % av makspuls — bare beina som roterer, ingen anstrengelse.",
+        endurance: "Endurance-sone: lett til moderat motstand, 80–110 RPM, 65–75 % av makspuls — du skal kunne prate i hele setninger.",
+        tempo: "Tempo-sone: moderat til tung motstand, 60–80 RPM, 75–85 % av makspuls — merkbart arbeid, korte setninger.",
+        vo2: "VO2 Max-sone: 60–110 RPM, 65–92 % av makspuls — hardt, andpusten.",
+        anaerobic: "Anaerobic-sone: tung motstand, 80–92 % av makspuls — maks innsats, kort varighet."
+      };
+
+      // De to malene fra CSS Fitness sin plan — "short" er uke 1-4 og uke 12
+      // (avslutningsuken går tilbake til dette nivået), "long" er uke 5-11.
+      const SPIN_PHASES = {
+        short: { warm: 10, speedReps: 5, speedWork: 1, speedRest: 2, speedCool: 5,
+                 ladderSteps: [[3, 80], [2, 90], [1, 100]], ladderMid: 3, ladderCool: 5,
+                 climbReps: 4, climbWork: 2, climbStand: 30, climbCool: 10,
+                 sunday: 30 },
+        long: { warm: 15, speedReps: 10, speedWork: 1.5, speedRest: 1.5, speedCool: 15,
+                ladderSteps: [[5, 80], [4, 90], [2, 100]], ladderMid: 3, ladderCool: 20,
+                climbReps: 10, climbWork: 3, climbStand: 60, climbCool: 5,
+                sunday: 60 }
+      };
+      function spinPhaseForWeek(pw){ return (pw <= 4 || pw === 12) ? "short" : "long"; }
+      function spinSessionCountForWeek(pw){ return (pw >= 9 && pw <= 11) ? 5 : 4; }
+
+      function spinWarmCard(min){
+        return { name: "Oppvarming – Spinning", emoji: "🚴", img: SPIN_PHOTOS.main, sets: 1, reps: `${min} min`, rest: "Lett tråkk", tip: SPIN_ZONE_TIP.recovery, type: "Oppvarming", typeClass: "warm", durationSeconds: min * 60, videoUrl: "" };
+      }
+      function spinCoolCard(min){
+        return { name: "Nedtrapping – Spinning", emoji: "🚴", img: SPIN_PHOTOS.main, sets: 1, reps: `${min} min`, rest: "Lett tråkk", tip: SPIN_ZONE_TIP.recovery, type: "Nedtrapping", typeClass: "warm", durationSeconds: min * 60, videoUrl: "" };
+      }
+      function spinSpeedCard(reps, workMin, restMin){
+        return { name: "Speed Intervals", emoji: "🚴", img: SPIN_PHOTOS.main, sets: reps, reps: `${formatMinSec(workMin * 60)} rask kadens`, rest: `${formatMinSec(restMin * 60)} lett`, tip: "Høy kadens (rask tråkkfrekvens) i draget, i et komfortabelt gir — det er farten på beina, ikke motstanden, som skal være høy. " + SPIN_ZONE_TIP.vo2, type: "Speed Intervals", typeClass: "hard", durationSeconds: reps * (workMin + restMin) * 60, videoUrl: "" };
+      }
+      function spinClimbCard(reps, workMin, standSec){
+        return { name: "Climbing Bursts", emoji: "🚴", img: SPIN_PHOTOS.main, sets: reps, reps: `${formatMinSec(workMin * 60)} sittende, tung motstand`, rest: `${standSec} sek stående ut av sadelen`, tip: "Skru opp motstanden som en motbakke. Reis deg opp av sadelen i de stående dragene og hold rytmen i overkroppen. " + SPIN_ZONE_TIP.tempo, type: "Climbing Bursts", typeClass: "hard", durationSeconds: reps * (workMin * 60 + standSec), videoUrl: "" };
+      }
+      function spinLadderCard(steps, midMin){
+        const up = steps.map(s => s[0]).join("-");
+        const down = steps.map(s => s[0]).slice().reverse().join("-");
+        const totalMin = steps.reduce((a, s) => a + s[0], 0) * 2 + midMin;
+        return { name: "Ladder Intervals", emoji: "🚴", img: SPIN_PHOTOS.main, sets: 1, reps: `${up} → ${midMin} min lett → ${down} min`, rest: `Opp mot ${steps[steps.length - 1][1]}% innsats på toppen`, tip: "Motstanden trappes opp gjennom stigen (80 % → 90 % → 100 %), og ned igjen på vei tilbake. " + SPIN_ZONE_TIP.tempo, type: "Ladder Intervals", typeClass: "hard", durationSeconds: totalMin * 60, videoUrl: "" };
+      }
+      function spinEnduranceCard(min){
+        return { name: "Sunday Ride", emoji: "🚴", img: SPIN_PHOTOS.main, sets: 1, reps: `${min} min`, rest: "Rolig og jevnt", tip: "En lengre, snillere tur for grunnformen — ikke en hard økt. " + SPIN_ZONE_TIP.endurance, type: "Langtur", typeClass: "easy", durationSeconds: min * 60, videoUrl: "" };
+      }
+      function spinMaxEffortCard(min){
+        return { name: "Maks-innsats", emoji: "🚴", img: SPIN_PHOTOS.main, sets: 1, reps: `${min} min`, rest: "Egen struktur, maks innsats", tip: "Fritt opplegg denne dagen — du velger selv hvordan du legger opp økten, men innsatsen skal være maksimal. " + SPIN_ZONE_TIP.anaerobic, type: "Maks-test", typeClass: "hard", durationSeconds: min * 60, videoUrl: "" };
+      }
+
+      function buildSpinWeekSessions(pw){
+        const phase = SPIN_PHASES[spinPhaseForWeek(pw)];
+        const sessions = [
+          [spinWarmCard(phase.warm), spinSpeedCard(phase.speedReps, phase.speedWork, phase.speedRest), spinCoolCard(phase.speedCool)],
+          [spinWarmCard(phase.warm), spinLadderCard(phase.ladderSteps, phase.ladderMid), spinCoolCard(phase.ladderCool)],
+          [spinWarmCard(phase.warm), spinClimbCard(phase.climbReps, phase.climbWork, phase.climbStand), spinCoolCard(phase.climbCool)],
+          [spinEnduranceCard(phase.sunday)]
+        ];
+        if(spinSessionCountForWeek(pw) === 5){
+          sessions.push([spinWarmCard(5), spinMaxEffortCard(20), spinCoolCard(5)]);
+        }
+        return sessions;
+      }
+
+      // Nivå → hvilken av de 12 ekte plan-ukene programukene mappes til.
+      const SPIN_LEVEL_SRC_MAP = {
+        1: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+        2: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 12],
+        3: [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 12, 12],
+        4: [5, 6, 7, 8, 9, 10, 11, 12, 12, 12, 12, 12],
+        5: [7, 8, 9, 10, 11, 12, 12, 12, 12, 12, 12, 12]
+      };
+      function getSpinProgramWeekSessions(level, week){
+        const w = Math.min(12, Math.max(1, week));
+        const pw = (SPIN_LEVEL_SRC_MAP[level] || SPIN_LEVEL_SRC_MAP[1])[w - 1];
+        return buildSpinWeekSessions(pw);
+      }
+
+      // ============================================================
+      // Gåtur-program — bygget på to ekte, navngitte kilder:
+      // 1) Weber State University sitt offentlige, gratis «12-Week Walking
+      //    Program for Beginners» (weber.edu, Employee Wellness) — selve
+      //    12-ukers varighetsprogresjonen (10 → 60 min) og de 5 navngitte
+      //    intervallmønstrene (#1-#5, "gå X min normalt → Y min økt fart,
+      //    gjenta til turen er over"), som guiden selv introduserer fra og
+      //    med uke 5 (uke 1-4 er bare vanlig gange, ingen intervaller enda).
+      // 2) British Heart Foundation (bhf.org.uk) sin veiledning om gange:
+      //    «øk farten og/eller innfør motbakker» for å heve intensiteten,
+      //    og bygg opp distansen FØR du introduserer motbakker i ruta.
+      //    Motbakke-økten følger derfor samme prinsipp som intervallene —
+      //    kommer inn fra uke 5, ikke fra dag 1 — og trapper opp fra lette
+      //    til moderate motbakker fra uke 9 (samme uke intervallene også
+      //    trappes opp til mønster #3/#4).
+      // Samme motor (kopiert) finnes i vanekalender.html — hold i sync.
+      // ============================================================
+      const WALK_PHOTOS = { main: RUN_PHOTOS.walk };
+
+      const WALK_BASE_MIN = [10, 12, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60];
+
+      const WALK_INTERVAL_PATTERNS = {
+        1: { normalMin: 4, fastMin: 1 },
+        2: { normalMin: 2, fastMin: 1 },
+        3: { normalMin: 3, fastMin: 2 },
+        4: { normalMin: 2, fastMin: 3 },
+        5: { normalMin: 5, fastMin: 5 }
+      };
+      // Uke → hvilket intervallmønster (ingen felt = ingen intervall enda,
+      // nøyaktig som i Weber State sin tabell).
+      const WALK_INTERVAL_BY_WEEK = { 5: 1, 6: 2, 7: 2, 8: 3, 9: 3, 10: 4, 11: 4, 12: 5 };
+      // Uke → motbakke-nivå, etter BHF-prinsippet «bygg distansen først».
+      function walkHillLevelForWeek(pw){
+        if(pw < 5) return null;
+        return pw < 9 ? "lette" : "moderate";
+      }
+
+      function walkStraightCard(min){
+        return { name: "Gåtur", emoji: "🚶", img: WALK_PHOTOS.main, sets: 1, reps: `${min} min`, rest: "Behagelig gangfart", tip: "Jevnt, behagelig tempo — du skal kunne prate i hele setninger gjennom hele turen.", type: "Gåtur", typeClass: "easy", durationSeconds: min * 60, videoUrl: "" };
+      }
+      function walkIntervalCard(min, patternId){
+        if(!patternId) return walkStraightCard(min);
+        const p = WALK_INTERVAL_PATTERNS[patternId];
+        const cycleMin = p.normalMin + p.fastMin;
+        const reps = Math.max(1, Math.round((min - 5) / cycleMin));
+        return { name: "Intervalltur", emoji: "🚶", img: WALK_PHOTOS.main, sets: reps, reps: `${p.normalMin} min normalt → ${p.fastMin} min økt fart`, rest: "Gjenta til turen er over", tip: "5 min oppvarming i vanlig tempo, deretter gjentatt bytte mellom normalt tempo og økt fart — hev farten (kadensen), ikke nødvendigvis skrittlengden.", type: "Intervalltur", typeClass: "hard", durationSeconds: min * 60, videoUrl: "" };
+      }
+      function walkHillCard(min, hillLevel){
+        if(!hillLevel) return walkStraightCard(min);
+        const desc = hillLevel === "lette" ? "lette motbakker eller trapper" : "noe tyngre motbakker (eller høyere stigning på tredemølle)";
+        return { name: "Motbakketur", emoji: "🚶", img: WALK_PHOTOS.main, sets: 1, reps: `${min} min`, rest: hillLevel === "lette" ? "Lett stigning" : "Moderat stigning", tip: `Finn en rute med ${desc}. British Heart Foundation sin anbefaling for gange: øk farten og/eller innfør motbakker for å heve intensiteten, etter at grunndistansen først er bygget opp.`, type: "Motbakketur", typeClass: "hard", durationSeconds: min * 60, videoUrl: "" };
+      }
+
+      function buildWalkWeekSessions(pw){
+        const min = WALK_BASE_MIN[pw - 1];
+        const intervalPattern = WALK_INTERVAL_BY_WEEK[pw] || null;
+        const hillLevel = walkHillLevelForWeek(pw);
+        return [
+          [walkStraightCard(min)],
+          [walkIntervalCard(min, intervalPattern)],
+          [walkHillCard(min, hillLevel)]
+        ];
+      }
+
+      const WALK_LEVEL_SRC_MAP = {
+        1: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+        2: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 12],
+        3: [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 12, 12],
+        4: [5, 6, 7, 8, 9, 10, 11, 12, 12, 12, 12, 12],
+        5: [7, 8, 9, 10, 11, 12, 12, 12, 12, 12, 12, 12]
+      };
+      function getWalkProgramWeekSessions(level, week){
+        const w = Math.min(12, Math.max(1, week));
+        const pw = (WALK_LEVEL_SRC_MAP[level] || WALK_LEVEL_SRC_MAP[1])[w - 1];
+        return buildWalkWeekSessions(pw);
+      }
+
+      // ============================================================
+      // Hoppetau-program — bygget på to kilder:
+      // 1) Fagfellevurdert forskning: «Physical Fitness Promotion among
+      //    Adolescents: Effects of a Jump Rope-Based Physical Activity
+      //    Afterschool Program» (Children, 2020, MDPI/PubMed) — validerer
+      //    selve rammen: 12 uker, 3 økter/uke, som en reell, forsknings-
+      //    undersøkt struktur for hoppetau-trening.
+      // 2) Elevate Rope sin offentlige, gratis «Jump Rope Workout for
+      //    Beginners: Your Complete First 30 Days» — de faktiske tallene
+      //    (arbeid/pause i sekunder, antall runder, sammenhengende
+      //    hopp-mål), hentet direkte fra dag 1-30 i guiden. Guidens 4 ekte
+      //    uker mappes til programmets 12 uker — uke 4 (guidens egen
+      //    "vedlikeholds"-uke, dag 28 er uttalt en repetisjon av dag 22)
+      //    holdes for resten av perioden, samme prinsipp som de andre
+      //    programmene.
+      // Samme motor (kopiert) finnes i vanekalender.html — hold i sync.
+      // ============================================================
+      const JUMPROPE_PHOTOS = { main: "https://images.pexels.com/photos/8846350/pexels-photo-8846350.jpeg?auto=compress&cs=tinysrgb&h=200&fit=crop&w=300" };
+
+      const JUMPROPE_WEEKS = {
+        1: {
+          skill: { min: 6, tip: "Bygg opp mot 15-20 sammenhengende hopp. Ta pauser når tauet stopper — det er en naturlig del av å lære, ikke et nederlag." },
+          interval: { reps: 5, workSec: 30, restSec: 30 },
+          continuous: { kind: "open", tip: "Hopp sammenhengende så lenge du klarer, ta en pause, og prøv igjen 3-5 ganger. Notér deg gjerne antall hopp fra gang til gang." }
+        },
+        2: {
+          skill: { min: 6, tip: "Sirkel: 30 sek vanlig hopp, 30 sek pause, 30 sek annenhver-fot-hopp, 30 sek pause. Gjenta 3 runder." },
+          interval: { reps: 4, workSec: 60, restSec: 45 },
+          continuous: { kind: "reps", reps: 5, workSec: 60, restSec: 120 }
+        },
+        3: {
+          skill: { min: 12, tip: "Sirkel: 60 sek tau, 10 knebøy, 10 push-ups, 60 sek pause. Gjenta 4 runder." },
+          interval: { reps: 5, workSec: 90, restSec: 45 },
+          continuous: { kind: "reps", reps: 5, workSec: 120, restSec: 90 }
+        },
+        4: {
+          skill: { min: 13, tip: "2 min oppvarming, deretter 9 min der du bytter mellom vanlig hopp, annenhver-fot-hopp og high knees hvert 60. sekund, så 2 min nedtrapping." },
+          interval: { reps: 10, workSec: 30, restSec: 30, warmMin: 2, coolMin: 2 },
+          continuous: { kind: "single", min: 10 }
+        }
+      };
+
+      const JUMPROPE_LEVEL_SRC_MAP = {
+        1: [1, 2, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4],
+        2: [2, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4],
+        3: [3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4],
+        4: [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4],
+        5: [4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4]
+      };
+
+      function jumpropeSkillCard(skill){
+        return { name: "Teknikk", emoji: "🪢", img: JUMPROPE_PHOTOS.main, sets: 1, reps: `${skill.min} min`, rest: "Fokuser på teknikk, ikke fart", tip: skill.tip, type: "Teknikk", typeClass: "easy", durationSeconds: skill.min * 60, videoUrl: "" };
+      }
+      function jumpropeIntervalCard(interval){
+        const warm = interval.warmMin || 0;
+        const cool = interval.coolMin || 0;
+        const totalSec = (warm + cool) * 60 + interval.reps * (interval.workSec + interval.restSec);
+        const tip = warm
+          ? `${warm} min oppvarming før intervallene, ${cool} min nedtrapping etter — hold jevn rytme i hvert drag.`
+          : "Hold jevn rytme i hvert drag — det er OK om tauet stopper, bare fortsett rolig igjen.";
+        return { name: "Intervalltrening", emoji: "🪢", img: JUMPROPE_PHOTOS.main, sets: interval.reps, reps: `${interval.workSec} sek hopp`, rest: `${interval.restSec} sek pause`, tip, type: "Intervalltrening", typeClass: "hard", durationSeconds: totalSec, videoUrl: "" };
+      }
+      function jumpropeContinuousCard(continuous){
+        if(continuous.kind === "open"){
+          return { name: "Sammenhengende hopping", emoji: "🪢", img: JUMPROPE_PHOTOS.main, sets: 1, reps: "Test deg selv", rest: "Pause ved behov", tip: continuous.tip, type: "Utholdenhet", typeClass: "easy", durationSeconds: 300, videoUrl: "" };
+        }
+        if(continuous.kind === "single"){
+          return { name: "Sammenhengende hopping", emoji: "🪢", img: JUMPROPE_PHOTOS.main, sets: 1, reps: `${continuous.min} min`, rest: "Ett sammenhengende forsøk", tip: "Målet er å hoppe sammenhengende i hele perioden — stopper tauet, fortsett umiddelbart igjen uten å stoppe klokken.", type: "Utholdenhet", typeClass: "easy", durationSeconds: continuous.min * 60, videoUrl: "" };
+        }
+        return { name: "Sammenhengende hopping", emoji: "🪢", img: JUMPROPE_PHOTOS.main, sets: continuous.reps, reps: `${formatMinSec(continuous.workSec)} sammenhengende`, rest: `${formatMinSec(continuous.restSec)} pause`, tip: "Hvert drag skal være sammenhengende hopping uten stopp — bruk pausen til å hente deg helt inn før neste drag.", type: "Utholdenhet", typeClass: "easy", durationSeconds: continuous.reps * (continuous.workSec + continuous.restSec), videoUrl: "" };
+      }
+
+      function buildJumpropeWeekSessions(sw){
+        const d = JUMPROPE_WEEKS[sw];
+        return [
+          [jumpropeSkillCard(d.skill)],
+          [jumpropeIntervalCard(d.interval)],
+          [jumpropeContinuousCard(d.continuous)]
+        ];
+      }
+      function getJumpropeProgramWeekSessions(level, week){
+        const w = Math.min(12, Math.max(1, week));
+        const sw = (JUMPROPE_LEVEL_SRC_MAP[level] || JUMPROPE_LEVEL_SRC_MAP[1])[w - 1];
+        return buildJumpropeWeekSessions(sw);
+      }
+
+      // ============================================================
+      // Hjemme cardio-program — bygget på den fagfellevurderte «Scientific
+      // 7-Minute Workout» (Klika & Jordan, 2013, ACSM's Health & Fitness
+      // Journal, årgang 17, nr. 3) — 12 kroppsvekt-øvelser (kun stol og
+      // vegg som utstyr), 30 sek arbeid / 10 sek pause per øvelse, i fast
+      // rekkefølge (helkropp → underkropp → overkropp → kjerne). Samme
+      // artikkel anbefaler å gjenta hele sirkelen 2-3 ganger for å nå
+      // ACSM sin anbefalte ~20 min høyintensitetsdose — det er nøyaktig
+      // denne opptrappingen (1 → 2 → 3 runder) som brukes som 12-ukers
+      // progresjon her, ikke en oppspunnet skala. Én pause på 1 min
+      // mellom rundene er lagt til av oss (ikke fra artikkelen) — en
+      // rimelig, sikker mellompause, ikke et forskningstall.
+      // Kun ÉN økttype (sirkelen selv) — samme, uforandrede treningsform
+      // hver treningsdag, akkurat som i den opprinnelige artikkelen.
+      // Samme motor (kopiert) finnes i vanekalender.html — hold i sync.
+      // ============================================================
+      const HOME_PHOTOS = { main: "https://images.pexels.com/photos/4148919/pexels-photo-4148919.jpeg?auto=compress&cs=tinysrgb&h=200&fit=crop&w=300" };
+
+      const HOME_CIRCUIT_EXERCISES = [
+        "Hopp med åpne/lukkede ben (jumping jacks)",
+        "Vegg-sittende (wall sit)",
+        "Push-up",
+        "Magemuskler (crunch)",
+        "Step-up på stol",
+        "Knebøy",
+        "Triceps dip på stol",
+        "Planke",
+        "Høye kneløft på stedet",
+        "Utfall",
+        "Push-up med rotasjon",
+        "Sideplanke"
+      ];
+
+      function homeCircuitDurationSec(){
+        return HOME_CIRCUIT_EXERCISES.length * 30 + (HOME_CIRCUIT_EXERCISES.length - 1) * 10;
+      }
+      function homeCircuitCard(roundIndex, totalRounds){
+        const label = totalRounds > 1 ? `Sirkel — runde ${roundIndex + 1} av ${totalRounds}` : "Sirkel";
+        return { name: label, emoji: "🤸", img: HOME_PHOTOS.main, sets: HOME_CIRCUIT_EXERCISES.length, reps: "30 sek pr. øvelse", rest: "10 sek mellom hver", tip: `Rekkefølge: ${HOME_CIRCUIT_EXERCISES.join(" → ")}.`, type: "Sirkel", typeClass: "hard", durationSeconds: homeCircuitDurationSec(), videoUrl: "" };
+      }
+      function homeRestBetweenRoundsCard(){
+        return { name: "Pause mellom runder", emoji: "🤸", img: HOME_PHOTOS.main, sets: 1, reps: "1 min", rest: "Rolig", tip: "Kort pause før du starter sirkelen på nytt.", type: "Pause", typeClass: "warm", durationSeconds: 60, videoUrl: "" };
+      }
+
+      function buildHomeWeekSessions(rounds){
+        const session = [];
+        for(let r = 0; r < rounds; r++){
+          if(r > 0) session.push(homeRestBetweenRoundsCard());
+          session.push(homeCircuitCard(r, rounds));
+        }
+        return [session];
+      }
+
+      const HOME_LEVEL_SRC_MAP = {
+        1: [1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3],
+        2: [1, 1, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3],
+        3: [1, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+        4: [2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
+        5: [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3]
+      };
+      function getHomeProgramWeekSessions(level, week){
+        const w = Math.min(12, Math.max(1, week));
+        const rounds = (HOME_LEVEL_SRC_MAP[level] || HOME_LEVEL_SRC_MAP[1])[w - 1];
+        return buildHomeWeekSessions(rounds);
+      }
+
+      const DAY_LABELS = { mon:"Mandag", tue:"Tirsdag", wed:"Onsdag", thu:"Torsdag", fri:"Fredag", sat:"Lørdag", sun:"Søndag" };
+      const DAY_ORDER = Object.keys(DAY_LABELS);
+      const DEFAULT_TRAINING_DAYS = ["mon", "wed", "fri"];
+
+      // Alle program varer 12 uker — ingen ukevalg-steg lenger, enklest for
+      // kunden (ett spørsmål mindre) og gir alltid nok tid til å klatre
+      // gjennom flere nivå med automatisk progresjon.
+      const PROGRAM_TOTAL_WEEKS = 12;
+
+      const state = {
+        enduranceStyle: "",   // utholdenhet-stil
+        testLevel: null,      // 1-5, fra nivåtesten — eneste ting kunden styrer selv
+        duration: "30",       // fast — økt-lengde spørres ikke lenger om
+        days: [],
+        weeks: PROGRAM_TOTAL_WEEKS
+      };
+
+      let currentStep = "enduranceStyle";
+      let generatedEnduranceProgram = null;
+
+      // Flyt: Stil → Nivåtest → Dager → Resultat. Mål- og økt-lengde-
+      // spørsmål er fjernet — den avanserte progresjonsmodellen (nivå-
+      // basert oppvarming/intensitet, se buildEnduranceProgram) kjører
+      // usett i bakgrunnen uansett hvilket nivå kunden har.
+      function getStepOrder(){
+        const steps = ["enduranceStyle"];
+        steps.push("levelTest");
+        steps.push("days");
+        steps.push("result");
+        return steps;
+      }
+
+      const refs = {
+        panels: Array.from(document.querySelectorAll(".tbsa-panel")),
+        progressWrap: document.getElementById("tbpProgress"),
+        step: document.getElementById("tbpStep"),
+        daysGrid: document.getElementById("tbpDaysGrid"),
+        dayButtons: Array.from(document.querySelectorAll(".tbsa-day")),
+        daysNote: document.getElementById("tbpDaysNote"),
+        daysCoach: document.getElementById("tbpDaysCoach"),
+        daysCoachText: document.getElementById("tbpDaysCoachText"),
+        daysStatus: document.getElementById("tbpDaysStatus"),
+        goNextAfterDaysBtn: document.getElementById("tbpGoNextAfterDays"),
+        resultTitle: document.getElementById("tbpResultTitle"),
+        resultSub: document.getElementById("tbpResultSub"),
+        roadmap: document.getElementById("tbpRoadmap"),
+        resultList: document.getElementById("tbpResultList"),
+        resultBack: document.getElementById("tbpResultBack"),
+        useProgramBtn: document.getElementById("tbpUseProgram"),
+        savedNote: document.getElementById("tbpSavedNote")
+      };
+
+      function escapeHtml(str){
+        return String(str).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;");
+      }
+
+      function getYtId(url){
+        if(!url) return null;
+        const m = url.match(/(?:youtu\.be\/|[?&]v=)([A-Za-z0-9_-]{11})/);
+        return m ? m[1] : null;
+      }
+
+      function markSelected(group, value){
+        document.querySelectorAll(`[data-group="${group}"]`).forEach(btn => {
+          btn.classList.toggle("selected", btn.dataset.value === value);
+        });
+      }
+
+      function setStatus(el, text, mode){
+        el.textContent = text;
+        el.classList.remove("ok","warn");
+        if(mode) el.classList.add(mode);
+      }
+
+      function sortedDayLabel(ids){
+        return ids.slice().sort((a,b) => DAY_ORDER.indexOf(a) - DAY_ORDER.indexOf(b)).map(d => DAY_LABELS[d]).join(", ");
+      }
+
+      function renderProgressBar(){
+        const order = getStepOrder();
+        refs.progressWrap.innerHTML = order.map(() => "<div></div>").join("");
+      }
+
+      function showStep(step){
+        currentStep = step;
+        renderProgressBar();
+        const order = getStepOrder();
+        const idx = Math.max(order.indexOf(step), 0);
+        refs.panels.forEach(panel => panel.classList.toggle("active", panel.dataset.step === step));
+        refs.step.textContent = `Steg ${idx + 1} av ${order.length}`;
+        Array.from(refs.progressWrap.children).forEach((bar, i) => bar.classList.toggle("on", i <= idx));
+
+        if(step === "days"){
+          if(!state.days.length){
+            state.days = DEFAULT_TRAINING_DAYS.slice();
+          }
+          renderDays();
+        }
+        if(step === "result"){
+          refs.savedNote.classList.remove("show","warn");
+          renderResult();
+        }
+      }
+
+      // ---- Dager -------------------------------------------------------
+      // Ingen øvre grense på antall dager lenger (frekvens-spørsmålet er
+      // fjernet) — kunden krysser bare av dagene som passer.
+      //
+      // Anbefalt frekvens per løpenivå, hentet fra samme kilder som selve
+      // programmene (se getRunProgramWeekSessions): C25K er bygget for 3
+      // økter/uke med hvile mellom, NHSC-planen for 3-4, og de avanserte
+      // nivåene trenger nok dager til å romme intervall-, rolig- og langtur
+      // uten å kollidere. Vises som en anbefaling fra coachen — sperrer ikke
+      // kunden fra å velge færre eller flere dager.
+      const RUN_DAYS_RECOMMENDATION = {
+        1: { min: 3, text: "Jeg anbefaler 3 treningsdager i uken på dette nivået, gjerne med minst én hviledag mellom hver løpeøkt — kroppen trenger tid til å venne seg til belastningen." },
+        2: { min: 3, text: "Jeg anbefaler 3 treningsdager i uken. Spre dem gjerne utover uken, så rekker du å restituere mellom øktene." },
+        3: { min: 3, text: "Jeg anbefaler 3-4 treningsdager i uken på dette nivået, så du får nok variasjon mellom rolige økter og terskeløkter." },
+        4: { min: 4, text: "Jeg anbefaler minst 4 treningsdager i uken på dette nivået — du trenger både en intervalldag, en rolig dag og en langtur for å få full effekt av programmet." },
+        5: { min: 4, text: "Jeg anbefaler 4-5 treningsdager i uken på dette nivået, så det blir god plass til intervall, terskeltur og langtur." }
+      };
+
+      function renderDays(){
+        refs.dayButtons.forEach(btn => {
+          btn.classList.remove("sel");
+          const id = btn.dataset.day;
+          if(state.days.includes(id)) btn.classList.add("sel");
+        });
+        refs.daysNote.textContent = "Velg dagene du vil trene.";
+
+        if(state.enduranceStyle === "Løping"){
+          const rec = RUN_DAYS_RECOMMENDATION[getStrengthStartLevel()];
+          refs.daysCoachText.textContent = rec.text;
+          refs.daysCoach.classList.add("show");
+        } else {
+          refs.daysCoach.classList.remove("show");
+        }
+
+        updateDaysStatus();
+      }
+
+      function updateDaysStatus(){
+        if(!state.days.length){
+          setStatus(refs.daysStatus, "Velg minst én dag.");
+          refs.goNextAfterDaysBtn.disabled = true;
+          return;
+        }
+        let text = `Dagene er valgt: ${sortedDayLabel(state.days)}.`;
+        let mode = "ok";
+        if(state.enduranceStyle === "Løping"){
+          const rec = RUN_DAYS_RECOMMENDATION[getStrengthStartLevel()];
+          if(state.days.length < rec.min){
+            text += ` Jeg anbefaler minst ${rec.min} dager på dette nivået, men du kan gå videre med det du har valgt.`;
+            mode = "warn";
+          }
+        }
+        setStatus(refs.daysStatus, text, mode);
+        refs.goNextAfterDaysBtn.disabled = false;
+      }
+
+      function enduranceDayIds(){
+        return state.days.slice();
+      }
+
+      function getStrengthStartLevel(){
+        return state.testLevel || 1;
+      }
+
+      // Emoji og visningsnavn per utholdenhet-stil — brukes i resultat-
+      // tittelen og programnavnet i vanekalenderen, i stedet for det
+      // generiske "Utholdenhet" (som egentlig bare er kategorien, ikke
+      // aktiviteten kunden faktisk valgte).
+      const ENDURANCE_STYLE_META = {
+        "Løping": { emoji: "🏃", label: "Løping" },
+        "Spinning": { emoji: "🚴", label: "Spinning" },
+        "Hjemme": { emoji: "🤸", label: "Hjemme cardio" },
+        "Svømming": { emoji: "🏊", label: "Svømming" },
+        "Hoppetau": { emoji: "🪢", label: "Hoppetau" },
+        "Gå tur": { emoji: "🚶", label: "Gå tur" }
+      };
+      function getEnduranceStyleMeta(){
+        return ENDURANCE_STYLE_META[state.enduranceStyle] || ENDURANCE_STYLE_META["Løping"];
+      }
+
+      // ---- Bygg program -------------------------------------------------
+      function buildEnduranceProgram(){
+        const totalMin = Number(state.duration) || 30;
+        const startLevel = getStrengthStartLevel();
+        const style = state.enduranceStyle || "Løping";
+
+        if(style === "Løping"){
+          // Viser alltid første økt i uke 1 i veiviseren — selve 12-ukers
+          // programmet (inkl. flere økt-typer per uke) hentes fra
+          // getRunProgramWeekSessions() hver gang kunden åpner økten i
+          // vanekalenderen (se resolveRunIntervalExercises() der).
+          const sessions = getRunProgramWeekSessions(startLevel, 1);
+          return sessionToExercises(sessions[0]);
+        }
+
+        if(style === "Svømming"){
+          // Samme prinsipp som Løping — viser uke 1 i veiviseren, selve
+          // 12-ukers programmet hentes fra getSwimProgramWeekSessions() i
+          // vanekalenderen (se resolveSwimIntervalExercises() der). Kortene
+          // er allerede ferdigbygde (ikke "blokker"), derfor ingen
+          // sessionToExercises()-konvertering her.
+          const sessions = getSwimProgramWeekSessions(startLevel, 1);
+          return sessions[0];
+        }
+
+        if(style === "Spinning"){
+          // Samme prinsipp som Løping/Svømming — se getSpinProgramWeekSessions()
+          // og resolveSpinIntervalExercises() i vanekalender.html.
+          const sessions = getSpinProgramWeekSessions(startLevel, 1);
+          return sessions[0];
+        }
+
+        if(style === "Gå tur"){
+          // Samme prinsipp som Løping/Svømming/Spinning — se
+          // getWalkProgramWeekSessions() og resolveWalkIntervalExercises()
+          // i vanekalender.html.
+          const sessions = getWalkProgramWeekSessions(startLevel, 1);
+          return sessions[0];
+        }
+
+        if(style === "Hoppetau"){
+          // Samme prinsipp som resten — se getJumpropeProgramWeekSessions()
+          // og resolveJumpropeIntervalExercises() i vanekalender.html.
+          const sessions = getJumpropeProgramWeekSessions(startLevel, 1);
+          return sessions[0];
+        }
+
+        if(style === "Hjemme"){
+          // Samme prinsipp som resten — se getHomeProgramWeekSessions() og
+          // resolveHomeIntervalExercises() i vanekalender.html.
+          const sessions = getHomeProgramWeekSessions(startLevel, 1);
+          return sessions[0];
+        }
+
+        const profile = ENDURANCE_LEVEL_PROFILE[startLevel];
+        const warm = Math.max(5, Math.round(totalMin * profile.warmupPct));
+        const cool = Math.max(5, Math.round(totalMin * profile.coolPct));
+        const main = Math.max(5, totalMin - warm - cool);
+
+        // durationSeconds gjør at hver fase kan ha sin egen nedtellingstimer
+        // i vanekalenderen — nyttig når kunden trener på tredemølle og vil
+        // vite nøyaktig når oppvarming/hoveddel/nedtrapping er over.
+        return [
+          { name: `Oppvarming – ${style}`, emoji: "🏃", sets: 1, reps: `${warm} min`, rest: "Rolig tempo", durationSeconds: warm * 60, videoUrl: "" },
+          { name: `Hoveddel – ${style}`, emoji: "🏃", sets: 1, reps: `${main} min`, rest: profile.intensity, durationSeconds: main * 60, videoUrl: "" },
+          { name: `Nedtrapping – ${style}`, emoji: "🏃", sets: 1, reps: `${cool} min`, rest: "Rolig tempo", durationSeconds: cool * 60, videoUrl: "" }
+        ];
+      }
+
+      function renderProgramSection(title, program){
+        return `
+          <div class="tbp-section-title">${escapeHtml(title)}</div>
+          ${program.map(ex => `
+            <div class="tbp-ex-card">
+              ${(function(){
+                const ytId = getYtId(ex.videoUrl);
+                const bgUrl = ytId ? `https://img.youtube.com/vi/${ytId}/mqdefault.jpg` : ex.img;
+                const thumbStyle = bgUrl ? `background-image:url('${bgUrl}')` : '';
+                const dataAttrs = ex.videoUrl ? `data-url="${escapeHtml(ex.videoUrl)}" data-title="${escapeHtml(ex.name)}"` : '';
+                return `<div class="tbp-ex-thumb ${ex.videoUrl ? 'has-video tbp-video-btn' : ''}" style="${thumbStyle}" ${dataAttrs}>
+                  ${ex.videoUrl
+                    ? `<div class="tbp-ex-play"><svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="18" cy="18" r="18" fill="rgba(0,0,0,0.45)"/><polygon points="14,11 27,18 14,25" fill="white"/></svg></div>`
+                    : (bgUrl ? '' : `<div class="tbp-ex-noimg">${ex.emoji}</div>`)}
+                </div>`;
+              })()}
+              <div class="tbp-ex-info">
+                ${ex.type ? `<span class="tbp-ex-type ${ex.typeClass}">${escapeHtml(ex.type)}</span>` : ''}
+                <p class="tbp-ex-name">${escapeHtml(ex.name)}</p>
+                <div class="tbp-ex-meta">
+                  ${ex.sets > 1 ? `<span>${ex.sets} runder</span>` : ''}
+                  <span>${escapeHtml(ex.reps)}</span>
+                  <span>${escapeHtml(ex.rest)}</span>
+                </div>
+                ${ex.tip ? `<p class="tbp-ex-tip">${escapeHtml(ex.tip)}</p>` : ''}
+              </div>
+            </div>
+          `).join("")}
+        `;
+      }
+
+      function renderResult(){
+        generatedEnduranceProgram = buildEnduranceProgram();
+        const startLevel = getStrengthStartLevel();
+        const style = state.enduranceStyle || "Løping";
+        const styleMeta = getEnduranceStyleMeta();
+
+        refs.resultTitle.textContent = `${styleMeta.emoji} ${styleMeta.label}`;
+
+        if(style === "Løping"){
+          renderRoadmap(startLevel);
+          const sessions = getRunProgramWeekSessions(startLevel, 1);
+
+          if(sessions.length === 1){
+            // Bare én økt-type denne uken — ingen vits i å gjenta den identisk
+            // per valgte dag, viser den bare én gang.
+            refs.resultSub.textContent = "Samme økt hver treningsdag denne uken.";
+            refs.resultList.innerHTML = renderProgramSection(styleMeta.label, sessionToExercises(sessions[0]));
+          } else {
+            // Flere ulike økter roterer på dagene kunden valgte — vis nøyaktig
+            // hvilken økt som havner på hvilken dag, i stedet for bare den
+            // første. Samme fordelings-logikk (sortert dag-indeks % antall
+            // økter) som vanekalenderen faktisk bruker live, se
+            // pickRunSessionForToday() der.
+            refs.resultSub.textContent = "Slik ser uke 1 ut på dagene du valgte:";
+            const sortedDays = state.days.slice().sort((a, b) => DAY_ORDER.indexOf(a) - DAY_ORDER.indexOf(b));
+            refs.resultList.innerHTML = sortedDays.map((day, i) => {
+              const session = sessions[i % sessions.length];
+              return renderProgramSection(`${DAY_LABELS[day]} · ${sessionTitle(session)}`, sessionToExercises(session));
+            }).join("");
+          }
+        } else if(style === "Svømming"){
+          renderSwimRoadmap(startLevel);
+          const sessions = getSwimProgramWeekSessions(startLevel, 1);
+          // Guiden har alltid 3 økter/uke (Fitness/Teknikk/Utholdenhet) — samme
+          // dag-fordeling som Løping, se pickSwimSessionForToday() i
+          // vanekalender.html.
+          refs.resultSub.textContent = "Slik ser uke 1 ut på dagene du valgte:";
+          const sortedDays = state.days.slice().sort((a, b) => DAY_ORDER.indexOf(a) - DAY_ORDER.indexOf(b));
+          refs.resultList.innerHTML = sortedDays.map((day, i) => {
+            const session = sessions[i % sessions.length];
+            return renderProgramSection(`${DAY_LABELS[day]} · ${swimSessionTitle(session)}`, session);
+          }).join("");
+        } else if(style === "Spinning"){
+          renderSpinRoadmap(startLevel);
+          const sessions = getSpinProgramWeekSessions(startLevel, 1);
+          // 4-5 økter/uke (Speed/Ladder/Climbing/Sunday, + maks-test uke
+          // 9-11) — samme dag-fordeling som Løping/Svømming, se
+          // resolveSpinIntervalExercises() i vanekalender.html.
+          refs.resultSub.textContent = "Slik ser uke 1 ut på dagene du valgte:";
+          const sortedDays = state.days.slice().sort((a, b) => DAY_ORDER.indexOf(a) - DAY_ORDER.indexOf(b));
+          refs.resultList.innerHTML = sortedDays.map((day, i) => {
+            const session = sessions[i % sessions.length];
+            return renderProgramSection(`${DAY_LABELS[day]} · ${spinSessionTitle(session)}`, session);
+          }).join("");
+        } else if(style === "Gå tur"){
+          renderWalkRoadmap(startLevel);
+          const sessions = getWalkProgramWeekSessions(startLevel, 1);
+          // 3 økter/uke (Gåtur/Intervalltur/Motbakketur) — samme
+          // dag-fordeling som resten, se resolveWalkIntervalExercises() i
+          // vanekalender.html.
+          refs.resultSub.textContent = "Slik ser uke 1 ut på dagene du valgte:";
+          const sortedDays = state.days.slice().sort((a, b) => DAY_ORDER.indexOf(a) - DAY_ORDER.indexOf(b));
+          refs.resultList.innerHTML = sortedDays.map((day, i) => {
+            const session = sessions[i % sessions.length];
+            return renderProgramSection(`${DAY_LABELS[day]} · ${walkSessionTitle(session)}`, session);
+          }).join("");
+        } else if(style === "Hoppetau"){
+          renderJumpropeRoadmap(startLevel);
+          const sessions = getJumpropeProgramWeekSessions(startLevel, 1);
+          // 3 økter/uke (Teknikk/Intervalltrening/Sammenhengende hopping) —
+          // samme dag-fordeling som resten, se
+          // resolveJumpropeIntervalExercises() i vanekalender.html.
+          refs.resultSub.textContent = "Slik ser uke 1 ut på dagene du valgte:";
+          const sortedDays = state.days.slice().sort((a, b) => DAY_ORDER.indexOf(a) - DAY_ORDER.indexOf(b));
+          refs.resultList.innerHTML = sortedDays.map((day, i) => {
+            const session = sessions[i % sessions.length];
+            return renderProgramSection(`${DAY_LABELS[day]} · ${jumpropeSessionTitle(session)}`, session);
+          }).join("");
+        } else if(style === "Hjemme"){
+          renderHomeRoadmap(startLevel);
+          const sessions = getHomeProgramWeekSessions(startLevel, 1);
+          // Kun én økttype (selve sirkelen, ev. flere runder) — samme
+          // økt hver treningsdag, akkurat som i den opprinnelige
+          // artikkelen. Se resolveHomeIntervalExercises() i
+          // vanekalender.html.
+          refs.resultSub.textContent = "Samme økt hver treningsdag denne uken.";
+          refs.resultList.innerHTML = renderProgramSection(homeSessionTitle(sessions[0]), sessions[0]);
+        } else {
+          refs.resultSub.textContent = `Nivå ${startLevel} av 5 · ${state.weeks} uker`;
+          refs.roadmap.innerHTML = "";
+          refs.resultList.innerHTML = renderProgramSection(styleMeta.label, generatedEnduranceProgram);
+        }
+      }
+
+      // ============================================================
+      // Skriver til SAMME Supabase-tabell som vanekalenderen leser fra
+      // ("movement_plans", state_json.assignedPrograms for member_id).
+      // ============================================================
+      async function saveProgramToCalendar(){
+        const member = getMovementMember();
+        if(!member.id){
+          return { ok:false, reason:"no-member" };
+        }
+
+        const isRunning = state.enduranceStyle === "Løping";
+        const isSwimming = state.enduranceStyle === "Svømming";
+        const isSpinning = state.enduranceStyle === "Spinning";
+        const isWalking = state.enduranceStyle === "Gå tur";
+        const isJumproping = state.enduranceStyle === "Hoppetau";
+        const isHomeCardio = state.enduranceStyle === "Hjemme";
+        const styleMeta = getEnduranceStyleMeta();
+
+        const newPrograms = [{
+          id: "utholdenhet",
+          programType: "utholdenhet",
+          title: `${styleMeta.emoji} ${styleMeta.label}`,
+          programUrl: "",
+          days: enduranceDayIds(),
+          startDate: new Date().toISOString().slice(0, 10),
+          totalWeeks: state.weeks,
+          autoProgress: isRunning || isSwimming || isSpinning || isWalking || isJumproping || isHomeCardio,
+          // Lar vanekalenderen selv slå opp riktig ukes økt(er) fra de ekte
+          // kildeprogrammene (se getRunProgramWeekSessions()/
+          // getSwimProgramWeekSessions()/getSpinProgramWeekSessions()/
+          // getWalkProgramWeekSessions()/getJumpropeProgramWeekSessions()/
+          // getHomeProgramWeekSessions() der og her) — uten dette ville
+          // programmet vist samme økt i alle 12 ukene.
+          runProgram: isRunning ? { level: getStrengthStartLevel() } : null,
+          swimProgram: isSwimming ? { level: getStrengthStartLevel() } : null,
+          spinProgram: isSpinning ? { level: getStrengthStartLevel() } : null,
+          walkProgram: isWalking ? { level: getStrengthStartLevel() } : null,
+          jumpropeProgram: isJumproping ? { level: getStrengthStartLevel() } : null,
+          homeProgram: isHomeCardio ? { level: getStrengthStartLevel() } : null,
+          exercises: generatedEnduranceProgram
+        }];
+
+        try{
+          // ATOMISK skriving (fikset 2026-09-17) — se
+          // movement-plans-atomic-list-rpc.sql i prosjektroten og samme fiks
+          // i en-sterk-kropp.html for full forklaring. Denne raden (samme
+          // assignedPrograms-felt) skrives også til av en-sterk-kropp.html og
+          // aandelige-praksiser.html, samt lest/skrevet mye annet i av
+          // vanekalender.html.
+          const client = await withTimeout(getSupabaseClient(), 15000);
+          const { data: nextStateJson, error: saveError } = await withTimeout(client
+            .rpc("upsert_movement_plan_list_items", {
+              p_member_id: member.id,
+              p_member_name: member.name || "",
+              p_field: "assignedPrograms",
+              p_items: newPrograms
+            }), 15000);
+          if(saveError) throw saveError;
+
+          return { ok:true, stateJson: nextStateJson };
+        }catch(e){
+          console.warn("Kunne ikke lagre programmet i vanekalenderen.", e);
+          return { ok:false, reason:"error", error:e };
+        }
+      }
+
+      // Nivåtest-bildene skal vise samme aktivitet som kunden faktisk
+      // valgte i steg 1 (gå tur på gå tur, svømming på svømming, osv.) —
+      // ikke generiske treningsstudio-bilder uansett stil. Gjenbruker
+      // samme ett-bilde-per-aktivitet som allerede brukes på øktkortene.
+      const STYLE_LEVEL_PHOTO = {
+        "Løping": RUN_PHOTOS.run,
+        "Gå tur": WALK_PHOTOS.main,
+        "Svømming": SWIM_PHOTOS.main,
+        "Spinning": SPIN_PHOTOS.main,
+        "Hjemme": HOME_PHOTOS.main,
+        "Hoppetau": JUMPROPE_PHOTOS.main
+      };
+      function updateLevelTestImages(style){
+        const url = STYLE_LEVEL_PHOTO[style];
+        if(!url) return;
+        document.querySelectorAll('[data-group="levelSelf"] img').forEach(img => { img.src = url; });
+      }
+
+      // ---- Eventlyttere -------------------------------------------------
+      document.querySelectorAll('[data-group="enduranceStyle"]').forEach(btn => {
+        btn.addEventListener("click", () => {
+          state.enduranceStyle = btn.dataset.value;
+          markSelected("enduranceStyle", state.enduranceStyle);
+          updateLevelTestImages(state.enduranceStyle);
+          setTimeout(() => showStep("levelTest"), 120);
+        });
+      });
+
+      // ---- Nivåtest (styrer startpunktet for den skjulte progresjonen —
+      // se buildEnduranceProgram) -------
+      document.querySelectorAll('[data-group="levelSelf"]').forEach(btn => {
+        btn.addEventListener("click", () => {
+          state.testLevel = Number(btn.dataset.level);
+          markSelected("levelSelf", btn.dataset.level);
+          setTimeout(() => showStep("days"), 120);
+        });
+      });
+
+      refs.dayButtons.forEach(btn => {
+        btn.addEventListener("click", () => {
+          const id = btn.dataset.day;
+          if(state.days.includes(id)){
+            state.days = state.days.filter(d => d !== id);
+          } else {
+            state.days = [...state.days, id];
+          }
+          renderDays();
+        });
+      });
+
+      refs.goNextAfterDaysBtn.addEventListener("click", () => showStep("result"));
+
+      document.querySelectorAll("[data-back]").forEach(btn => {
+        btn.addEventListener("click", () => showStep(btn.dataset.back));
+      });
+
+      refs.resultBack.addEventListener("click", () => {
+        showStep("days");
+      });
+
+      refs.useProgramBtn.addEventListener("click", async () => {
+        refs.useProgramBtn.disabled = true;
+        refs.useProgramBtn.textContent = "Lagrer ...";
+
+        const result = await saveProgramToCalendar();
+
+        refs.useProgramBtn.disabled = false;
+        refs.useProgramBtn.textContent = "Legg i vanekalenderen";
+
+        if(result.ok){
+          refs.savedNote.classList.remove("warn");
+          refs.savedNote.textContent = "✓ Programmet er lagret! Du blir sendt tilbake til hjem-siden om et øyeblikk ...";
+          setTimeout(() => {
+            window.location.href = "index.html" + (window.TL_PT_HASH || "");
+          }, 1600);
+        } else if(result.reason === "no-member"){
+          refs.savedNote.classList.add("warn");
+          refs.savedNote.textContent = "Fant ingen kundeprofil å lagre på. Åpne denne siden fra Tro&Livsstil-appen, ikke i en frittstående nettleser.";
+        } else {
+          refs.savedNote.classList.add("warn");
+          refs.savedNote.textContent = "Kunne ikke lagre programmet akkurat nå. Prøv igjen om litt.";
+        }
+        refs.savedNote.classList.add("show");
+      });
+
+      showStep("enduranceStyle");
+    })();
+  </script>
+<style>
+  #vmod{display:none;position:fixed;inset:0;z-index:99999;background:rgba(0,0,0,.85);align-items:center;justify-content:center;padding:16px;}
+  #vmod-inner{position:relative;width:100%;max-width:680px;background:#111;border-radius:16px;overflow:hidden;}
+  #vmod-wrap{position:relative;width:100%;padding-bottom:56.25%;background:#000;cursor:pointer;}
+  #vmod-wrap img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;}
+  #vmod-play{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;}
+  #vmod-play svg{width:72px;height:72px;filter:drop-shadow(0 2px 8px rgba(0,0,0,.5));transition:transform .15s;}
+  #vmod-wrap:hover #vmod-play svg{transform:scale(1.1);}
+  #vmod-wrap iframe{position:absolute;inset:0;width:100%;height:100%;border:0;}
+  #vmod-bar{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:#111;}
+  #vmod-title{color:#ddd;font-size:.88rem;font-weight:700;margin:0;}
+  #vmod-close{background:none;border:none;color:#aaa;font-size:1.5rem;cursor:pointer;padding:0 4px;line-height:1;}
+</style>
+
+<div id="vmod">
+  <div id="vmod-inner">
+    <div id="vmod-wrap">
+      <img id="vmod-thumb" src="" alt="">
+      <div id="vmod-play">
+        <svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="40" cy="40" r="40" fill="rgba(0,0,0,0.6)"/>
+          <polygon points="32,22 62,40 32,58" fill="white"/>
+        </svg>
+      </div>
+    </div>
+    <div id="vmod-bar">
+      <p id="vmod-title"></p>
+      <button id="vmod-close">✕</button>
+    </div>
+  </div>
+</div>
+
+<script data-tl-widget="ett-sterkt-hjerte">
+(function(){
+  var modal   = document.getElementById('vmod');
+  var wrap    = document.getElementById('vmod-wrap');
+  var thumb   = document.getElementById('vmod-thumb');
+  var titleEl = document.getElementById('vmod-title');
+  var currentId = null;
+
+  function ytId(url){
+    var m = url.match(/(?:youtu\.be\/|[?&]v=)([A-Za-z0-9_-]{11})/);
+    return m ? m[1] : null;
+  }
+
+  function loadPlayer(){
+    if(!currentId) return;
+    wrap.innerHTML = '<iframe src="https://www.youtube.com/embed/' + currentId + '?autoplay=1&start=2&rel=0&modestbranding=1&iv_load_policy=3" allow="autoplay; encrypted-media; fullscreen" allowfullscreen style="position:absolute;inset:0;width:100%;height:100%;border:0;"></iframe>';
+  }
+
+  function openVideo(url, name){
+    var id = ytId(url);
+    if(!id){ window.open(url,'_blank'); return; }
+    currentId = id;
+    thumb.src = 'https://img.youtube.com/vi/' + id + '/hqdefault.jpg';
+    titleEl.textContent = name || '';
+    wrap.innerHTML = '';
+    wrap.appendChild(thumb);
+    var play = document.getElementById('vmod-play');
+    if(!play){
+      play = document.createElement('div');
+      play.id = 'vmod-play';
+      play.innerHTML = '<svg viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg"><circle cx="40" cy="40" r="40" fill="rgba(0,0,0,0.6)"/><polygon points="32,22 62,40 32,58" fill="white"/></svg>';
+      wrap.appendChild(play);
+    }
+    modal.style.display = 'flex';
+  }
+
+  wrap.addEventListener('click', function(e){
+    if(e.target.closest('iframe')) return;
+    loadPlayer();
+  });
+
+  function closeVideo(){
+    modal.style.display = 'none';
+    currentId = null;
+    wrap.innerHTML = '';
+  }
+
+  document.getElementById('vmod-close').addEventListener('click', closeVideo);
+  modal.addEventListener('click', function(e){ if(e.target === modal) closeVideo(); });
+  document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeVideo(); });
+  document.addEventListener('click', function(e){
+    var btn = e.target.closest('.tbp-video-btn');
+    if(btn) openVideo(btn.dataset.url, btn.dataset.title);
+  });
+})();
+</script>
+<script>
+/* Vakthund (samme idé som i vanekalenderen): movement.os kan bytte ut sidens
+   innhold etter at skriptene har kjørt. Da ligger en ny kopi av skriptene her
+   som aldri har startet, og siden står tom til kunden laster på nytt. Vakten
+   finner nye skript merket data-tl-widget="ett-sterkt-hjerte" som ikke har kjørt, og
+   starter dem. Kjører nettleseren sidens skript på vanlig måte, tar den nye vakten over. */
+(function () {
+  var KEY = "ett-sterkt-hjerte";
+  var counterKey = "__tlWatch_" + KEY;
+  var me = (window[counterKey] = (window[counterKey] || 0) + 1);
+  var sel = 'script[data-tl-widget="' + KEY + '"]';
+  // Husker selve skript-elementene som har kjørt (ikke et merke i HTML-en,
+  // som kan bli med når innholdet kopieres).
+  var known = new WeakSet();
+  document.querySelectorAll(sel).forEach(function (s) { known.add(s); });
+  var timer = setInterval(function () {
+    if (window[counterKey] !== me) { clearInterval(timer); return; }
+    var fresh = Array.prototype.filter.call(document.querySelectorAll(sel), function (s) { return !known.has(s); });
+    if (!fresh.length) return;
+    console.info("Tro & Livsstil (" + KEY + "): innholdet ble byttet ut – starter på nytt.");
+    var ran = {};
+    fresh.forEach(function (orig) {
+      known.add(orig);
+      var code = orig.textContent;
+      if (ran[code]) return; // samme skript to ganger (kopi av kopi) – kjør én gang
+      ran[code] = true;
+      var again = document.createElement("script");
+      again.setAttribute("data-tl-widget", KEY);
+      known.add(again);
+      again.textContent = code;
+      orig.parentNode.insertBefore(again, orig.nextSibling);
+    });
+  }, 700);
+})();
+</script>
+<nav class="pt-nav" aria-label="Meny"><a href="index.html" data-nav class=""><i>🏠</i>Hjem</a><a href="trening.html" data-nav class="on"><i>🏋️</i>Trening</a><a href="mat.html" data-nav class=""><i>🍽️</i>Mat</a><a href="helse.html" data-nav class=""><i>❤️</i>Helse</a></nav>
+<script>
+(function () {
+  // Menyen tar med den personlige koden mellom sidene
+  document.querySelectorAll("[data-nav]").forEach(function (a) { a.href = a.getAttribute("href") + (window.TL_PT_HASH || ""); });
+  var r = document.getElementById("ptRefresh");
+  function refresh() { if (r) r.classList.add("spin"); location.replace(location.pathname + "?r=" + Date.now() + (location.search.indexOf("vis=") >= 0 ? "&vis=trening" : "") + location.hash); }
+  if (r) r.addEventListener("click", refresh);
+  var hiddenAt = 0;
+  document.addEventListener("visibilitychange", function () { if (document.hidden) hiddenAt = Date.now(); else if (hiddenAt && Date.now() - hiddenAt > 15 * 60 * 1000) refresh(); });
+  // Navnet til kunden (lagres når planen lagres)
+  var m = window.MVT_memberData; if (!m || !m.id) return;
+  fetch("https://cpqbdorxilssxylkqdkt.supabase.co/rest/v1/rpc/tl_plan_get", { method: "POST", headers: { apikey: "sb_publishable_37LxJJHdYNa8HpqDOVKpVw_0fJlfDmd", Authorization: "Bearer sb_publishable_37LxJJHdYNa8HpqDOVKpVw_0fJlfDmd", "Content-Type": "application/json" }, body: JSON.stringify({ p_member_id: m.id }) })
+    .then(function (x) { return x.ok ? x.json() : null; }).then(function (row) {
+      var n = row && row.member_name ? String(row.member_name) : ""; if (!n || /^Kunde [0-9a-f]{8}$/i.test(n)) return;
+      m.name = n; try { localStorage.setItem("tl_pt_name:" + m.id, n); } catch (e) {}
+      var h = document.getElementById("ptHello"); if (h) h.textContent = "Hei, " + n.trim().split(/\s+/)[0] + "!";
+    }).catch(function () {});
+})();
+</script>
+</body>
+</html>

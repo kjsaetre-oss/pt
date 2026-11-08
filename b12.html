@@ -1,0 +1,2247 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="referrer" content="no-referrer">
+<meta name="theme-color" content="#6f35b5">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="PT Kjetil">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="apple-touch-icon" href="ikon-180.png">
+<link rel="icon" type="image/png" sizes="192x192" href="ikon-192.png">
+<title>Vitamin B12 – PT Kjetil</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script>
+// Personlig lenke: app.metabolsktesting.no/#<kunde-ID>/<Fornavn>. Koden står etter # og sendes aldri til nettstedet.
+(function () {
+  var ok = function (v) { return /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(String(v || "")); };
+  var raw = String(location.hash || "").replace(/^#\/?/, "").trim(), parts = raw.split("/"), id = parts[0], hashName = "";
+  try { hashName = decodeURIComponent(parts[1] || "").trim().slice(0, 40); } catch (e) {}
+  try {
+    if (ok(id)) { localStorage.setItem("tl_pt_member", id); if (hashName) localStorage.setItem("tl_pt_name:" + id, hashName); }
+    else id = localStorage.getItem("tl_pt_member") || "";
+  } catch (e) {}
+  window.TL_STANDALONE = { brand: "pt" };
+  if (ok(id) && !(window.MVT_memberData && window.MVT_memberData.id)) {
+    var name = ""; try { name = localStorage.getItem("tl_pt_name:" + id) || ""; } catch (e) {}
+    window.MVT_memberData = { id: id, name: name || hashName };
+  }
+  window.TL_TP_OK = ok(id) || !!(window.MVT_memberData && window.MVT_memberData.id);
+  window.TL_PT_HASH = ok(id) ? "#" + id + (hashName ? "/" + encodeURIComponent(hashName) : "") : "";
+})();
+</script><style>
+  html, body { margin: 0; background: #f4efe8; }
+  body.tl-standalone { padding: 0 0 calc(76px + env(safe-area-inset-bottom)) !important; -webkit-text-size-adjust: 100%; }
+  .pt-head { position: sticky; top: 0; z-index: 50; display: flex; align-items: center; gap: 10px; padding: calc(env(safe-area-inset-top) + 10px) 14px 10px;
+    background: rgba(244,239,232,.94); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-bottom: 1px solid #ece4d8; color: #2b2235; font-family: Inter, -apple-system, sans-serif; }
+  .pt-logo { width: 32px; height: 32px; border-radius: 10px; background: linear-gradient(140deg, #8c57cb, #6f35b5); color: #fff; display: grid; place-items: center; font: 800 13px "Outfit", sans-serif; flex: none; }
+  .pt-head b { font: 800 17px "Outfit", -apple-system, sans-serif; display: block; line-height: 1.1; } .pt-head small { display: block; font-size: 10.5px; color: #7a6f86; }
+  .pt-refresh { margin-left: auto; flex: none; width: 34px; height: 34px; border-radius: 50%; border: 1px solid #ece4d8; background: #fffdfa; color: #6f35b5; font: 700 18px/1 -apple-system, sans-serif; display: grid; place-items: center; padding: 0; }
+  .pt-refresh.spin { animation: ptSpin .8s linear infinite; } @keyframes ptSpin { to { transform: rotate(360deg); } }
+  .pt-av { width: 34px; height: 34px; border-radius: 50%; background: #ddd url("bilder/kjetil-lindefjell-saetre.jpg") center/cover; border: 2px solid #6f35b5; flex: none; }
+  .tl-brand-pt .lock-btn { display: none !important; }   /* redigeringslås for coachen i Verd å vite-artikler */
+  .pt-back { width: 32px; height: 32px; border-radius: 10px; background: #fffdfa; border: 1px solid #ece4d8; color: #6f35b5; display: grid; place-items: center; font: 800 22px/1 -apple-system, sans-serif; text-decoration: none; flex: none; }
+  /* Startsider for Trening, Mat og Helse */
+  .pt-hub { padding: 14px 14px 24px; display: grid; gap: 12px; font-family: Inter, -apple-system, sans-serif; color: #2b2235; max-width: 560px; margin: 0 auto; }
+  .pt-hub h1 { margin: 2px 2px 0; font: 800 28px/1.1 "Outfit", -apple-system, sans-serif; } .pt-hub > p { margin: -6px 2px 2px; color: #7a6f86; font-size: 13.5px; line-height: 1.45; }
+  .pt-card { position: relative; display: flex; flex-direction: column; justify-content: flex-end; min-height: 150px; padding: 16px; border-radius: 22px; color: #fff; text-decoration: none; overflow: hidden;
+    background: #2b2235 center/cover no-repeat; box-shadow: 0 14px 30px -18px rgba(43,34,53,.6); }
+  .pt-card::before { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(20,12,32,.05) 0%, rgba(20,12,32,.45) 45%, rgba(20,12,32,.88) 100%); }
+  .pt-card > * { position: relative; } .pt-card small { font: 800 10.5px Inter, sans-serif; letter-spacing: .12em; text-transform: uppercase; opacity: .85; }
+  .pt-card b { font: 800 21px/1.15 "Outfit", -apple-system, sans-serif; margin-top: 2px; } .pt-card span { font-size: 13px; opacity: .88; margin-top: 3px; line-height: 1.4; }
+  .pt-card.big { min-height: 190px; } .pt-card .go { position: absolute; right: 14px; top: 14px; width: 34px; height: 34px; border-radius: 50%; background: rgba(255,255,255,.18); display: grid; place-items: center; font-size: 18px; }
+  .pt-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; } .pt-row .pt-card { min-height: 140px; } .pt-row .pt-card b { font-size: 17px; }
+  .pt-nav { position: fixed; left: 0; right: 0; bottom: 0; z-index: 40; display: grid; grid-template-columns: repeat(4, 1fr); background: rgba(255,253,250,.97);
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); border-top: 1px solid #ece4d8; padding: 6px 4px calc(6px + env(safe-area-inset-bottom)); box-shadow: 0 -8px 24px -16px rgba(43,34,53,.35); }
+  .pt-nav a { display: grid; justify-items: center; gap: 2px; padding: 4px 2px; font: 700 10.5px Inter, -apple-system, sans-serif; color: #7a6f86; text-decoration: none; }
+  .pt-nav a i { font-style: normal; font-size: 20px; line-height: 1.1; filter: grayscale(1); opacity: .65; } .pt-nav a.on { color: #6f35b5; } .pt-nav a.on i { filter: none; opacity: 1; }
+  .pt-nolink { display: none; max-width: 420px; margin: 60px auto; padding: 0 24px; text-align: center; font: 16px/1.5 -apple-system, sans-serif; color: #3b3640; }
+  body.tp-missing .pt-nolink { display: block; } body.tp-missing .tp-app, body.tp-missing .pt-nav { display: none; }
+  .pt-hero { margin: 12px 14px 0; border-radius: 22px; background: #fffdfa; border: 1px solid #ece4d8; padding: 14px 16px; font-family: Inter, -apple-system, sans-serif; color: #2b2235; }
+  .pt-hero h1 { margin: 0; font: 800 26px/1.1 "Outfit", -apple-system, sans-serif; } .pt-hero p { margin: 4px 0 0; font-size: 13px; color: #7a6f86; }
+  /* Fokus og mål (samme kode som bordtennis, lilla farger) */
+
+</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <style id="articleCoreStyles">
+    :root{
+      --bg:#f7f3ec;
+      --bg2:#fcfaf6;
+      --bg3:#f2ede6;
+      --text:#213542;
+      --muted:#667882;
+      --shadow-xs:0 6px 14px rgba(35,53,66,.05);
+      --shadow-sm:0 12px 28px rgba(35,53,66,.07);
+      --shadow-md:0 22px 48px rgba(35,53,66,.10);
+      --shadow-lg:0 30px 80px rgba(35,53,66,.13);
+      --hero-a:#eef8ef;
+      --hero-b:#edf4ff;
+      --hero-c:#faf3ff;
+      --accent:#94b6a0;
+      --card-radius:24px;
+      --hero-radius:28px;
+      --editor-width:390px;
+      --feature-image-width:100%;
+      --feature-image-height:420px;
+    }
+
+    *{ box-sizing:border-box; }
+    html{ scroll-behavior:smooth; }
+    body{
+      margin:0;
+      font-family:Inter, Arial, sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at 8% 0%, rgba(222,240,229,.95) 0%, rgba(222,240,229,0) 28%),
+        radial-gradient(circle at 100% 8%, rgba(239,233,255,.90) 0%, rgba(239,233,255,0) 24%),
+        radial-gradient(circle at 50% 100%, rgba(253,233,223,.55) 0%, rgba(253,233,223,0) 30%),
+        linear-gradient(180deg, var(--bg), var(--bg2) 55%, var(--bg3));
+      min-height:100vh;
+    }
+
+    .article{
+      width:100%;
+      max-width:980px;
+      margin:0 auto;
+      padding:14px 12px 90px;
+    }
+
+    .shell{
+      position:relative;
+      overflow:hidden;
+      padding:12px;
+      border-radius:32px;
+      background:linear-gradient(180deg, rgba(255,255,255,.52), rgba(255,255,255,.35));
+      border:1px solid rgba(255,255,255,.82);
+      backdrop-filter:blur(14px);
+      box-shadow:0 18px 52px rgba(40,57,71,.08);
+      isolation:isolate;
+    }
+    .shell::before{
+      content:"";
+      position:absolute;
+      top:-86px;
+      right:-84px;
+      width:200px;
+      height:200px;
+      border-radius:50%;
+      background:radial-gradient(circle, rgba(223,243,229,.98), rgba(223,243,229,0));
+      pointer-events:none;
+      z-index:0;
+    }
+    .shell::after{
+      content:"";
+      position:absolute;
+      bottom:-104px;
+      left:-92px;
+      width:220px;
+      height:220px;
+      border-radius:50%;
+      background:radial-gradient(circle, rgba(238,232,251,.94), rgba(238,232,251,0));
+      pointer-events:none;
+      z-index:0;
+    }
+    .shell > *{ position:relative; z-index:1; }
+
+    .hero,.summary-box,.quote-strip,.visual-box,.section,.wide-box,.closing,.accordion,.image-feature,.custom-boxes{
+      border-radius:var(--card-radius);
+      position:relative;
+    }
+
+    .hero{
+      padding:22px;
+      border-radius:var(--hero-radius);
+      background:linear-gradient(135deg, var(--hero-a), var(--hero-b) 52%, var(--hero-c));
+      border:1px solid rgba(255,255,255,.92);
+      box-shadow:var(--shadow-lg);
+      margin-bottom:12px;
+      overflow:hidden;
+    }
+    .hero::before{
+      content:"";
+      position:absolute;
+      right:-28px;
+      bottom:-28px;
+      width:170px;
+      height:170px;
+      border-radius:50%;
+      background:radial-gradient(circle, rgba(255,255,255,.82), rgba(255,255,255,0));
+      pointer-events:none;
+    }
+    .updated{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 12px;
+      margin-bottom:10px;
+      border-radius:999px;
+      background:rgba(255,255,255,.82);
+      border:1px solid rgba(255,255,255,.94);
+      color:#5a6f7c;
+      font-size:12.5px;
+      font-weight:800;
+      letter-spacing:.2px;
+      box-shadow:var(--shadow-xs);
+    }
+    .updated-dot{
+      width:8px;
+      height:8px;
+      border-radius:50%;
+      background:#94b6a0;
+      box-shadow:0 0 0 4px rgba(148,182,160,.14);
+    }
+    .title-row{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:10px;
+    }
+    .hero h1{
+      margin:0;
+      font-size:clamp(30px, 5vw, 50px);
+      line-height:1.01;
+      letter-spacing:-1.12px;
+    }
+    .lock-btn{
+      width:40px;
+      height:40px;
+      flex:0 0 40px;
+      border:none;
+      border-radius:14px;
+      background:linear-gradient(135deg,#263a48,#1f303d);
+      color:#fff;
+      display:grid;
+      place-items:center;
+      font-size:16px;
+      box-shadow:0 12px 26px rgba(24,38,51,.18);
+      cursor:pointer;
+      margin-top:2px;
+    }
+    .hero p{
+      margin:0;
+      max-width:66ch;
+      font-size:15.9px;
+      line-height:1.75;
+      color:#566b76;
+    }
+    .hero-pills{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-top:14px;
+    }
+    .hero-pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:9px 12px;
+      border-radius:999px;
+      background:rgba(255,255,255,.72);
+      border:1px solid rgba(255,255,255,.9);
+      color:#566f7c;
+      font-size:12.4px;
+      font-weight:800;
+      box-shadow:var(--shadow-xs);
+    }
+    .hero-pill i{
+      width:7px;
+      height:7px;
+      border-radius:50%;
+      background:#94b6a0;
+      display:block;
+      box-shadow:0 0 0 4px rgba(148,182,160,.14);
+    }
+
+    .image-feature{
+      display:none;
+      padding:14px;
+      background:linear-gradient(135deg,#fffdf9,#f8fbff);
+      border:1px solid #e8ecef;
+      box-shadow:var(--shadow-sm);
+      margin-bottom:12px;
+    }
+    .image-feature.show{ display:block; }
+    .image-feature img{
+      width:var(--feature-image-width);
+      max-width:100%;
+      height:var(--feature-image-height);
+      display:block;
+      margin:0 auto;
+      border-radius:20px;
+      object-fit:cover;
+      box-shadow:var(--shadow-sm);
+    }
+    .image-caption{
+      margin-top:10px;
+      font-size:13.4px;
+      color:#65757e;
+      line-height:1.55;
+      text-align:center;
+    }
+
+    .summary-box{
+      padding:16px;
+      background:linear-gradient(135deg,#fff8de,#fffdf4);
+      border:1px solid rgba(255,255,255,.94);
+      box-shadow:var(--shadow-sm);
+      margin-bottom:12px;
+    }
+    .summary-box h2,.section h2,.wide-box h2,.closing h2,.accordion-title,.custom-boxes h2{ margin:0 0 8px; font-size:21px; letter-spacing:-.35px; }
+    .summary-grid,.grid-2,.garmin-grid,.practice-grid,.signal-grid,.custom-grid{ display:grid; gap:10px; }
+    .summary-grid{ grid-template-columns:repeat(3,1fr); }
+    .grid-2,.signal-grid,.custom-grid{ grid-template-columns:1fr 1fr; }
+    .garmin-grid,.practice-grid{ grid-template-columns:repeat(3,1fr); }
+    .summary-item,.mini-card,.practice-item,.signal-card,.custom-card{
+      padding:13px;
+      border-radius:18px;
+      background:rgba(255,255,255,.82);
+      border:1px solid rgba(255,255,255,.94);
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.55);
+      position:relative;
+      min-height:100%;
+    }
+    .summary-item small,.custom-type-label{
+      display:block;
+      margin:0 0 4px;
+      font-size:11.5px;
+      font-weight:900;
+      letter-spacing:.7px;
+      text-transform:uppercase;
+      color:#72818a;
+    }
+    .summary-item strong,.mini-card h3,.practice-item h3,.signal-card h3,.custom-card-title{
+      display:block;
+      margin:0 0 6px;
+      font-size:15px;
+      line-height:1.25;
+      color:#243744;
+      font-weight:800;
+    }
+    .summary-item span,.mini-card p,.practice-item p,.signal-card ul,.custom-card-text{
+      display:block;
+      font-size:13.4px;
+      line-height:1.58;
+      color:#5f727d;
+    }
+
+    .quote-strip{
+      display:flex;
+      gap:12px;
+      align-items:flex-start;
+      padding:16px 17px;
+      background:linear-gradient(135deg,#f5f0ff,#fff9fd);
+      border:1px solid #ece3fb;
+      box-shadow:var(--shadow-sm);
+      margin-bottom:12px;
+    }
+    .quote-mark{
+      width:40px;
+      height:40px;
+      flex:0 0 40px;
+      display:grid;
+      place-items:center;
+      border-radius:14px;
+      background:rgba(255,255,255,.74);
+      border:1px solid rgba(255,255,255,.92);
+      color:#7b6ca7;
+      font-size:22px;
+      font-weight:900;
+    }
+    .quote-strip p{ margin:0; font-size:15px; line-height:1.68; color:#5e7080; }
+
+    .visual-box{
+      padding:18px;
+      background:linear-gradient(135deg,#edf7f1,#fbfffd);
+      border:1px solid rgba(255,255,255,.92);
+      box-shadow:var(--shadow-md);
+      margin-bottom:12px;
+      overflow:hidden;
+    }
+    .visual-head{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-start;
+      gap:12px;
+      margin-bottom:12px;
+    }
+    .visual-head h2{ margin:0 0 6px; font-size:23px; letter-spacing:-.45px; }
+    .visual-head p{ margin:0; font-size:14.8px; line-height:1.66; color:#5f727d; max-width:66ch; }
+    .visual-badge{
+      flex:0 0 auto;
+      padding:9px 12px;
+      border-radius:999px;
+      background:rgba(255,255,255,.78);
+      border:1px solid rgba(255,255,255,.94);
+      font-size:12px;
+      font-weight:900;
+      letter-spacing:.55px;
+      text-transform:uppercase;
+      color:#6b7c85;
+      box-shadow:var(--shadow-xs);
+    }
+    .visual-grid{
+      display:grid;
+      grid-template-columns:1.25fr .75fr;
+      gap:12px;
+      align-items:stretch;
+    }
+    .wave-panel{
+      padding:15px;
+      border-radius:20px;
+      background:rgba(255,255,255,.84);
+      border:1px solid #e0eee5;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.55);
+    }
+    .wave-row{
+      display:grid;
+      grid-template-columns:98px 1fr;
+      gap:10px;
+      align-items:center;
+      padding:10px 0;
+      border-bottom:1px solid #edf2ee;
+    }
+    .wave-row:last-child{ border-bottom:none; padding-bottom:0; }
+    .wave-label{ font-size:12px; font-weight:900; letter-spacing:.45px; text-transform:uppercase; color:#73868e; }
+    .beat-line{ display:flex; align-items:center; gap:8px; min-height:24px; flex-wrap:nowrap; }
+    .beat-dot{ width:9px; height:9px; border-radius:50%; background:#8eb4a0; flex:0 0 auto; box-shadow:0 0 0 5px rgba(142,180,160,.12); }
+    .gap{ height:4px; border-radius:999px; background:linear-gradient(90deg,#cfe2f3,#dcecf9); flex:0 0 auto; }
+    .gap.s1{ width:14px; } .gap.s2{ width:24px; } .gap.s3{ width:34px; } .gap.s4{ width:46px; } .gap.s5{ width:58px; }
+    .visual-note{
+      padding:15px;
+      border-radius:20px;
+      background:linear-gradient(135deg,#f4efff,#fff9fd);
+      border:1px solid #ece4fb;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+    }
+    .visual-note h3{ margin:0 0 8px; font-size:16px; letter-spacing:-.2px; }
+    .visual-note p{ margin:0; font-size:13.5px; line-height:1.62; color:#5e7080; }
+
+    .section{
+      padding:18px;
+      background:linear-gradient(180deg, rgba(255,255,255,.95), rgba(255,255,255,.78));
+      border:1px solid rgba(255,255,255,.88);
+      box-shadow:var(--shadow-sm);
+    }
+    .section-top{ display:flex; justify-content:space-between; align-items:flex-start; gap:8px; margin-bottom:10px; }
+    .title-group{ display:flex; gap:10px; align-items:flex-start; }
+    .section-icon{
+      width:36px;
+      height:36px;
+      flex:0 0 36px;
+      display:grid;
+      place-items:center;
+      border-radius:12px;
+      background:rgba(255,255,255,.78);
+      border:1px solid rgba(255,255,255,.94);
+      box-shadow:var(--shadow-xs);
+      color:#4f6877;
+    }
+    .section-icon svg{ width:18px; height:18px; stroke:currentColor; fill:none; stroke-width:1.9; stroke-linecap:round; stroke-linejoin:round; }
+    .section p,.wide-box > p,.closing p,.accordion-content p,.custom-boxes > p{ margin:0 0 12px; font-size:14.8px; line-height:1.66; color:#586c77; }
+    .learn-btn{
+      border:none;
+      cursor:pointer;
+      padding:8px 12px;
+      border-radius:12px;
+      font-weight:800;
+      font-size:12.5px;
+      white-space:nowrap;
+      box-shadow:0 5px 12px rgba(35,53,66,.05);
+    }
+    .learn-blue{ background:linear-gradient(180deg,#edf4fc,#dfeeff); border:1px solid #d4e4f3; color:#284d64; }
+    .learn-peach{ background:linear-gradient(180deg,#feeee6,#fff3ee); border:1px solid #f2d9d0; color:#7a4a39; }
+    .points{ display:grid; gap:8px; }
+    .point{
+      display:flex;
+      gap:9px;
+      align-items:flex-start;
+      padding:11px;
+      border-radius:14px;
+      background:rgba(255,255,255,.84);
+      border:1px solid #eee5db;
+      position:relative;
+    }
+    .point .nr{
+      width:24px;
+      height:24px;
+      flex:0 0 24px;
+      display:grid;
+      place-items:center;
+      border-radius:50%;
+      background:#eef4f8;
+      color:#567180;
+      font-size:11px;
+      font-weight:900;
+    }
+    .point span{ font-size:13.6px; line-height:1.54; color:#566a75; }
+
+    .wide-box{ padding:18px; border:1px solid rgba(255,255,255,.9); box-shadow:var(--shadow-sm); margin-bottom:12px; }
+    .garmin-box{ background:linear-gradient(135deg,#eef6ff,#fbfdff); border-color:#deebf7; }
+    .practice-box{ background:linear-gradient(135deg,#f2edff,#fff7fc); border-color:#ece4fb; }
+    .signal-box{ background:linear-gradient(135deg,#fff4ee,#fffaf7); border-color:#f0ddd3; }
+    .custom-boxes{
+      padding:18px;
+      background:linear-gradient(135deg,#edf7f1,#fbfffd);
+      border:1px solid #deeadf;
+      box-shadow:var(--shadow-sm);
+      margin-bottom:12px;
+    }
+    .practice-num{
+      width:30px;
+      height:30px;
+      display:grid;
+      place-items:center;
+      border-radius:9px;
+      background:#eef4fb;
+      color:#47677b;
+      font-weight:900;
+      font-size:12px;
+      margin-bottom:8px;
+    }
+    .signal-card ul{ margin:0; padding-left:17px; }
+
+    .closing{
+      padding:20px 18px;
+      background:linear-gradient(135deg,#f4f8ff,#fbfdff);
+      border:1px solid #dfeaf5;
+      box-shadow:var(--shadow-sm);
+      margin-bottom:12px;
+      overflow:hidden;
+    }
+    .closing::before{
+      content:"";
+      position:absolute;
+      inset:0 auto 0 0;
+      width:5px;
+      background:linear-gradient(180deg,#cfe0f4,#dfe9ff,#f1dccc);
+    }
+
+    .accordion{
+      margin-bottom:12px;
+      border:1px solid rgba(255,255,255,.92);
+      box-shadow:var(--shadow-sm);
+      overflow:hidden;
+    }
+    .sources-acc{ background:linear-gradient(180deg,#fffdf9,#faf6f0); border-color:#ece2d8; }
+    .disclaimer-acc{ background:linear-gradient(135deg,#fff4ee,#fffaf7); border-color:#f0ddd3; }
+    .accordion-toggle{
+      width:100%;
+      border:none;
+      background:transparent;
+      padding:18px;
+      text-align:left;
+      cursor:pointer;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+    }
+    .accordion-left{ display:flex; align-items:center; gap:10px; }
+    .accordion-plus{
+      width:34px;
+      height:34px;
+      flex:0 0 34px;
+      border-radius:12px;
+      display:grid;
+      place-items:center;
+      background:rgba(255,255,255,.78);
+      border:1px solid rgba(255,255,255,.94);
+      font-size:22px;
+      color:#61747f;
+      box-shadow:var(--shadow-xs);
+    }
+    .accordion-kicker{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:7px 11px;
+      margin-bottom:8px;
+      border-radius:999px;
+      background:rgba(255,255,255,.78);
+      border:1px solid rgba(255,255,255,.92);
+      font-size:12px;
+      font-weight:900;
+      letter-spacing:.5px;
+      text-transform:uppercase;
+      color:#6b7c85;
+      box-shadow:var(--shadow-xs);
+    }
+    .accordion-content{ display:none; padding:0 18px 18px; }
+    .accordion.open .accordion-content{ display:block; }
+    .accordion-content ul{ margin:0; padding-left:18px; color:#5d717d; line-height:1.78; font-size:13.8px; }
+    .accordion-content p:last-child{ margin-bottom:0; }
+
+    .deletable{ position:relative; overflow:visible; }
+    .selected-edit-block{ box-shadow:0 0 0 3px rgba(148,182,160,.28), var(--shadow-sm) !important; }
+    .top-grid-wrap{ margin-bottom:12px; }
+    .top-grid-wrap .section{ margin-bottom:0; }
+    .block-tools{
+      position:absolute;
+      top:-14px;
+      right:8px;
+      display:none;
+      gap:6px;
+      z-index:12;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+      padding:4px;
+      border-radius:12px;
+      background:rgba(255,253,249,.96);
+      border:1px solid #eadfd4;
+      box-shadow:var(--shadow-sm);
+    }
+    body.editor-mode .selected-edit-block > .block-tools{ display:flex; }
+    .block-tool{
+      width:24px;
+      height:24px;
+      border:none;
+      border-radius:8px;
+      background:#fff;
+      border:1px solid #eadfd4;
+      box-shadow:var(--shadow-xs);
+      color:#5d6f79;
+      font-size:12px;
+      cursor:pointer;
+      display:grid;
+      place-items:center;
+      line-height:1;
+      padding:0;
+    }
+    .block-tool.delete{ color:#9b5b5b; }
+    .is-hidden-block{ display:none !important; }
+
+    .editor-panel{
+      position:fixed;
+      top:12px;
+      right:12px;
+      bottom:12px;
+      width:min(var(--editor-width), calc(100vw - 24px));
+      border-radius:28px;
+      background:rgba(255,252,248,.98);
+      border:1px solid rgba(255,255,255,.95);
+      box-shadow:0 24px 80px rgba(24,38,51,.22);
+      z-index:170;
+      transform:translateX(calc(100% + 18px));
+      transition:transform .24s ease;
+      display:flex;
+      flex-direction:column;
+      overflow:hidden;
+      backdrop-filter:blur(14px);
+    }
+    body.editor-open .editor-panel{ transform:translateX(0); }
+    .editor-head{
+      padding:16px;
+      border-bottom:1px solid #eee4d9;
+      background:linear-gradient(180deg,#fffdf9,#fbf7f1);
+    }
+    .editor-head-top{ display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:6px; }
+    .editor-head-actions{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+    .editor-head h3{ margin:0; font-size:18px; }
+    .editor-head p{ margin:0; font-size:13px; line-height:1.55; color:#687882; }
+    .compact-toggle,.editor-close{
+      border:none;
+      cursor:pointer;
+      padding:9px 12px;
+      border-radius:12px;
+      font-weight:800;
+      background:#fff;
+      border:1px solid #e7ddd2;
+      color:#556975;
+      box-shadow:var(--shadow-xs);
+    }
+    .compact-toolbar{ display:none; gap:8px; margin-top:10px; }
+    .compact-toolbar button{
+      width:42px;
+      height:42px;
+      border:none;
+      border-radius:12px;
+      background:#fff;
+      border:1px solid #e7ddd2;
+      color:#556975;
+      box-shadow:var(--shadow-xs);
+      font-size:16px;
+      cursor:pointer;
+    }
+    body.editor-compact .editor-panel{ width:86px; }
+    body.editor-compact .editor-head{ padding:10px; }
+    body.editor-compact .editor-head-top{ display:none; }
+    body.editor-compact .editor-head p{ display:none; }
+    body.editor-compact .editor-body{ display:none; }
+    body.editor-compact .compact-toolbar{ display:grid; }
+
+    .editor-body{ padding:14px; overflow:auto; }
+    .editor-group{
+      margin-bottom:14px;
+      padding:14px;
+      border-radius:18px;
+      background:#fff;
+      border:1px solid #eee5db;
+    }
+    .editor-group h4{ margin:0 0 10px; font-size:14px; letter-spacing:-.2px; }
+    .editor-row{ display:grid; gap:8px; }
+    .editor-row + .editor-row{ margin-top:10px; }
+    .editor-label{
+      font-size:12px;
+      font-weight:800;
+      color:#6d7d86;
+      text-transform:uppercase;
+      letter-spacing:.5px;
+    }
+    .editor-input,.editor-range,.editor-select{ width:100%; font:inherit; }
+    .editor-input,.editor-select{
+      border:1px solid #e6ddd2;
+      background:#fff;
+      border-radius:12px;
+      padding:10px 12px;
+      color:#233746;
+    }
+    textarea.editor-input{ resize:vertical; min-height:96px; }
+    .palette-row{ display:flex; gap:8px; flex-wrap:wrap; }
+    .palette-btn{
+      border:none;
+      cursor:pointer;
+      padding:10px 12px;
+      border-radius:12px;
+      font-weight:800;
+      background:#f5f8fb;
+      border:1px solid #e5edf4;
+      color:#395160;
+    }
+    .editor-actions{ display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+    .editor-btn{
+      border:none;
+      cursor:pointer;
+      padding:11px 12px;
+      border-radius:12px;
+      font-weight:800;
+      background:linear-gradient(180deg,#edf4fc,#dfeeff);
+      border:1px solid #d4e4f3;
+      color:#284d64;
+    }
+    .editor-btn.secondary{
+      background:#fff;
+      border:1px solid #e7ddd2;
+      color:#556975;
+    }
+    .editor-note{
+      padding:10px 12px;
+      border-radius:12px;
+      background:#fff8de;
+      border:1px solid #f0e4b7;
+      font-size:12.5px;
+      line-height:1.55;
+      color:#6b6a55;
+    }
+
+    .editable{ outline:none; transition:box-shadow .14s ease, background .14s ease; }
+    body.editor-mode .editable{ box-shadow:0 0 0 2px rgba(148,182,160,.22); background:rgba(255,255,255,.3); cursor:text; }
+    body.editor-mode .editable:hover{ box-shadow:0 0 0 2px rgba(148,182,160,.35); }
+
+    .login-overlay{ position:fixed; inset:0; display:none; z-index:220; }
+    .login-overlay.show{ display:block; }
+    .login-backdrop{ position:absolute; inset:0; background:rgba(23,34,42,.42); backdrop-filter:blur(8px); }
+    .login-card{
+      position:relative;
+      width:min(92vw,420px);
+      margin:10vh auto 0;
+      padding:24px;
+      border-radius:26px;
+      background:rgba(255,253,249,.98);
+      border:1px solid rgba(255,255,255,.94);
+      box-shadow:0 24px 80px rgba(24,38,51,.22);
+      z-index:2;
+    }
+    .login-card h3{ margin:0 0 8px; font-size:25px; letter-spacing:-.4px; }
+    .login-card p{ margin:0 0 14px; color:#61727d; line-height:1.65; }
+    .login-actions{ display:flex; gap:10px; margin-top:12px; }
+    .login-msg{ min-height:18px; margin-top:10px; font-size:13px; color:#a14e4e; }
+    .sr-only{ position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+
+    .modal{ position:fixed; inset:0; display:none; z-index:200; }
+    .modal.open{ display:block; }
+    .modal-backdrop{ position:absolute; inset:0; background:rgba(29,40,50,.36); backdrop-filter:blur(8px); }
+    .modal-card{
+      position:relative;
+      z-index:2;
+      width:min(92vw, 720px);
+      max-height:82vh;
+      overflow:auto;
+      margin:5vh auto 0;
+      padding:22px;
+      border-radius:24px;
+      background:rgba(255,253,249,.98);
+      border:1px solid rgba(255,255,255,.96);
+      box-shadow:0 22px 70px rgba(24,38,51,.2);
+    }
+    .modal-close{
+      position:absolute;
+      top:12px;
+      right:12px;
+      width:38px;
+      height:38px;
+      border:none;
+      cursor:pointer;
+      border-radius:50%;
+      background:#f4f7fa;
+      border:1px solid #dfe7ee;
+      color:#425a6c;
+      font-size:18px;
+      font-weight:800;
+    }
+    .modal-card h3{ margin:0 42px 10px 0; font-size:25px; letter-spacing:-.4px; line-height:1.08; }
+    .modal-card p{ margin:0 0 12px; font-size:14.8px; line-height:1.68; color:#556975; }
+    .soft{
+      padding:13px;
+      border-radius:15px;
+      background:#f5f9fc;
+      border:1px solid #e1ebf1;
+      color:#5a6d79;
+      font-size:13.7px;
+      line-height:1.58;
+      margin-top:8px;
+    }
+    .soft.good{ background:#eef9f0; border-color:#d6ead9; }
+    .soft.warn{ background:#fff3ef; border-color:#f2d7cd; }
+
+    @media (max-width: 930px){
+      .summary-grid,.visual-grid,.grid-2,.garmin-grid,.practice-grid,.signal-grid,.custom-grid{ grid-template-columns:1fr; }
+    }
+    @media (max-width: 640px){
+      .article{ padding:10px 8px 68px; }
+      .shell{ padding:8px; border-radius:22px; }
+      .hero,.summary-box,.quote-strip,.visual-box,.section,.wide-box,.closing,.accordion,.image-feature,.custom-boxes{ border-radius:18px; }
+      .hero{ padding:16px; }
+      .hero h1{ font-size:31px; }
+      .hero p,.section p,.wide-box > p,.visual-head p,.closing p,.quote-strip p,.accordion-content p,.custom-boxes > p{ font-size:14px; line-height:1.6; }
+      .visual-head{ display:block; }
+      .visual-badge{ margin-top:10px; display:inline-flex; }
+      .section-top{ display:block; }
+      .learn-btn{ margin-top:10px; display:inline-flex; }
+      .wave-row{ grid-template-columns:1fr; gap:7px; }
+      .point span,.signal-card ul,.practice-item p,.mini-card p,.summary-item span,.visual-note p,.custom-card-text{ font-size:13px; }
+      .lock-btn{ width:38px; height:38px; border-radius:13px; font-size:15px; }
+      .editor-panel{ top:auto; left:8px; right:8px; bottom:8px; width:auto; height:min(78vh,760px); border-radius:22px; }
+      .block-tools{ top:-12px; right:6px; }
+    }
+  </style>
+</head>
+<body class="tl-standalone tl-brand-pt">
+<header class="pt-head"><a class="pt-back" data-nav href="helse.html" aria-label="Tilbake">‹</a><span><b>Vitamin B12</b><small>PT Kjetil</small></span><button type="button" class="pt-refresh" id="ptRefresh" aria-label="Oppdater">↻</button><span class="pt-av" aria-hidden="true"></span></header>
+<div class="pt-nolink"><h1 style="font-family:Outfit,sans-serif">PT Kjetil</h1><p>Denne siden åpnes med den personlige lenken du har fått fra Kjetil.<br>Spør ham om å få lenken på nytt.</p></div>
+<script>if (!window.TL_TP_OK) document.body.classList.add("tp-missing");</script>
+
+  <div class="article">
+    <div class="shell" id="articleShell">
+      <section class="hero deletable" data-block-id="hero">
+        <div class="updated editable" data-key="updatedText"><span class="updated-dot"></span> Sist oppdatert: 1. mai 2026</div>
+        <div class="title-row">
+          <h1 class="editable" data-key="heroTitle">Vitamin B12</h1>
+          <button class="lock-btn" type="button" onclick="openEditorLogin()" aria-label="Åpne redaktørmodus">🔒</button>
+        </div>
+        <p class="editable" data-key="heroText">Vitamin B12 er nødvendig for nervesystemet, dannelsen av røde blodceller og produksjon av DNA. Mangel kan gi tretthet, nummenhet, prikking, tungeforandringer, dårligere hukommelse og i noen tilfeller blodmangel. Det viktigste er ikke bare å vite om B12 er “innenfor”, men å forstå hva som er tydelig lavt, hva som er gråsone, og når symptomer bør tas på alvor selv om prøven ikke ser dramatisk ut.</p>
+        <div class="hero-pills" data-sort-group="hero-pills">
+          <span class="hero-pill editable deletable" data-block-id="hero-pill-1" data-key="heroPill1"><i></i> Se nivå, symptomer og årsak sammen</span>
+          <span class="hero-pill editable deletable" data-block-id="hero-pill-2" data-key="heroPill2"><i></i> Gråsoner trenger ofte mer utredning</span>
+          <span class="hero-pill editable deletable" data-block-id="hero-pill-3" data-key="heroPill3"><i></i> Ett tall alene garanterer ikke symptomfrihet</span>
+        </div>
+      </section>
+
+      <section class="image-feature deletable" id="featureImageSection" data-block-id="feature-image">
+        <img id="featureImage" alt="Artikkelbilde">
+        <div class="image-caption editable" id="featureImageCaption" data-key="featureImageCaption">Bildetekst</div>
+      </section>
+
+      <section class="summary-box deletable" data-block-id="summary-box">
+        <h2 class="editable" data-key="summaryTitle">Kort fortalt</h2>
+        <div class="summary-grid" data-sort-group="summary-grid">
+          <div class="summary-item deletable" data-block-id="summary-1"><small class="editable" data-key="sum1Small">Hva er B12?</small><strong class="editable" data-key="sum1Title">Et nøkkelvitamin for nerver og blod</strong><span class="editable" data-key="sum1Text">Vitamin B12 trengs for normal nervefunksjon, DNA-syntese og dannelse av friske røde blodceller.</span></div>
+          <div class="summary-item deletable" data-block-id="summary-2"><small class="editable" data-key="sum2Small">Referanseverdier</small><strong class="editable" data-key="sum2Title">Under 133 pmol/L er tydelig mangel</strong><span class="editable" data-key="sum2Text">NICE bruker under 133 pmol/L som bekreftet B12-mangel, 133 til 258 pmol/L som gråsone, og over 258 pmol/L som nivå der mangel er mindre sannsynlig.</span></div>
+          <div class="summary-item deletable" data-block-id="summary-3"><small class="editable" data-key="sum3Small">Viktig å huske</small><strong class="editable" data-key="sum3Title">Ett tall alene er ikke nok</strong><span class="editable" data-key="sum3Text">For å unngå symptomer er det viktig å ha nok B12 over tid og å finne årsaken til lave eller borderline verdier, ikke bare jage ett bestemt tall.</span></div>
+        </div>
+      </section>
+
+      <section class="quote-strip deletable" data-block-id="quote-strip">
+        <div class="quote-mark">“</div>
+        <p class="editable" data-key="quoteText">Et B12-svar bør alltid tolkes sammen med symptomer, risiko, kosthold og eventuelle tilleggsprøver.</p>
+      </section>
+
+      <section class="visual-box deletable" data-block-id="visual-box">
+        <div class="visual-head">
+          <div>
+            <h2 class="editable" data-key="visualTitle">Slik kan du forstå B12-nivåer visuelt</h2>
+            <p class="editable" data-key="visualText">Tenk på B12 som et spekter: tydelig mangel nederst, en usikker gråsone i midten, og mer betryggende nivåer høyere opp. Jo lavere nivået er, jo større er sannsynligheten for at symptomene henger sammen med B12-mangel.</p>
+          </div>
+          <div class="visual-badge editable" data-key="visualBadge">nivåer</div>
+        </div>
+        <div class="visual-grid">
+          <div class="wave-panel">
+            <div class="wave-row">
+              <div class="wave-label editable" data-key="waveLabel1">Bedre status</div>
+              <div class="beat-line">
+                <span class="beat-dot"></span><span class="gap s4"></span>
+                <span class="beat-dot"></span><span class="gap s2"></span>
+                <span class="beat-dot"></span><span class="gap s5"></span>
+                <span class="beat-dot"></span><span class="gap s3"></span>
+                <span class="beat-dot"></span><span class="gap s4"></span>
+                <span class="beat-dot"></span>
+              </div>
+            </div>
+            <div class="wave-row">
+              <div class="wave-label editable" data-key="waveLabel2">Lavere status</div>
+              <div class="beat-line">
+                <span class="beat-dot"></span><span class="gap s2"></span>
+                <span class="beat-dot"></span><span class="gap s2"></span>
+                <span class="beat-dot"></span><span class="gap s2"></span>
+                <span class="beat-dot"></span><span class="gap s2"></span>
+                <span class="beat-dot"></span><span class="gap s2"></span>
+                <span class="beat-dot"></span>
+              </div>
+            </div>
+          </div>
+          <div class="visual-note">
+            <h3 class="editable" data-key="visualNoteTitle">Det viktigste poenget</h3>
+            <p class="editable" data-key="visualNoteText">Det finnes ikke ett universelt “symptomfritt” B12-tall for alle. Men tydelig lave nivåer og borderline nivåer med symptomer bør tas alvorlig og utredes videre.</p>
+          </div>
+        </div>
+      </section>
+
+      <div class="grid-2 deletable top-grid-wrap" data-block-id="top-grid-wrap" data-sort-group="top-grid">
+        <section class="section deletable" data-block-id="section-1">
+          <div class="section-top">
+            <div class="title-group">
+              <div class="section-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M12 3v18"></path><path d="M6 8c1.7 0 1.7 2 3.4 2S11.1 8 12.8 8s1.7 2 3.4 2S17.9 8 19.6 8"></path><path d="M6 16c1.7 0 1.7-2 3.4-2s1.7 2 3.4 2 1.7-2 3.4-2 1.7 2 3.4 2"></path></svg>
+              </div>
+              <h2 class="editable" data-key="sec1Title">Hva er vitamin B12 egentlig?</h2>
+            </div>
+            <button class="learn-btn learn-blue" onclick="openLearnMore('sectionA')">Les mer</button>
+          </div>
+          <p class="editable" data-key="sec1Text">Vitamin B12, også kalt kobalamin, er et vannløselig vitamin som kroppen trenger for normal celledeling, dannelse av røde blodceller og vedlikehold av nervesystemet. Du får det hovedsakelig fra animalske matvarer eller tilskudd.</p>
+          <div class="points" data-sort-group="sec1-points">
+            <div class="point deletable" data-block-id="sec1-point1"><div class="nr">1</div><span class="editable" data-key="sec1Point1">B12 trengs for myelin og normal nervefunksjon.</span></div>
+            <div class="point deletable" data-block-id="sec1-point2"><div class="nr">2</div><span class="editable" data-key="sec1Point2">Mangel kan gi både blodmangel og nevrologiske symptomer.</span></div>
+            <div class="point deletable" data-block-id="sec1-point3"><div class="nr">3</div><span class="editable" data-key="sec1Point3">Kroppen lagrer B12 i flere år, så symptomer kan komme gradvis.</span></div>
+          </div>
+        </section>
+
+        <section class="section deletable" data-block-id="section-2">
+          <div class="section-top">
+            <div class="title-group">
+              <div class="section-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24"><path d="M4 13c2.4-5.5 13.6-5.5 16 0"></path><path d="M7 15.5c1.8-3.2 8.2-3.2 10 0"></path><circle cx="12" cy="18" r="1.3"></circle></svg>
+              </div>
+              <h2 class="editable" data-key="sec2Title">Hvordan tolke B12 klokt?</h2>
+            </div>
+            <button class="learn-btn learn-peach" onclick="openLearnMore('sectionB')">Les mer</button>
+          </div>
+          <p class="editable" data-key="sec2Text">Et normalt eller borderline svar betyr ikke automatisk at alt er avklart. Ved symptomer eller høy risiko kan det være behov for videre testing, særlig i gråsonen.</p>
+          <div class="points" data-sort-group="sec2-points">
+            <div class="point deletable" data-block-id="sec2-point1"><div class="nr">•</div><span class="editable" data-key="sec2Point1">Under 133 pmol/L taler klart for mangel.</span></div>
+            <div class="point deletable" data-block-id="sec2-point2"><div class="nr">•</div><span class="editable" data-key="sec2Point2">133 til 258 pmol/L er en gråsone der MMA eller homocystein ofte kan være nyttig.</span></div>
+            <div class="point deletable" data-block-id="sec2-point3"><div class="nr">•</div><span class="editable" data-key="sec2Point3">Over 258 pmol/L gjør mangel mindre sannsynlig, men symptomer må fortsatt vurderes klinisk.</span></div>
+          </div>
+        </section>
+      </div>
+
+      <section class="wide-box garmin-box deletable" data-block-id="garmin-box">
+        <h2 class="editable" data-key="garminTitle">Referanseverdier og nivåer</h2>
+        <p class="editable" data-key="garminText">NICE 2024 anbefaler at total B12 under 133 pmol/L regnes som bekreftet mangel, 133 til 258 pmol/L som mulig mangel, og over 258 pmol/L som nivå der mangel er mindre sannsynlig. NIH opplyser samtidig at mange laboratorier bruker subnormale grenser rundt 148 til 185 pmol/L, og at nivåer mellom omtrent 111 og 294 pmol/L ofte kan trenge vurdering med MMA.</p>
+        <div class="garmin-grid" data-sort-group="garmin-grid">
+          <div class="mini-card deletable" data-block-id="garmin-card-1"><h3 class="editable" data-key="garminCard1Title">Bekreftet mangel</h3><p class="editable" data-key="garminCard1Text">Under 133 pmol/L: dette bør tas alvorlig og følges opp, særlig ved symptomer.</p></div>
+          <div class="mini-card deletable" data-block-id="garmin-card-2"><h3 class="editable" data-key="garminCard2Title">Gråsone</h3><p class="editable" data-key="garminCard2Text">133 til 258 pmol/L: her kan noen ha reell mangel, og tilleggsprøver kan være viktige.</p></div>
+          <div class="mini-card deletable" data-block-id="garmin-card-3"><h3 class="editable" data-key="garminCard3Title">Mindre sannsynlig mangel</h3><p class="editable" data-key="garminCard3Text">Over 258 pmol/L: mangel er mindre sannsynlig, men klinisk bilde teller fortsatt.</p></div>
+        </div>
+      </section>
+
+      <section class="wide-box practice-box deletable" data-block-id="practice-box">
+        <h2 class="editable" data-key="practiceTitle">Hva trengs for å unngå symptomer?</h2>
+        <p class="editable" data-key="practiceText">Det finnes ikke én bestemt B12-verdi som garanterer at ingen får symptomer. For mange handler symptomfrihet mer om å ha nok B12 over tid, god nok absorpsjon og å oppdage mangel tidlig enn om å ligge på ett bestemt tall.</p>
+        <div class="practice-grid" data-sort-group="practice-grid">
+          <div class="practice-item deletable" data-block-id="practice1"><div class="practice-num">01</div><h3 class="editable" data-key="p1Title">Ha nok inntak</h3><p class="editable" data-key="p1Text">Voksne trenger vanligvis 2,4 mikrogram B12 daglig. Dette er anbefalt inntak, ikke en behandlingsdose ved mangel.</p></div>
+          <div class="practice-item deletable" data-block-id="practice2"><div class="practice-num">02</div><h3 class="editable" data-key="p2Title">Sikre opptak</h3><p class="editable" data-key="p2Text">Noen får ikke mangel fordi de spiser for lite, men fordi de absorberer dårlig på grunn av pernisiøs anemi, mage-tarmkirurgi, cøliaki, Crohns sykdom eller medisiner som metformin og syrehemmere.</p></div>
+          <div class="practice-item deletable" data-block-id="practice3"><div class="practice-num">03</div><h3 class="editable" data-key="p3Title">Ta symptomer på alvor</h3><p class="editable" data-key="p3Text">Prikking, nummenhet, ustøhet, tungesvie, uttalt tretthet eller hjernetåke kan fortjene videre utredning selv om total B12 ikke er dramatisk lav.</p></div>
+        </div>
+      </section>
+
+      <section class="wide-box signal-box deletable" data-block-id="signal-box">
+        <h2 class="editable" data-key="signalTitle">Hva øker risikoen, og hva hjelper?</h2>
+        <p class="editable" data-key="signalText">B12-mangel handler ikke bare om kosthold. Mange får mangel fordi kroppen ikke får tatt opp vitaminet godt nok.</p>
+        <div class="signal-grid" data-sort-group="signal-grid">
+          <div class="signal-card deletable" data-block-id="signal1"><h3 class="editable" data-key="s1Title">Vanlige risikofaktorer</h3><ul><li class="editable" data-key="s1Item1">Vegansk kost uten tilskudd eller berikede matvarer</li><li class="editable" data-key="s1Item2">Pernisiøs anemi eller annen malabsorpsjon</li><li class="editable" data-key="s1Item3">Mage- eller tarmkirurgi</li><li class="editable" data-key="s1Item4">Langvarig bruk av metformin eller protonpumpehemmere</li><li class="editable" data-key="s1Item5">Høy alder eller kronisk mage-tarmsykdom</li></ul></div>
+          <div class="signal-card deletable" data-block-id="signal2"><h3 class="editable" data-key="s2Title">Det som ofte hjelper</h3><ul><li class="editable" data-key="s2Item1">Måling av total B12 ved symptomer eller risiko</li><li class="editable" data-key="s2Item2">Tilleggsprøver som MMA i gråsonen</li><li class="editable" data-key="s2Item3">Tidlig behandling når mangel er sannsynlig</li><li class="editable" data-key="s2Item4">Tilskudd eller injeksjoner når opptaket er dårlig</li><li class="editable" data-key="s2Item5">Å finne årsaken, ikke bare rette tallet</li></ul></div>
+        </div>
+      </section>
+
+      <section class="closing deletable" data-block-id="closing-box">
+        <h2 class="editable" data-key="closingTitle">Det viktigste å sitte igjen med</h2>
+        <p class="editable" data-key="closingText">Vitamin B12 bør vurderes i lys av både blodprøver, symptomer og årsak. Under 133 pmol/L taler tydelig for mangel. Mellom 133 og 258 pmol/L er det ofte klokt å se nærmere på tilleggsprøver og klinikk. Målet er ikke å jage et perfekt tall, men å forebygge symptomer, beskytte nervesystemet og finne årsaken hvis B12 er lav eller borderline.</p>
+      </section>
+
+      <section class="custom-boxes deletable is-hidden-block" id="customBoxesSection" data-block-id="custom-boxes">
+        <h2 class="editable" data-key="customBoxesTitle">Ekstra informasjon</h2>
+        <p class="editable" data-key="customBoxesIntro">Her kan du legge inn egne bokser med tips, fakta eller viktige nyanser.</p>
+        <div class="custom-grid" id="customGrid"></div>
+      </section>
+
+      <section class="accordion sources-acc deletable" data-block-id="sources-accordion">
+        <button class="accordion-toggle" type="button" onclick="toggleAccordion('sources')">
+          <div class="accordion-left">
+            <div class="accordion-plus" id="sourcesPlus">+</div>
+            <div>
+              <div class="accordion-kicker editable" data-key="sourcesLabel">Faglig grunnlag</div>
+              <h2 class="accordion-title editable" data-key="sourcesTitle">Kilder</h2>
+            </div>
+          </div>
+        </button>
+        <div class="accordion-content" id="sourcesContent">
+          <ul>
+            <li class="editable" data-key="source1">NICE. <em>Vitamin B12 deficiency in over 16s: diagnosis and management</em> (NG239), 2024.</li>
+            <li class="editable" data-key="source2">NIH Office of Dietary Supplements. <em>Vitamin B12 – Health Professional Fact Sheet</em>.</li>
+            <li class="editable" data-key="source3">NHS. <em>Vitamin B12 or folate deficiency anaemia</em>.</li>
+            <li class="editable" data-key="source4">Mayo Clinic. <em>Vitamin deficiency anemia</em> og <em>Vitamin B-12</em>.</li>
+        </ul>
+      </div>
+      </section>
+
+      <section class="accordion disclaimer-acc deletable" data-block-id="disclaimer-accordion">
+        <button class="accordion-toggle" type="button" onclick="toggleAccordion('disclaimer')">
+          <div class="accordion-left">
+            <div class="accordion-plus" id="disclaimerPlus">+</div>
+            <div>
+              <h2 class="accordion-title editable" data-key="discTitle">Viktig å vite</h2>
+            </div>
+          </div>
+        </button>
+        <div class="accordion-content" id="disclaimerContent">
+          <p class="editable" data-key="disc1">Denne artikkelen er laget for generell informasjon og læring. Den erstatter ikke vurdering, undersøkelser, diagnose eller behandling fra lege eller annet autorisert helsepersonell.</p>
+          <p class="editable" data-key="disc2">Hvis du har vedvarende tretthet, prikking, nummenhet, balansevansker, tungesvie, hukommelsesendringer eller andre symptomer du er bekymret for, bør du kontakte lege eller annet helsepersonell.</p>
+          <p class="editable" data-key="disc3">Blodprøver for vitamin B12 må tolkes i sammenheng med symptomer, sykehistorie, kosthold og eventuelle tilleggsprøver. Følg alltid rådene du får fra behandleren din dersom de er forskjellige fra generell informasjon i denne teksten.</p>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <aside class="editor-panel" id="editorPanel" aria-hidden="false">
+    <div class="editor-head">
+      <div class="editor-head-top">
+        <h3>Redaktørmodus</h3>
+        <div class="editor-head-actions">
+          <button class="compact-toggle" type="button" onclick="toggleEditorCompact()">Kompakt</button>
+          <button class="editor-close" type="button" onclick="closeEditorMode()">Til artikkel</button>
+        </div>
+      </div>
+      <p>Rediger tekst direkte i artikkelen. Du kan legge til egne bokser, flytte bokser, skjule bokser, bytte bilde og justere bildestørrelse.</p>
+      <div class="compact-toolbar">
+        <button type="button" title="Åpne fullt panel" onclick="toggleEditorCompact()">⤢</button>
+        <button type="button" title="Lagre" onclick="saveEditorState()">💾</button>
+        <button type="button" title="Kopier HTML" onclick="copyUpdatedHtml()">⧉</button>
+        <button type="button" title="Lukk" onclick="closeEditorMode()">✕</button>
+      </div>
+    </div>
+
+    <div class="editor-body">
+      <div class="editor-group">
+        <h4>Hurtigverktøy</h4>
+        <div class="editor-actions">
+          <button class="editor-btn" type="button" onclick="saveEditorState()">Lagre</button>
+          <button class="editor-btn secondary" type="button" onclick="closeEditorMode()">Lås</button>
+          <button class="editor-btn secondary" type="button" onclick="exportEditorData()">Eksporter data</button>
+          <button class="editor-btn secondary" type="button" onclick="exportUpdatedHtml()">Eksporter HTML</button>
+          <button class="editor-btn secondary" type="button" onclick="copyUpdatedHtml()">Kopier HTML</button>
+          <button class="editor-btn secondary" type="button" onclick="document.getElementById('importFile').click()">Importer</button>
+          <input class="sr-only" type="file" id="importFile" accept="application/json">
+          <button class="editor-btn secondary" type="button" onclick="resetEditorState()">Tilbakestill</button>
+          <button class="editor-btn secondary" type="button" onclick="restoreAllHiddenBlocks()">Vis alt igjen</button>
+        </div>
+      </div>
+
+      <div class="editor-group">
+        <h4>Bilde</h4>
+        <div class="editor-row">
+          <label class="editor-label" for="imageUrlInput">Bilde-URL</label>
+          <input class="editor-input" id="imageUrlInput" type="text" placeholder="Lim inn bilde-URL">
+        </div>
+        <div class="editor-row">
+          <label class="editor-label" for="imageFileInput">Eller last opp bilde</label>
+          <input class="editor-input" id="imageFileInput" type="file" accept="image/*">
+        </div>
+        <div class="editor-row">
+          <label class="editor-label" for="imageCaptionInput">Bildetekst</label>
+          <input class="editor-input" id="imageCaptionInput" type="text" placeholder="Skriv bildetekst">
+        </div>
+        <div class="editor-row">
+          <label class="editor-label" for="imageWidthRange">Bildebredde</label>
+          <input class="editor-range" id="imageWidthRange" type="range" min="35" max="100" value="100">
+        </div>
+        <div class="editor-row">
+          <label class="editor-label" for="imageHeightRange">Bildehøyde</label>
+          <input class="editor-range" id="imageHeightRange" type="range" min="180" max="700" value="420">
+        </div>
+        <div class="editor-actions" style="margin-top:10px;">
+          <button class="editor-btn secondary" type="button" onclick="applyImageChanges()">Bruk bilde</button>
+          <button class="editor-btn secondary" type="button" onclick="removeFeatureImage()">Fjern bilde</button>
+        </div>
+      </div>
+
+      <div class="editor-group">
+        <h4>Lag ny boks</h4>
+        <div class="editor-row">
+          <label class="editor-label" for="newBoxType">Bokstype</label>
+          <select class="editor-select" id="newBoxType">
+            <option value="standard">Standard</option>
+            <option value="tips">Tips</option>
+            <option value="fakta">Fakta</option>
+            <option value="advarsel">Viktig</option>
+          </select>
+        </div>
+        <div class="editor-row">
+          <label class="editor-label" for="newBoxTitle">Tittel</label>
+          <input class="editor-input" id="newBoxTitle" type="text" placeholder="Skriv tittel">
+        </div>
+        <div class="editor-row">
+          <label class="editor-label" for="newBoxText">Tekst</label>
+          <textarea class="editor-input" id="newBoxText" rows="4" placeholder="Skriv innhold"></textarea>
+        </div>
+        <div class="editor-actions" style="margin-top:10px;">
+          <button class="editor-btn" type="button" onclick="addCustomInfoBox()">Legg til boks</button>
+          <button class="editor-btn secondary" type="button" onclick="clearCustomBoxInputs()">Tøm felter</button>
+        </div>
+      </div>
+
+      <div class="editor-group">
+        <h4>Små grafiske endringer</h4>
+        <div class="editor-row">
+          <label class="editor-label" for="radiusRange">Runde hjørner</label>
+          <input class="editor-range" id="radiusRange" type="range" min="14" max="34" value="24">
+        </div>
+        <div class="editor-row">
+          <label class="editor-label" for="heroRadiusRange">Hero-runding</label>
+          <input class="editor-range" id="heroRadiusRange" type="range" min="18" max="40" value="28">
+        </div>
+        <div class="editor-row">
+          <label class="editor-label">Fargevalg</label>
+          <div class="palette-row">
+            <button class="palette-btn" type="button" onclick="applyPalette('calm')">Rolig</button>
+            <button class="palette-btn" type="button" onclick="applyPalette('warm')">Varm</button>
+            <button class="palette-btn" type="button" onclick="applyPalette('fresh')">Frisk</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="editor-group">
+        <h4>Innloggingskode</h4>
+        <div class="editor-row">
+          <label class="editor-label" for="passInput">Ny kode</label>
+          <input class="editor-input" id="passInput" type="text" value="Kjetil">
+        </div>
+        <div class="editor-actions" style="margin-top:10px;">
+          <button class="editor-btn secondary" type="button" onclick="saveEditorPassword()">Lagre kode</button>
+        </div>
+        <div class="editor-note">Standardpassordet er <strong>Kjetil</strong>.</div>
+      </div>
+    </div>
+  </aside>
+
+  <div class="login-overlay" id="loginOverlay" aria-hidden="true">
+    <div class="login-backdrop"></div>
+    <div class="login-card" role="dialog" aria-modal="true" aria-labelledby="loginTitle">
+      <h3 id="loginTitle">Redaktørinnlogging</h3>
+      <p>Skriv inn redaktørkoden for å åpne redaktørmodus.</p>
+      <input class="editor-input" id="loginPassword" type="password" placeholder="Redaktørkode">
+      <div class="login-actions">
+        <button class="editor-btn" type="button" onclick="submitEditorLogin()">Logg inn</button>
+        <button class="editor-btn secondary" type="button" onclick="cancelEditorLogin()">Avbryt</button>
+      </div>
+      <div class="login-msg" id="loginMsg"></div>
+    </div>
+  </div>
+
+  <div class="modal" id="learnModal" aria-hidden="true">
+    <div class="modal-backdrop" onclick="closeLearnMore()"></div>
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <button class="modal-close" type="button" onclick="closeLearnMore()">×</button>
+      <h3 id="modalTitle">Fordypning</h3>
+      <div id="modalContent"></div>
+    </div>
+  </div>
+
+  <script id="embeddedOriginalState" type="application/json">
+{
+  "stamp": "vitamin-b12-2026-05-01",
+  "content": {
+    "updatedText": "<span class=\"updated-dot\"></span> Sist oppdatert: 1. mai 2026",
+    "heroTitle": "Vitamin B12",
+    "heroText": "Vitamin B12 er nødvendig for nervesystemet, dannelsen av røde blodceller og produksjon av DNA. Mangel kan gi tretthet, nummenhet, prikking, tungeforandringer, dårligere hukommelse og i noen tilfeller blodmangel. Det viktigste er ikke bare å vite om B12 er “innenfor”, men å forstå hva som er tydelig lavt, hva som er gråsone, og når symptomer bør tas på alvor selv om prøven ikke ser dramatisk ut.",
+    "heroPill1": "<i></i> Se nivå, symptomer og årsak sammen",
+    "heroPill2": "<i></i> Gråsoner trenger ofte mer utredning",
+    "heroPill3": "<i></i> Ett tall alene garanterer ikke symptomfrihet",
+    "featureImageCaption": "Bildetekst",
+    "summaryTitle": "Kort fortalt",
+    "sum1Small": "Hva er B12?",
+    "sum1Title": "Et nøkkelvitamin for nerver og blod",
+    "sum1Text": "Vitamin B12 trengs for normal nervefunksjon, DNA-syntese og dannelse av friske røde blodceller.",
+    "sum2Small": "Referanseverdier",
+    "sum2Title": "Under 133 pmol/L er tydelig mangel",
+    "sum2Text": "NICE bruker under 133 pmol/L som bekreftet B12-mangel, 133 til 258 pmol/L som gråsone, og over 258 pmol/L som nivå der mangel er mindre sannsynlig.",
+    "sum3Small": "Viktig å huske",
+    "sum3Title": "Ett tall alene er ikke nok",
+    "sum3Text": "For å unngå symptomer er det viktig å ha nok B12 over tid og å finne årsaken til lave eller borderline verdier, ikke bare jage ett bestemt tall.",
+    "quoteText": "Et B12-svar bør alltid tolkes sammen med symptomer, risiko, kosthold og eventuelle tilleggsprøver.",
+    "visualTitle": "Slik kan du forstå B12-nivåer visuelt",
+    "visualText": "Tenk på B12 som et spekter: tydelig mangel nederst, en usikker gråsone i midten, og mer betryggende nivåer høyere opp. Jo lavere nivået er, jo større er sannsynligheten for at symptomene henger sammen med B12-mangel.",
+    "visualBadge": "nivåer",
+    "waveLabel1": "Bedre status",
+    "waveLabel2": "Lavere status",
+    "visualNoteTitle": "Det viktigste poenget",
+    "visualNoteText": "Det finnes ikke ett universelt “symptomfritt” B12-tall for alle. Men tydelig lave nivåer og borderline nivåer med symptomer bør tas alvorlig og utredes videre.",
+    "sec1Title": "Hva er vitamin B12 egentlig?",
+    "sec1Text": "Vitamin B12, også kalt kobalamin, er et vannløselig vitamin som kroppen trenger for normal celledeling, dannelse av røde blodceller og vedlikehold av nervesystemet. Du får det hovedsakelig fra animalske matvarer eller tilskudd.",
+    "sec1Point1": "B12 trengs for myelin og normal nervefunksjon.",
+    "sec1Point2": "Mangel kan gi både blodmangel og nevrologiske symptomer.",
+    "sec1Point3": "Kroppen lagrer B12 i flere år, så symptomer kan komme gradvis.",
+    "sec2Title": "Hvordan tolke B12 klokt?",
+    "sec2Text": "Et normalt eller borderline svar betyr ikke automatisk at alt er avklart. Ved symptomer eller høy risiko kan det være behov for videre testing, særlig i gråsonen.",
+    "sec2Point1": "Under 133 pmol/L taler klart for mangel.",
+    "sec2Point2": "133 til 258 pmol/L er en gråsone der MMA eller homocystein ofte kan være nyttig.",
+    "sec2Point3": "Over 258 pmol/L gjør mangel mindre sannsynlig, men symptomer må fortsatt vurderes klinisk.",
+    "garminTitle": "Referanseverdier og nivåer",
+    "garminText": "NICE 2024 anbefaler at total B12 under 133 pmol/L regnes som bekreftet mangel, 133 til 258 pmol/L som mulig mangel, og over 258 pmol/L som nivå der mangel er mindre sannsynlig. NIH opplyser samtidig at mange laboratorier bruker subnormale grenser rundt 148 til 185 pmol/L, og at nivåer mellom omtrent 111 og 294 pmol/L ofte kan trenge vurdering med MMA.",
+    "garminCard1Title": "Bekreftet mangel",
+    "garminCard1Text": "Under 133 pmol/L: dette bør tas alvorlig og følges opp, særlig ved symptomer.",
+    "garminCard2Title": "Gråsone",
+    "garminCard2Text": "133 til 258 pmol/L: her kan noen ha reell mangel, og tilleggsprøver kan være viktige.",
+    "garminCard3Title": "Mindre sannsynlig mangel",
+    "garminCard3Text": "Over 258 pmol/L: mangel er mindre sannsynlig, men klinisk bilde teller fortsatt.",
+    "practiceTitle": "Hva trengs for å unngå symptomer?",
+    "practiceText": "Det finnes ikke én bestemt B12-verdi som garanterer at ingen får symptomer. For mange handler symptomfrihet mer om å ha nok B12 over tid, god nok absorpsjon og å oppdage mangel tidlig enn om å ligge på ett bestemt tall.",
+    "p1Title": "Ha nok inntak",
+    "p1Text": "Voksne trenger vanligvis 2,4 mikrogram B12 daglig. Dette er anbefalt inntak, ikke en behandlingsdose ved mangel.",
+    "p2Title": "Sikre opptak",
+    "p2Text": "Noen får ikke mangel fordi de spiser for lite, men fordi de absorberer dårlig på grunn av pernisiøs anemi, mage-tarmkirurgi, cøliaki, Crohns sykdom eller medisiner som metformin og syrehemmere.",
+    "p3Title": "Ta symptomer på alvor",
+    "p3Text": "Prikking, nummenhet, ustøhet, tungesvie, uttalt tretthet eller hjernetåke kan fortjene videre utredning selv om total B12 ikke er dramatisk lav.",
+    "signalTitle": "Hva øker risikoen, og hva hjelper?",
+    "signalText": "B12-mangel handler ikke bare om kosthold. Mange får mangel fordi kroppen ikke får tatt opp vitaminet godt nok.",
+    "s1Title": "Vanlige risikofaktorer",
+    "s1Item1": "Vegansk kost uten tilskudd eller berikede matvarer",
+    "s1Item2": "Pernisiøs anemi eller annen malabsorpsjon",
+    "s1Item3": "Mage- eller tarmkirurgi",
+    "s1Item4": "Langvarig bruk av metformin eller protonpumpehemmere",
+    "s1Item5": "Høy alder eller kronisk mage-tarmsykdom",
+    "s2Title": "Det som ofte hjelper",
+    "s2Item1": "Måling av total B12 ved symptomer eller risiko",
+    "s2Item2": "Tilleggsprøver som MMA i gråsonen",
+    "s2Item3": "Tidlig behandling når mangel er sannsynlig",
+    "s2Item4": "Tilskudd eller injeksjoner når opptaket er dårlig",
+    "s2Item5": "Å finne årsaken, ikke bare rette tallet",
+    "closingTitle": "Det viktigste å sitte igjen med",
+    "closingText": "Vitamin B12 bør vurderes i lys av både blodprøver, symptomer og årsak. Under 133 pmol/L taler tydelig for mangel. Mellom 133 og 258 pmol/L er det ofte klokt å se nærmere på tilleggsprøver og klinikk. Målet er ikke å jage et perfekt tall, men å forebygge symptomer, beskytte nervesystemet og finne årsaken hvis B12 er lav eller borderline.",
+    "customBoxesTitle": "Ekstra informasjon",
+    "customBoxesIntro": "Her kan du legge inn egne bokser med tips, fakta eller viktige nyanser.",
+    "sourcesLabel": "Faglig grunnlag",
+    "sourcesTitle": "Kilder",
+    "source1": "NICE. <em>Vitamin B12 deficiency in over 16s: diagnosis and management</em> (NG239), 2024.",
+    "source2": "NIH Office of Dietary Supplements. <em>Vitamin B12 – Health Professional Fact Sheet</em>.",
+    "source3": "NHS. <em>Vitamin B12 or folate deficiency anaemia</em>.",
+    "source4": "Mayo Clinic. <em>Vitamin deficiency anemia</em> og <em>Vitamin B-12</em>.",
+    "discTitle": "Viktig å vite",
+    "disc1": "Denne artikkelen er laget for generell informasjon og læring. Den erstatter ikke vurdering, undersøkelser, diagnose eller behandling fra lege eller annet autorisert helsepersonell.",
+    "disc2": "Hvis du har vedvarende tretthet, prikking, nummenhet, balansevansker, tungesvie, hukommelsesendringer eller andre symptomer du er bekymret for, bør du kontakte lege eller annet helsepersonell.",
+    "disc3": "Blodprøver for vitamin B12 må tolkes i sammenheng med symptomer, sykehistorie, kosthold og eventuelle tilleggsprøver. Følg alltid rådene du får fra behandleren din dersom de er forskjellige fra generell informasjon i denne teksten."
+  },
+  "styles": {
+    "cardRadius": 24,
+    "heroRadius": 28,
+    "imageWidth": 100,
+    "imageHeight": 420,
+    "palette": "calm",
+    "editorCompact": false
+  },
+  "image": null,
+  "hidden": [],
+  "accordions": {
+    "sources": false,
+    "disclaimer": false
+  },
+  "order": {
+    "hero-pills": ["hero-pill-1","hero-pill-2","hero-pill-3"],
+    "summary-grid": ["summary-1","summary-2","summary-3"],
+    "top-grid": ["section-1","section-2"],
+    "sec1-points": ["sec1-point1","sec1-point2","sec1-point3"],
+    "sec2-points": ["sec2-point1","sec2-point2","sec2-point3"],
+    "garmin-grid": ["garmin-card-1","garmin-card-2","garmin-card-3"],
+    "practice-grid": ["practice1","practice2","practice3"],
+    "signal-grid": ["signal1","signal2"]
+  },
+  "customBoxes": [],
+  "pass": "Kjetil"
+}
+  </script>
+
+  <script id="articleAppScript">
+    const STORAGE_PREFIX = 'tro_livsstil_article_template_v1';
+    const KEYS = {
+      content: STORAGE_PREFIX + '_content',
+      style: STORAGE_PREFIX + '_style',
+      pass: STORAGE_PREFIX + '_pass',
+      image: STORAGE_PREFIX + '_image',
+      hidden: STORAGE_PREFIX + '_hidden',
+      accordion: STORAGE_PREFIX + '_accordion',
+      order: STORAGE_PREFIX + '_order',
+      custom: STORAGE_PREFIX + '_custom',
+      snapshot: STORAGE_PREFIX + '_snapshot'
+    };
+
+    const learnMoreData = {
+      sectionA: {
+        title: 'Hva gjør vitamin B12 i kroppen?',
+        content: '<p>Vitamin B12 er nødvendig for normal dannelse av røde blodceller, produksjon av DNA og vedlikehold av nervesystemet. Når nivåene blir for lave, kan kroppen få problemer både med blodproduksjon og nervefunksjon.</p><p>Det er en del av grunnen til at B12-mangel kan gi både klassiske symptomer som tretthet og mer nevrologiske symptomer som prikking, nummenhet, ustøhet eller kognitive plager.</p><div class=\"soft good\">Poenget er at B12 ikke bare handler om energi, men også om å beskytte nerver og normal celledeling.</div>'
+      },
+      sectionB: {
+        title: 'Hvordan tolke B12 klokt?',
+        content: '<p>Et B12-tall må alltid sees i sammenheng med symptomer, kosthold, medisiner og eventuell sykdom som påvirker opptaket. Ett enkelt tall forteller ikke alltid hele historien.</p><p>Det er derfor gråsoner er viktige. Ved borderline verdier kan tilleggsprøver som MMA og noen ganger homocystein hjelpe til å avklare om kroppen faktisk mangler funksjonell B12.</p><div class=\"soft\">Det tryggeste er å tenke: ikke bare spør om prøven er innenfor, men om nivået er godt nok for akkurat denne personen til å unngå symptomer og skade over tid.</div>'
+      }
+    };
+
+    const DEFAULT_STATE = {
+      stamp: 'article-template-default',
+      content: {},
+      styles: {
+        cardRadius: 24,
+        heroRadius: 28,
+        imageWidth: 100,
+        imageHeight: 420,
+        palette: 'calm',
+        editorCompact: false
+      },
+      image: null,
+      hidden: [],
+      accordions: { sources: false, disclaimer: false },
+      order: {},
+      customBoxes: [],
+      pass: 'Kjetil'
+    };
+
+    function q(sel){ return document.querySelector(sel); }
+    function qa(sel){ return Array.from(document.querySelectorAll(sel)); }
+    function cloneData(data){ return JSON.parse(JSON.stringify(data)); }
+
+    function readEmbeddedState(){
+      try{
+        const raw = document.getElementById('embeddedOriginalState')?.textContent?.trim();
+        return raw ? JSON.parse(raw) : {};
+      }catch(e){
+        console.error(e);
+        return {};
+      }
+    }
+
+    function getEmbeddedState(){
+      const embedded = readEmbeddedState();
+      return {
+        stamp: embedded.stamp || DEFAULT_STATE.stamp,
+        content: embedded.content && typeof embedded.content === 'object' ? embedded.content : {},
+        styles: {
+          ...DEFAULT_STATE.styles,
+          ...(embedded.styles && typeof embedded.styles === 'object' ? embedded.styles : {})
+        },
+        image: embedded.image || null,
+        hidden: Array.isArray(embedded.hidden) ? embedded.hidden : [],
+        accordions: {
+          ...DEFAULT_STATE.accordions,
+          ...(embedded.accordions && typeof embedded.accordions === 'object' ? embedded.accordions : {})
+        },
+        order: embedded.order && typeof embedded.order === 'object' ? embedded.order : {},
+        customBoxes: Array.isArray(embedded.customBoxes) ? embedded.customBoxes : [],
+        pass: embedded.pass ? String(embedded.pass) : DEFAULT_STATE.pass
+      };
+    }
+
+    const ORIGINAL_STATE = getEmbeddedState();
+
+    function getStoredJson(key){
+      try{
+        const raw = localStorage.getItem(key);
+        return raw ? JSON.parse(raw) : null;
+      }catch(e){
+        console.error(e);
+        return null;
+      }
+    }
+
+    function setStoredJson(key, value){
+      localStorage.setItem(key, JSON.stringify(value));
+    }
+
+    function writeStateToLocalStorage(state){
+      if(state.content) setStoredJson(KEYS.content, state.content);
+      if(state.styles) setStoredJson(KEYS.style, state.styles);
+      if(state.image) setStoredJson(KEYS.image, state.image);
+      else localStorage.removeItem(KEYS.image);
+      setStoredJson(KEYS.hidden, Array.isArray(state.hidden) ? state.hidden : []);
+      setStoredJson(KEYS.accordion, state.accordions || DEFAULT_STATE.accordions);
+      setStoredJson(KEYS.order, state.order || {});
+      setStoredJson(KEYS.custom, Array.isArray(state.customBoxes) ? state.customBoxes : []);
+      localStorage.setItem(KEYS.pass, state.pass || 'Kjetil');
+      localStorage.setItem(KEYS.snapshot, state.stamp || DEFAULT_STATE.stamp);
+    }
+
+    function syncEmbeddedStateToLocalStorage(){
+      const currentStamp = localStorage.getItem(KEYS.snapshot);
+      if(currentStamp !== ORIGINAL_STATE.stamp){
+        writeStateToLocalStorage(ORIGINAL_STATE);
+      }
+    }
+
+    function generateSnapshotStamp(){
+      return 'article-' + Date.now() + '-' + Math.random().toString(36).slice(2, 8);
+    }
+
+    function getEditableNodes(){ return qa('[data-key]'); }
+    function getDeletableNodes(){ return qa('.deletable[data-block-id]'); }
+    function getSavedPass(){ return localStorage.getItem(KEYS.pass) || ORIGINAL_STATE.pass || 'Kjetil'; }
+
+    function collectContent(){
+      const out = {};
+      getEditableNodes().forEach(node => out[node.dataset.key] = node.innerHTML.trim());
+      return out;
+    }
+
+    function applyContent(data){
+      getEditableNodes().forEach(node => {
+        const key = node.dataset.key;
+        if(Object.prototype.hasOwnProperty.call(data, key)) node.innerHTML = data[key];
+      });
+    }
+
+    function saveContent(){
+      setStoredJson(KEYS.content, collectContent());
+    }
+
+    function loadContent(){
+      const data = getStoredJson(KEYS.content) || ORIGINAL_STATE.content;
+      if(data) applyContent(data);
+    }
+
+    function applyPalette(name, persist=true){
+      document.documentElement.dataset.palette = name;
+      const root = document.documentElement.style;
+      const palettes = {
+        calm:{ heroA:'#eef8ef', heroB:'#edf4ff', heroC:'#faf3ff', accent:'#94b6a0' },
+        warm:{ heroA:'#fff5ea', heroB:'#fff0eb', heroC:'#fff8f1', accent:'#c69374' },
+        fresh:{ heroA:'#eaf8f2', heroB:'#eef8ff', heroC:'#f1fbff', accent:'#6fa7a2' }
+      };
+      const p = palettes[name] || palettes.calm;
+      root.setProperty('--hero-a', p.heroA);
+      root.setProperty('--hero-b', p.heroB);
+      root.setProperty('--hero-c', p.heroC);
+      root.setProperty('--accent', p.accent);
+      if(persist) saveStyles();
+    }
+
+    function collectStyleState(){
+      return {
+        cardRadius: Number(q('#radiusRange')?.value || 24),
+        heroRadius: Number(q('#heroRadiusRange')?.value || 28),
+        imageWidth: Number(q('#imageWidthRange')?.value || 100),
+        imageHeight: Number(q('#imageHeightRange')?.value || 420),
+        palette: document.documentElement.dataset.palette || 'calm',
+        editorCompact: document.body.classList.contains('editor-compact')
+      };
+    }
+
+    function saveStyles(){
+      setStoredJson(KEYS.style, collectStyleState());
+    }
+
+    function applyStyles(styles){
+      if(!styles) return;
+      if(styles.cardRadius){
+        document.documentElement.style.setProperty('--card-radius', styles.cardRadius + 'px');
+        const el = q('#radiusRange');
+        if(el) el.value = styles.cardRadius;
+      }
+      if(styles.heroRadius){
+        document.documentElement.style.setProperty('--hero-radius', styles.heroRadius + 'px');
+        const el = q('#heroRadiusRange');
+        if(el) el.value = styles.heroRadius;
+      }
+      if(styles.imageWidth){
+        document.documentElement.style.setProperty('--feature-image-width', styles.imageWidth + '%');
+        const el = q('#imageWidthRange');
+        if(el) el.value = styles.imageWidth;
+      }
+      if(styles.imageHeight){
+        document.documentElement.style.setProperty('--feature-image-height', styles.imageHeight + 'px');
+        const el = q('#imageHeightRange');
+        if(el) el.value = styles.imageHeight;
+      }
+      applyPalette(styles.palette || 'calm', false);
+      document.body.classList.toggle('editor-compact', !!styles.editorCompact);
+    }
+
+    function loadStyles(){
+      const styles = getStoredJson(KEYS.style) || ORIGINAL_STATE.styles;
+      applyStyles(styles);
+    }
+
+    function getCurrentImageState(){
+      const wrap = q('#featureImageSection');
+      const img = q('#featureImage');
+      if(!wrap || !img || !wrap.classList.contains('show') || !img.getAttribute('src')) return null;
+      return {
+        src: img.getAttribute('src'),
+        caption: q('#imageCaptionInput')?.value.trim() || q('#featureImageCaption')?.textContent.trim() || ''
+      };
+    }
+
+    function saveImageData(data){
+      if(data && data.src) setStoredJson(KEYS.image, data);
+      else localStorage.removeItem(KEYS.image);
+    }
+
+    function applyImageData(data){
+      const wrap = q('#featureImageSection');
+      const img = q('#featureImage');
+      const cap = q('#featureImageCaption');
+      const urlInput = q('#imageUrlInput');
+      const capInput = q('#imageCaptionInput');
+      if(!wrap || !img || !cap) return;
+
+      if(!data || !data.src){
+        wrap.classList.remove('show');
+        img.removeAttribute('src');
+        cap.textContent = 'Bildetekst';
+        if(urlInput) urlInput.value = '';
+        if(capInput) capInput.value = '';
+        return;
+      }
+
+      img.src = data.src;
+      wrap.classList.add('show');
+      cap.textContent = data.caption || '';
+      if(capInput) capInput.value = data.caption || '';
+      if(urlInput) urlInput.value = data.src.startsWith('data:') ? '' : data.src;
+    }
+
+    function loadImageData(){
+      const data = getStoredJson(KEYS.image);
+      if(data !== null) applyImageData(data);
+      else applyImageData(ORIGINAL_STATE.image || null);
+    }
+
+    function getHiddenBlocks(){
+      const hidden = getStoredJson(KEYS.hidden);
+      return Array.isArray(hidden) ? hidden : cloneData(ORIGINAL_STATE.hidden || []);
+    }
+
+    function saveHiddenBlocks(ids){
+      setStoredJson(KEYS.hidden, ids);
+    }
+
+    function applyHiddenBlocks(){
+      const hidden = new Set(getHiddenBlocks());
+      const hasCustomBoxes = getCustomBoxes().length > 0;
+      getDeletableNodes().forEach(node => {
+        if(node.id === 'customBoxesSection' && !hasCustomBoxes){
+          node.classList.add('is-hidden-block');
+          return;
+        }
+        node.classList.toggle('is-hidden-block', hidden.has(node.dataset.blockId));
+      });
+    }
+
+    function toggleBlockHidden(id){
+      const hidden = new Set(getHiddenBlocks());
+      if(hidden.has(id)) hidden.delete(id);
+      else hidden.add(id);
+      saveHiddenBlocks(Array.from(hidden));
+      applyHiddenBlocks();
+    }
+
+    function restoreAllHiddenBlocks(){
+      localStorage.removeItem(KEYS.hidden);
+      applyHiddenBlocks();
+      alert('Alle skjulte bokser er vist igjen.');
+    }
+
+    function ensureSortGroups(){
+      const parents = new Set();
+      let i = 0;
+      getDeletableNodes().forEach(node => {
+        const parent = node.parentElement;
+        if(parent && Array.from(parent.children).some(child => child.dataset && child.dataset.blockId)) parents.add(parent);
+      });
+      parents.forEach(parent => {
+        if(!parent.dataset.sortGroup){
+          parent.dataset.sortGroup = 'auto-group-' + i;
+          i += 1;
+        }
+      });
+    }
+
+    function saveOrderState(){
+      const state = {};
+      qa('[data-sort-group]').forEach(parent => {
+        const ids = Array.from(parent.children)
+          .filter(child => child.dataset && child.dataset.blockId)
+          .map(child => child.dataset.blockId);
+        if(ids.length > 1) state[parent.dataset.sortGroup] = ids;
+      });
+      setStoredJson(KEYS.order, state);
+    }
+
+    function applyOrderState(){
+      const state = getStoredJson(KEYS.order) || ORIGINAL_STATE.order || {};
+      qa('[data-sort-group]').forEach(parent => {
+        const ids = state[parent.dataset.sortGroup];
+        if(!Array.isArray(ids)) return;
+        ids.forEach(id => {
+          const child = Array.from(parent.children).find(el => el.dataset && el.dataset.blockId === id);
+          if(child) parent.appendChild(child);
+        });
+      });
+    }
+
+    function moveBlock(node, direction){
+      const parent = node.parentElement;
+      if(!parent) return;
+      const siblings = Array.from(parent.children).filter(child => child.dataset && child.dataset.blockId);
+      const index = siblings.indexOf(node);
+      if(index === -1) return;
+      const target = siblings[index + direction];
+      if(!target) return;
+      if(direction < 0) parent.insertBefore(node, target);
+      else parent.insertBefore(target, node);
+      saveOrderState();
+    }
+
+    function clearSelectedBlock(){
+      getDeletableNodes().forEach(node => node.classList.remove('selected-edit-block'));
+    }
+
+    function attachSelectionHandlers(){
+      getDeletableNodes().forEach(node => {
+        if(node.dataset.selectionBound === 'true') return;
+        node.dataset.selectionBound = 'true';
+        node.addEventListener('click', e => {
+          if(!document.body.classList.contains('editor-mode')) return;
+          if(e.target.closest('.block-tools')) return;
+          e.stopPropagation();
+          clearSelectedBlock();
+          node.classList.add('selected-edit-block');
+        });
+      });
+
+      document.addEventListener('click', e => {
+        if(!document.body.classList.contains('editor-mode')) return;
+        if(e.target.closest('.deletable') || e.target.closest('.editor-panel') || e.target.closest('.login-card')) return;
+        clearSelectedBlock();
+      });
+    }
+
+    function attachBlockControls(){
+      getDeletableNodes().forEach(node => {
+        if(node.querySelector(':scope > .block-tools')) return;
+        const tools = document.createElement('div');
+        tools.className = 'block-tools';
+
+        const up = document.createElement('button');
+        up.className = 'block-tool';
+        up.type = 'button';
+        up.textContent = '↑';
+        up.title = 'Flytt opp';
+        up.onclick = e => { e.stopPropagation(); moveBlock(node, -1); };
+
+        const down = document.createElement('button');
+        down.className = 'block-tool';
+        down.type = 'button';
+        down.textContent = '↓';
+        down.title = 'Flytt ned';
+        down.onclick = e => { e.stopPropagation(); moveBlock(node, 1); };
+
+        const del = document.createElement('button');
+        del.className = 'block-tool delete';
+        del.type = 'button';
+        del.textContent = '×';
+        del.title = 'Skjul denne boksen';
+        del.onclick = e => { e.stopPropagation(); toggleBlockHidden(node.dataset.blockId); };
+
+        tools.appendChild(up);
+        tools.appendChild(down);
+        tools.appendChild(del);
+        node.appendChild(tools);
+      });
+    }
+
+    function getAccordionState(){
+      const state = getStoredJson(KEYS.accordion);
+      return {
+        ...DEFAULT_STATE.accordions,
+        ...ORIGINAL_STATE.accordions,
+        ...(state && typeof state === 'object' ? state : {})
+      };
+    }
+
+    function saveAccordionState(state){
+      setStoredJson(KEYS.accordion, state);
+    }
+
+    function setAccordion(name, open){
+      const content = q('#' + name + 'Content');
+      const plus = q('#' + name + 'Plus');
+      if(!content || !plus) return;
+      const wrapper = content.closest('.accordion');
+      if(wrapper) wrapper.classList.toggle('open', open);
+      plus.textContent = open ? '−' : '+';
+      const state = getAccordionState();
+      state[name] = open;
+      saveAccordionState(state);
+    }
+
+    function toggleAccordion(name){
+      const state = getAccordionState();
+      setAccordion(name, !state[name]);
+    }
+
+    function loadAccordions(){
+      const state = getAccordionState();
+      setAccordion('sources', !!state.sources);
+      setAccordion('disclaimer', !!state.disclaimer);
+    }
+
+    function getCustomBoxes(){
+      const boxes = getStoredJson(KEYS.custom);
+      if(Array.isArray(boxes)) return boxes;
+      return cloneData(ORIGINAL_STATE.customBoxes || []);
+    }
+
+    function saveCustomBoxes(boxes){
+      setStoredJson(KEYS.custom, boxes);
+    }
+
+    function getTypeLabel(type){
+      return ({ standard:'Info', tips:'Tips', fakta:'Fakta', advarsel:'Viktig' }[type] || 'Info');
+    }
+
+    function getTypeStyle(type){
+      return ({
+        standard:'',
+        tips:'background:linear-gradient(135deg,#eef6ff,#fbfdff);border-color:#deebf7;',
+        fakta:'background:linear-gradient(135deg,#edf7f1,#fbfffd);border-color:#deeadf;',
+        advarsel:'background:linear-gradient(135deg,#fff4ee,#fffaf7);border-color:#f0ddd3;'
+      }[type] || '');
+    }
+
+    function renderCustomBoxes(){
+      const wrap = q('#customGrid');
+      const section = q('#customBoxesSection');
+      if(!wrap || !section) return;
+
+      const boxes = getCustomBoxes();
+      wrap.innerHTML = '';
+
+      if(!boxes.length){
+        section.classList.add('is-hidden-block');
+        return;
+      }
+
+      const hidden = new Set(getHiddenBlocks());
+      section.classList.toggle('is-hidden-block', hidden.has(section.dataset.blockId));
+
+      boxes.forEach((box, index) => {
+        const card = document.createElement('div');
+        card.className = 'custom-card';
+        card.style.cssText = getTypeStyle(box.type);
+        card.innerHTML = `
+          <div class="custom-type-label">${getTypeLabel(box.type)}</div>
+          <div class="custom-card-title" contenteditable="${document.body.classList.contains('editor-mode')}" data-field="title">${box.title || 'Ny boks'}</div>
+          <div class="custom-card-text" contenteditable="${document.body.classList.contains('editor-mode')}" data-field="text">${box.text || ''}</div>
+          <div class="block-tools" style="display:${document.body.classList.contains('editor-mode') ? 'flex' : 'none'};position:static;justify-content:flex-end;margin-top:12px;">
+            <button type="button" class="block-tool" data-act="up">↑</button>
+            <button type="button" class="block-tool" data-act="down">↓</button>
+            <button type="button" class="block-tool delete" data-act="delete">×</button>
+          </div>`;
+
+        const titleEl = card.querySelector('[data-field="title"]');
+        const textEl = card.querySelector('[data-field="text"]');
+
+        titleEl.oninput = () => {
+          const next = getCustomBoxes();
+          if(!next[index]) return;
+          next[index].title = titleEl.innerHTML.trim();
+          saveCustomBoxes(next);
+        };
+
+        textEl.oninput = () => {
+          const next = getCustomBoxes();
+          if(!next[index]) return;
+          next[index].text = textEl.innerHTML.trim();
+          saveCustomBoxes(next);
+        };
+
+        card.querySelector('[data-act="up"]').onclick = () => moveCustomBox(index, -1);
+        card.querySelector('[data-act="down"]').onclick = () => moveCustomBox(index, 1);
+        card.querySelector('[data-act="delete"]').onclick = () => deleteCustomBox(index);
+        wrap.appendChild(card);
+      });
+    }
+
+    function addCustomInfoBox(){
+      const title = q('#newBoxTitle')?.value.trim() || '';
+      const text = q('#newBoxText')?.value.trim() || '';
+      const type = q('#newBoxType')?.value || 'standard';
+      if(!title && !text){
+        alert('Skriv inn litt innhold først.');
+        return;
+      }
+      const boxes = getCustomBoxes();
+      boxes.push({ title: title || 'Ny boks', text, type });
+      saveCustomBoxes(boxes);
+      clearCustomBoxInputs();
+      renderCustomBoxes();
+      applyHiddenBlocks();
+    }
+
+    function clearCustomBoxInputs(){
+      const type = q('#newBoxType');
+      const title = q('#newBoxTitle');
+      const text = q('#newBoxText');
+      if(type) type.value = 'standard';
+      if(title) title.value = '';
+      if(text) text.value = '';
+    }
+
+    function moveCustomBox(index, dir){
+      const boxes = getCustomBoxes();
+      const target = index + dir;
+      if(target < 0 || target >= boxes.length) return;
+      [boxes[index], boxes[target]] = [boxes[target], boxes[index]];
+      saveCustomBoxes(boxes);
+      renderCustomBoxes();
+    }
+
+    function deleteCustomBox(index){
+      const boxes = getCustomBoxes();
+      boxes.splice(index, 1);
+      saveCustomBoxes(boxes);
+      renderCustomBoxes();
+      applyHiddenBlocks();
+    }
+
+    function setEditorMode(on){
+      document.body.classList.toggle('editor-mode', on);
+      document.body.classList.toggle('editor-open', on);
+      const panel = q('#editorPanel');
+      if(panel) panel.setAttribute('aria-hidden', String(!on));
+      getEditableNodes().forEach(node => {
+        node.contentEditable = on ? 'true' : 'false';
+        node.classList.add('editable');
+      });
+      const lock = q('.lock-btn');
+      if(lock) lock.textContent = on ? '🔓' : '🔒';
+      if(!on) clearSelectedBlock();
+      renderCustomBoxes();
+    }
+
+    function openEditorLogin(){
+      if(document.body.classList.contains('editor-mode')){
+        closeEditorMode();
+        return;
+      }
+      const overlay = q('#loginOverlay');
+      const input = q('#loginPassword');
+      const msg = q('#loginMsg');
+      if(!overlay || !input || !msg) return;
+      overlay.classList.add('show');
+      overlay.setAttribute('aria-hidden', 'false');
+      msg.textContent = '';
+      setTimeout(() => input.focus(), 40);
+    }
+
+    function cancelEditorLogin(){
+      const overlay = q('#loginOverlay');
+      const input = q('#loginPassword');
+      const msg = q('#loginMsg');
+      if(overlay){
+        overlay.classList.remove('show');
+        overlay.setAttribute('aria-hidden', 'true');
+      }
+      if(input) input.value = '';
+      if(msg) msg.textContent = '';
+    }
+
+    function submitEditorLogin(){
+      const input = q('#loginPassword');
+      const msg = q('#loginMsg');
+      if(!input || !msg) return;
+      if(input.value === getSavedPass()){
+        cancelEditorLogin();
+        setEditorMode(true);
+      }else{
+        msg.textContent = 'Feil kode. Prøv igjen.';
+      }
+    }
+
+    function closeEditorMode(){
+      setEditorMode(false);
+    }
+
+    function toggleEditorCompact(){
+      document.body.classList.toggle('editor-compact');
+      saveStyles();
+    }
+
+    function applyImageChanges(){
+      const url = q('#imageUrlInput')?.value.trim() || '';
+      const caption = q('#imageCaptionInput')?.value.trim() || '';
+
+      if(!url){
+        const current = getCurrentImageState();
+        if(current && current.src){
+          current.caption = caption;
+          saveImageData(current);
+          applyImageData(current);
+          return;
+        }
+        alert('Legg inn en bilde-URL eller last opp et bilde først.');
+        return;
+      }
+
+      const data = { src: url, caption };
+      saveImageData(data);
+      applyImageData(data);
+    }
+
+    function removeFeatureImage(){
+      localStorage.removeItem(KEYS.image);
+      applyImageData(null);
+      const file = q('#imageFileInput');
+      if(file) file.value = '';
+    }
+
+    function saveEditorPassword(){
+      const next = q('#passInput')?.value.trim() || '';
+      if(!next){
+        alert('Skriv inn en kode først.');
+        return;
+      }
+      localStorage.setItem(KEYS.pass, next);
+      alert('Ny kode lagret.');
+    }
+
+    function saveEditorStateSilently(){
+      saveContent();
+      saveStyles();
+      saveOrderState();
+      const currentImage = getCurrentImageState();
+      if(currentImage) saveImageData(currentImage);
+      else localStorage.removeItem(KEYS.image);
+    }
+
+    function saveEditorState(){
+      saveEditorStateSilently();
+      alert('Lagret.');
+    }
+
+    function buildEmbeddedStatePayload(){
+      saveEditorStateSilently();
+      return {
+        stamp: generateSnapshotStamp(),
+        content: collectContent(),
+        styles: collectStyleState(),
+        image: getCurrentImageState(),
+        hidden: getHiddenBlocks(),
+        accordions: getAccordionState(),
+        order: getStoredJson(KEYS.order) || {},
+        customBoxes: getCustomBoxes(),
+        pass: getSavedPass()
+      };
+    }
+
+    function exportEditorData(){
+      const payload = buildEmbeddedStatePayload();
+      const blob = new Blob([JSON.stringify(payload, null, 2)], { type:'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'vitamin-b12-redaktor-data.json';
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function cleanCloneForExport(root){
+      if(!root) return;
+
+      if(root.classList){
+        root.classList.remove('editor-mode', 'editor-open', 'editor-compact');
+      }
+
+      const body = root.matches && root.matches('body') ? root : (root.querySelector ? root.querySelector('body') : null);
+      if(body) body.classList.remove('editor-mode', 'editor-open', 'editor-compact');
+
+      if(root.querySelectorAll){
+        root.querySelectorAll('.selected-edit-block').forEach(el => el.classList.remove('selected-edit-block'));
+        root.querySelectorAll('.block-tools').forEach(el => el.remove());
+        root.querySelectorAll('[contenteditable]').forEach(el => el.removeAttribute('contenteditable'));
+        root.querySelectorAll('[data-selection-bound]').forEach(el => el.removeAttribute('data-selection-bound'));
+
+        root.querySelectorAll('.login-overlay').forEach(el => {
+          el.classList.remove('show');
+          el.setAttribute('aria-hidden', 'true');
+        });
+
+        root.querySelectorAll('.modal').forEach(el => {
+          el.classList.remove('open');
+          el.setAttribute('aria-hidden', 'true');
+        });
+
+        const loginPassword = root.querySelector('#loginPassword');
+        if(loginPassword) loginPassword.value = '';
+        const loginMsg = root.querySelector('#loginMsg');
+        if(loginMsg) loginMsg.textContent = '';
+        const passInput = root.querySelector('#passInput');
+        if(passInput) passInput.value = getSavedPass();
+        const newType = root.querySelector('#newBoxType');
+        if(newType) newType.value = 'standard';
+        const newTitle = root.querySelector('#newBoxTitle');
+        if(newTitle) newTitle.value = '';
+        const newText = root.querySelector('#newBoxText');
+        if(newText) newText.value = '';
+        root.querySelectorAll('input[type="file"]').forEach(el => el.value = '');
+
+        const lock = root.querySelector('.lock-btn');
+        if(lock) lock.textContent = '🔒';
+        const panel = root.querySelector('#editorPanel');
+        if(panel) panel.setAttribute('aria-hidden', 'true');
+      }
+    }
+
+    function cloneOwnedNode(selector){
+      const node = q(selector);
+      if(!node) return '';
+      const clone = node.cloneNode(true);
+      cleanCloneForExport(clone);
+      return clone.outerHTML;
+    }
+
+    function buildArticleHtml(){
+      const shell = q('#articleShell');
+      if(!shell) return '<div class="article"></div>';
+      const shellClone = shell.cloneNode(true);
+      cleanCloneForExport(shellClone);
+      return `<div class="article">\n    ${shellClone.outerHTML}\n  </div>`;
+    }
+
+    function buildUpdatedHtmlString(){
+      const payload = buildEmbeddedStatePayload();
+
+      const styleNode = q('#articleCoreStyles');
+      const stateNode = q('#embeddedOriginalState');
+      const scriptNode = q('#articleAppScript');
+
+      const styleHtml = styleNode ? styleNode.outerHTML : '';
+      const articleHtml = buildArticleHtml();
+      const editorHtml = cloneOwnedNode('#editorPanel');
+      const loginHtml = cloneOwnedNode('#loginOverlay');
+      const modalHtml = cloneOwnedNode('#learnModal');
+
+      let stateHtml = '';
+      if(stateNode){
+        const stateClone = stateNode.cloneNode(true);
+        stateClone.textContent = '\n' + JSON.stringify(payload, null, 2) + '\n';
+        stateHtml = stateClone.outerHTML;
+      }
+
+      const scriptHtml = scriptNode ? scriptNode.outerHTML : '';
+
+      return `<!DOCTYPE html>\n<html lang="no">\n<head>\n  <meta charset="UTF-8" />\n  <meta name="viewport" content="width=device-width, initial-scale=1.0" />\n  \n  ${styleHtml}\n</head>\n<body>\n  ${articleHtml}\n\n  ${editorHtml}\n\n  ${loginHtml}\n\n  ${modalHtml}\n\n  ${stateHtml}\n\n  ${scriptHtml}\n</body>\n</html>`;
+    }
+
+    function exportUpdatedHtml(){
+      const html = buildUpdatedHtmlString();
+      const blob = new Blob([html], { type:'text/html;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'vitamin-b12-oppdatert.html';
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    async function copyUpdatedHtml(){
+      const html = buildUpdatedHtmlString();
+      try{
+        await navigator.clipboard.writeText(html);
+        alert('Hele Vitamin B12-artikkelen med endringene dine er kopiert.');
+      }catch(err){
+        const textarea = document.createElement('textarea');
+        textarea.value = html;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        textarea.remove();
+        alert('Hele Vitamin B12-artikkelen med endringene dine er kopiert.');
+      }
+    }
+
+    function resetEditorState(){
+      if(!confirm('Vil du tilbakestille til originalmalen som ligger i denne filen?')) return;
+      Object.values(KEYS).forEach(key => localStorage.removeItem(key));
+      location.reload();
+    }
+
+    function openLearnMore(key){
+      const modal = q('#learnModal');
+      const title = q('#modalTitle');
+      const content = q('#modalContent');
+      if(!modal || !title || !content || !learnMoreData[key]) return;
+      title.textContent = learnMoreData[key].title;
+      content.innerHTML = learnMoreData[key].content;
+      modal.classList.add('open');
+      modal.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeLearnMore(){
+      const modal = q('#learnModal');
+      if(!modal) return;
+      modal.classList.remove('open');
+      modal.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    }
+
+    document.addEventListener('keydown', e => {
+      if(e.key === 'Escape'){
+        closeLearnMore();
+        cancelEditorLogin();
+      }
+      if(e.key === 'Enter' && document.activeElement === q('#loginPassword')) submitEditorLogin();
+    });
+
+    function init(){
+      syncEmbeddedStateToLocalStorage();
+
+      const passInput = q('#passInput');
+      if(passInput) passInput.value = getSavedPass();
+
+      getEditableNodes().forEach(node => node.classList.add('editable'));
+
+      loadContent();
+      applyPalette('calm', false);
+      loadStyles();
+      loadImageData();
+      ensureSortGroups();
+      applyOrderState();
+      attachBlockControls();
+      attachSelectionHandlers();
+      renderCustomBoxes();
+      applyHiddenBlocks();
+      loadAccordions();
+      setEditorMode(false);
+
+      const imageFile = q('#imageFileInput');
+      if(imageFile){
+        imageFile.addEventListener('change', e => {
+          const file = e.target.files && e.target.files[0];
+          if(!file) return;
+          const reader = new FileReader();
+          reader.onload = () => {
+            const caption = q('#imageCaptionInput')?.value.trim() || '';
+            const data = { src: reader.result, caption };
+            saveImageData(data);
+            applyImageData(data);
+            imageFile.value = '';
+          };
+          reader.readAsDataURL(file);
+        });
+      }
+
+      const importFile = q('#importFile');
+      if(importFile){
+        importFile.addEventListener('change', e => {
+          const file = e.target.files && e.target.files[0];
+          if(!file) return;
+          const reader = new FileReader();
+          reader.onload = () => {
+            try{
+              const parsed = JSON.parse(reader.result);
+              const incoming = {
+                stamp: parsed.stamp || generateSnapshotStamp(),
+                content: parsed.content || collectContent(),
+                styles: parsed.styles || collectStyleState(),
+                image: parsed.image || null,
+                hidden: parsed.hidden || [],
+                accordions: parsed.accordions || DEFAULT_STATE.accordions,
+                order: parsed.order || {},
+                customBoxes: parsed.customBoxes || [],
+                pass: parsed.pass || getSavedPass()
+              };
+
+              writeStateToLocalStorage(incoming);
+              location.reload();
+            }catch(err){
+              alert('Kunne ikke importere filen.');
+            }
+          };
+          reader.readAsText(file);
+          importFile.value = '';
+        });
+      }
+
+      const radiusRange = q('#radiusRange');
+      if(radiusRange) radiusRange.addEventListener('input', e => {
+        document.documentElement.style.setProperty('--card-radius', e.target.value + 'px');
+        saveStyles();
+      });
+
+      const heroRadiusRange = q('#heroRadiusRange');
+      if(heroRadiusRange) heroRadiusRange.addEventListener('input', e => {
+        document.documentElement.style.setProperty('--hero-radius', e.target.value + 'px');
+        saveStyles();
+      });
+
+      const imageWidthRange = q('#imageWidthRange');
+      if(imageWidthRange) imageWidthRange.addEventListener('input', e => {
+        document.documentElement.style.setProperty('--feature-image-width', e.target.value + '%');
+        saveStyles();
+      });
+
+      const imageHeightRange = q('#imageHeightRange');
+      if(imageHeightRange) imageHeightRange.addEventListener('input', e => {
+        document.documentElement.style.setProperty('--feature-image-height', e.target.value + 'px');
+        saveStyles();
+      });
+    }
+
+    init();
+  </script>
+<nav class="pt-nav" aria-label="Meny"><a href="index.html" data-nav class=""><i>🏠</i>Hjem</a><a href="trening.html" data-nav class=""><i>🏋️</i>Trening</a><a href="mat.html" data-nav class=""><i>🍽️</i>Mat</a><a href="helse.html" data-nav class="on"><i>❤️</i>Helse</a></nav>
+<script>
+(function () {
+  // Menyen tar med den personlige koden mellom sidene
+  document.querySelectorAll("[data-nav]").forEach(function (a) { a.href = a.getAttribute("href") + (window.TL_PT_HASH || ""); });
+  var r = document.getElementById("ptRefresh");
+  function refresh() { if (r) r.classList.add("spin"); location.replace(location.pathname + "?r=" + Date.now() + (location.search.indexOf("vis=") >= 0 ? "&vis=trening" : "") + location.hash); }
+  if (r) r.addEventListener("click", refresh);
+  var hiddenAt = 0;
+  document.addEventListener("visibilitychange", function () { if (document.hidden) hiddenAt = Date.now(); else if (hiddenAt && Date.now() - hiddenAt > 15 * 60 * 1000) refresh(); });
+  // Navnet til kunden (lagres når planen lagres)
+  var m = window.MVT_memberData; if (!m || !m.id) return;
+  fetch("https://cpqbdorxilssxylkqdkt.supabase.co/rest/v1/rpc/tl_plan_get", { method: "POST", headers: { apikey: "sb_publishable_37LxJJHdYNa8HpqDOVKpVw_0fJlfDmd", Authorization: "Bearer sb_publishable_37LxJJHdYNa8HpqDOVKpVw_0fJlfDmd", "Content-Type": "application/json" }, body: JSON.stringify({ p_member_id: m.id }) })
+    .then(function (x) { return x.ok ? x.json() : null; }).then(function (row) {
+      var n = row && row.member_name ? String(row.member_name) : ""; if (!n || /^Kunde [0-9a-f]{8}$/i.test(n)) return;
+      m.name = n; try { localStorage.setItem("tl_pt_name:" + m.id, n); } catch (e) {}
+      var h = document.getElementById("ptHello"); if (h) h.textContent = "Hei, " + n.trim().split(/\s+/)[0] + "!";
+    }).catch(function () {});
+})();
+</script>
+</body>
+</html>
