@@ -19853,6 +19853,18 @@ var DPP_IMG = [
 
   // ---- Legg til / fjern øvelse (kundestyrt, søkbart) ------------------------
   function buildExerciseObjectFromLibrary(libEx, program) {
+    // Kondisjon legges inn som ett «sett» på tid (f.eks. Sone 2 i 20 min), mobilitet som 2 × 30 sek
+    const inLib = eq => (SWAP_LIBRARY[eq] || []).some(x => x.name === libEx.name);
+    if (inLib("Kondisjon") || inLib("Mobilitet")) {
+      const cardio = inLib("Kondisjon");
+      const nm = String(libEx.name || "");
+      const secs = !cardio ? 30 : /oppvarming|nedtrapping/i.test(nm) ? 300 : /intervall/i.test(nm) ? 480 : 1200;
+      const rest = cardio ? 60 : 30;
+      return {
+        name: libEx.name, emoji: libEx.emoji || (cardio ? "\u2764\ufe0f" : "\ud83e\uddd8"), isHold: true, videoUrl: libEx.videoUrl || "",
+        sets: cardio ? 1 : 2, targetReps: secs, reps: holdRepsText(secs), restSeconds: rest, rest: `${rest} sek pause`, tracksWeight: false
+      };
+    }
     const isHold = !!libEx.isHold;
     const restSeconds = isHold ? (program.restSecondsHold || 45) : (program.restSecondsNormal || 90);
     const targetReps = isHold ? 30 : 10;
@@ -19942,7 +19954,8 @@ var DPP_IMG = [
     const seen = new Set();
     const preferred = [];
     const rest = [];
-    const order = [preferredEquipment, "Kroppsvekt", "Manualer", "Strikk", "Treningsstudio"].filter(Boolean);
+    // Kondisjon (Sone 2, romaskin, sykkel …) og mobilitet kan også legges inn i en styrkeøkt
+    const order = [preferredEquipment, "Kroppsvekt", "Manualer", "Strikk", "Treningsstudio", "Kondisjon", "Mobilitet"].filter(Boolean);
     order.forEach(eq => {
       (SWAP_LIBRARY[eq] || []).forEach(ex => {
         if (seen.has(ex.name)) return;
@@ -20022,7 +20035,7 @@ var DPP_IMG = [
     if (addExerciseSheetRefs.title) addExerciseSheetRefs.title.textContent = "Legg til øvelse";
     if (addExerciseSheetRefs.search) {
       addExerciseSheetRefs.search.value = "";
-      addExerciseSheetRefs.search.placeholder = "Søk etter øvelse (f.eks. knebøy, planke)...";
+      addExerciseSheetRefs.search.placeholder = "Søk etter øvelse (f.eks. knebøy, planke, sone 2)...";
     }
     renderAddExerciseResults("");
     addExerciseSheetRefs.sheet.classList.add("show");
