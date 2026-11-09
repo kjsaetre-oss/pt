@@ -24643,6 +24643,11 @@ function getExercisePR(exerciseName) {
     return true;
   }
 
+  // Vis siste kjente kalender fra telefonen MENS vi venter på at movement.os gir oss
+  // kunden (kan ta flere sekunder). Før ble ingenting tegnet før kunden var klar.
+  if (!(window.MVT_memberData && window.MVT_memberData.id)) {
+    try { root.classList.add("dpp-syncing"); renderEarlyFromLocalCache(); } catch (e) {}
+  }
   await waitForMovementMember(5000);
   let appStarted = false;
   try {
