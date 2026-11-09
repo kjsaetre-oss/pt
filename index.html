@@ -20180,7 +20180,7 @@ function getExercisePR(exerciseName) {
       ? null
       : (allSetsHitTarget
           ? Math.round((bestThisTime.kg + increment) * 2) / 2
-          : (existing?.nextSuggestedKg ?? null));
+          : null); // gammelt forslag tas ikke med videre – da vises det kunden faktisk løftet
 
     // ── Progresjon for vanlige program (programbyggeren) ──
     //  progression "auto": dobbel progresjon – reps +1 per vellykket økt opp til
@@ -20204,7 +20204,8 @@ function getExercisePR(exerciseName) {
       if (minDone > cur.target) next = minDone; // kunden valgte mer – husk det
       if (mode === "auto") {
         // Dobbel progresjon styrer vekten selv (ikke +2 kg hver gang)
-        if (opts.tracksWeight && bestThisTime.kg > 0) nextSuggestedKg = existing?.nextSuggestedKg ?? null;
+        // Et forslag gjelder bare økta rett etter at det ble gitt; ellers vises det kunden faktisk løftet
+        if (opts.tracksWeight && bestThisTime.kg > 0) nextSuggestedKg = null;
         if (allHit && daysSinceRaise >= 6) {
           if (opts.isHold) {
             next = Math.max(next, Math.min(cur.target + 5, Math.max(base * 2, base + 15)));
@@ -20987,7 +20988,9 @@ function getExercisePR(exerciseName) {
         // Ren kroppsvektøvelse (siste logging var 0 kg) skal aldri vise en
         // gammel vektøkning-forslag som ble lagret før dette ble rettet.
         const lastSessionWasBodyweight = lastSession.length > 0 && lastSession.every(s => !s.kg);
-        const suggestedKg = lastSessionWasBodyweight ? null : (pr?.nextSuggestedKg ?? null);
+        // Et gammelt forslag skal aldri vinne over en tyngre vekt kunden faktisk har løftet
+        const lastMaxKg = lastSession.reduce((m, s) => Math.max(m, Number(s.kg) || 0), 0);
+        const suggestedKg = lastSessionWasBodyweight ? null : (pr?.nextSuggestedKg != null && pr.nextSuggestedKg > lastMaxKg ? pr.nextSuggestedKg : null);
 
         const setRowsWrap = document.createElement("div");
         setRowsWrap.className = "dpp-ex-log-row";
@@ -22599,7 +22602,8 @@ function getExercisePR(exerciseName) {
     const last = vkfLastSets(ex);
     const pr = getExercisePR(ex.name);
     const lastBody = last.length > 0 && last.every(s => !s.kg);
-    const sugg = lastBody ? null : (pr && pr.nextSuggestedKg != null ? pr.nextSuggestedKg : null);
+    const lastMaxKg = last.reduce((m, s) => Math.max(m, Number(s.kg) || 0), 0);
+    const sugg = lastBody ? null : (pr && pr.nextSuggestedKg != null && pr.nextSuggestedKg > lastMaxKg ? pr.nextSuggestedKg : null);
     const kg = ex.tracksWeight ? (sugg != null ? sugg : (last.length ? (last[last.length - 1].kg || 0) : (Number(ex.coachKg) || 0))) : null;
     const reps = Number(ex.targetReps) || parseInt(ex.reps, 10) || (ex.isHold ? 30 : 10);
     const today = vkfTodaySets(ex);
