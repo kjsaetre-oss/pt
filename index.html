@@ -20272,6 +20272,8 @@ function getExercisePR(exerciseName) {
     // mutatingPrograms KUN n\u00e5r vi faktisk endret noe i assignedPrograms her
     // (den automatiske reps-\u00f8kningen) \u2014 ellers skal den vanlige, ferske
     // synkroniseringen mot skyen f\u00e5 lov til \u00e5 kj\u00f8re som normalt.
+    // Feir med en gang – ikke vent på at lagringen i skyen er ferdig (kan ta flere sekunder på mobil).
+    if (isNewRecord) showPrCelebration();
     if (!(await save({ mutatingPrograms: !!(prevProgramsBackup || progressProgramsBackup), mutatingExercisePRs: true }))) {
       data.exercisePRs = prevBackup;
       if (prevProgramsBackup) data.assignedPrograms = prevProgramsBackup;
@@ -20280,7 +20282,6 @@ function getExercisePR(exerciseName) {
       return { saved: false, isPr: false };
     }
 
-    if (isNewRecord) showPrCelebration();
     if (progressNote) {
       rebuildVirtualProgramItemsFromState();
       showProgressToast(progressNote);
