@@ -6953,13 +6953,14 @@ var DPP_IMG = [
       // Bland med musikk kunden hører på (ikke stopp Spotify o.l.) der nettleseren støtter det
       try { if (navigator.audioSession && navigator.audioSession.type !== "ambient") navigator.audioSession.type = "ambient"; } catch (e) {}
       if (!vkAudio || vkAudio.state === "closed") vkAudio = new AC();
-      if (vkAudio.state === "suspended") vkAudio.resume().catch(() => {});
+      // «interrupted» = iPhone har stoppet lyden (skjermlås, samtale, annen app) – start den igjen
+      if (vkAudio.state !== "running") vkAudio.resume().catch(() => {});
       return vkAudio;
     } catch (e) { return null; }
   }
   function vkAudioUnlock() {
-    const ctx = vkAudioCtx();
-    if (!ctx || ctx.__unlocked) return;
+    const ctx = vkAudioCtx(); // starter lyden igjen i selve trykket hvis iPhone har stoppet den
+    if (!ctx || (ctx.__unlocked && ctx.state === "running")) return;
     try {
       // Et lydløst, kort lydklipp i selve trykket «låser opp» lyden på iOS
       const b = ctx.createBuffer(1, 1, 22050), src = ctx.createBufferSource();
