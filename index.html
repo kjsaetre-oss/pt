@@ -2679,14 +2679,20 @@
 
   /* Positiv fremgangs-toast (f.eks. reps økt i dynamisk progresjonsmal) */
   .dpp-progress-toast {
-    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
-    background: #1b2028; color: #ffffff; padding: 12px 22px; border-radius: 14px;
-    font-size: .86rem; font-weight: 800; z-index: 999999;
-    box-shadow: 0 6px 24px rgba(0,0,0,.3);
-    opacity: 0; pointer-events: none; transition: opacity .3s ease;
-    white-space: nowrap;
+    position: fixed; left: 50%; bottom: calc(96px + env(safe-area-inset-bottom));
+    transform: translate(-50%, 10px); width: max-content; max-width: min(340px, calc(100vw - 32px));
+    box-sizing: border-box; display: flex; align-items: center; gap: 10px;
+    background: #171b22; color: #f2f4f7; padding: 10px 14px 10px 10px; border-radius: 16px;
+    border: 1px solid rgba(38,43,52,.18); z-index: 999999;
+    box-shadow: 0 12px 30px -10px rgba(0,0,0,.35), 0 2px 6px rgba(0,0,0,.06);
+    font-family: Inter, Arial, sans-serif; line-height: 1.25;
+    opacity: 0; pointer-events: none; transition: opacity .25s ease, transform .25s ease;
   }
-  .dpp-progress-toast.show { opacity: 1; pointer-events: auto; }
+  .dpp-progress-toast.show { opacity: 1; transform: translate(-50%, 0); }
+  .dpp-progress-toast .pt-ic { flex: none; width: 34px; height: 34px; border-radius: 11px; display: grid; place-items: center; font-size: 17px; background: #0e1116; }
+  .dpp-progress-toast .pt-tx { min-width: 0; }
+  .dpp-progress-toast .pt-tx small { display: block; font-size: 11.5px; font-weight: 700; color: #98a1ad; }
+  .dpp-progress-toast .pt-tx b { display: block; font-size: 14px; font-weight: 800; overflow-wrap: anywhere; }
 
   /* Bytt &#xf8;velse */
   .dpp-ex-swap-wrap{ width:100%; margin-top:6px; }
@@ -23668,7 +23674,12 @@ function getExercisePR(exerciseName) {
   function showProgressToast(msg) {
     const toast = document.getElementById('dppProgressToast');
     if (!toast) return;
-    toast.textContent = msg;
+    // «📈 Nytt mål neste gang: 12 reps» → ikon + liten overskrift + verdien
+    const m = String(msg || "").match(/^(\S+)\s+([^:]+):\s*(.+)$/);
+    const esc = v => String(v).replace(/[&<>"]/g, ch => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[ch]);
+    toast.innerHTML = m
+      ? `<span class="pt-ic">${esc(m[1])}</span><span class="pt-tx"><small>${esc(m[2])}</small><b>${esc(m[3])}</b></span>`
+      : `<span class="pt-tx"><b>${esc(msg)}</b></span>`;
     toast.classList.add('show');
     clearTimeout(showProgressToast._t);
     showProgressToast._t = setTimeout(() => toast.classList.remove('show'), 4000);
