@@ -1337,7 +1337,7 @@
             selectedDate = btn.getAttribute("data-date");
             save(SELECTED_DATE_KEY, selectedDate);
             renderWeekCalendar(); renderHeroAndStats(); renderDynamicField(); renderCircles();
-            if(canPersist) await persistSettingsRemote({ quiet:true });
+            await persistSettingsRemote({ quiet:true });
           });
         });
       }
@@ -1357,7 +1357,7 @@
           activeMetric = btn.getAttribute("data-metric");
           save(ACTIVE_KEY, activeMetric);
           renderCircles(); renderDynamicField(); renderChart();
-          if(canPersist) await persistSettingsRemote({ quiet:true });
+          await persistSettingsRemote({ quiet:true });
         }));
         document.getElementById("th2AddMetricBtn").addEventListener("click", openAddMetricModal);
       }
@@ -1378,7 +1378,7 @@
           }
           save(VISIBLE_KEY, visibleMetrics);
           renderMetricPicker(); renderCircles(); renderDynamicField(); renderChart();
-          if(canPersist) await persistSettingsRemote({ quiet:true });
+          await persistSettingsRemote({ quiet:true });
         }));
       }
 
@@ -1450,21 +1450,21 @@
         // for dagens tall, men et EGET element) — ikke lenger nøstet inni
         // dagens-tall-boksen. Gir tre tydelig atskilte bokser totalt:
         // resultatmål (renderGoalDisplay) / dagens tall / sett nytt mål.
-        return `<div class="th2-dynamic" data-metric="${activeMetric}"><label for="th2GoalInput">Sett mål${metric.unit ? ` (${metric.unit})` : ""}</label><div class="th2-goal-row"><input class="th2-goal-input" id="th2GoalInput" type="number" step="${metric.step || '0.1'}" placeholder="${metric.goalPlaceholder || "Sett mål"}" value="${goal}"><button class="th2-goal-btn" id="th2GoalSave" type="button" ${canPersist ? "" : "disabled"}>Lagre mål</button></div></div>`;
+        return `<div class="th2-dynamic" data-metric="${activeMetric}"><label for="th2GoalInput">Sett mål${metric.unit ? ` (${metric.unit})` : ""}</label><div class="th2-goal-row"><input class="th2-goal-input" id="th2GoalInput" type="number" step="${metric.step || '0.1'}" placeholder="${metric.goalPlaceholder || "Sett mål"}" value="${goal}"><button class="th2-goal-btn" id="th2GoalSave" type="button" >Lagre mål</button></div></div>`;
       }
 
       function attachGoalHandler(){
         const btn = document.getElementById("th2GoalSave");
         if(!btn) return;
         btn.addEventListener("click", async () => {
-          if(!refreshIdentity()) return showBanner("Kan ikke lagre ennå", "error");
+          refreshIdentity();
           const raw = document.getElementById("th2GoalInput").value;
           if(raw === "") delete goals[activeMetric];
           else goals[activeMetric] = raw;
           save(GOALS_KEY, goals);
           renderDynamicField();
           const ok = await persistSettingsRemote({ quiet:true });
-          showBanner(ok ? "Mål lagret" : "Mål lagret lokalt", ok ? "success" : "info");
+          showBanner("Mål lagret", "success");
         });
       }
 
@@ -1603,14 +1603,14 @@
         renderHeroAndStats();
 
         if(metric.type === "number"){
-          wrap.innerHTML = `${renderGoalDisplay(metric)}${insightHtml}${renderReferenceBar(activeMetric)}<div class="th2-dynamic" data-metric="${activeMetric}"><label for="th2MetricInput">${metric.label}${metric.unit ? ` (${metric.unit})` : ""}</label>${metric.hint ? `<p class="th2-subtle-note">${metric.hint}</p>` : ""}${metric.how ? `<details class="th2-how"><summary>📏 Slik måler du ${metric.label.toLowerCase()}</summary><p>${metric.how}</p><p class="th2-how-tips">${HOW_TIPS}</p></details>` : ""}${subtleNote}${yesterdayHtml}<div class="th2-inline-save"><input id="th2MetricInput" type="number" step="${metric.step || '0.1'}" placeholder="${metric.placeholder || ""}" value="${initialValue ?? ""}"><button class="th2-inline-btn" id="th2InlineSave" type="button" ${canPersist ? "" : "disabled"}>+</button></div></div>${renderGoalInput(metric)}`;
+          wrap.innerHTML = `${renderGoalDisplay(metric)}${insightHtml}${renderReferenceBar(activeMetric)}<div class="th2-dynamic" data-metric="${activeMetric}"><label for="th2MetricInput">${metric.label}${metric.unit ? ` (${metric.unit})` : ""}</label>${metric.hint ? `<p class="th2-subtle-note">${metric.hint}</p>` : ""}${metric.how ? `<details class="th2-how"><summary>📏 Slik måler du ${metric.label.toLowerCase()}</summary><p>${metric.how}</p><p class="th2-how-tips">${HOW_TIPS}</p></details>` : ""}${subtleNote}${yesterdayHtml}<div class="th2-inline-save"><input id="th2MetricInput" type="number" step="${metric.step || '0.1'}" placeholder="${metric.placeholder || ""}" value="${initialValue ?? ""}"><button class="th2-inline-btn" id="th2InlineSave" type="button" >+</button></div></div>${renderGoalInput(metric)}`;
           attachGoalHandler(); attachYesterdayHandler();
           document.getElementById("th2InlineSave").addEventListener("click", async () => { const value = parseNum(document.getElementById("th2MetricInput").value); await saveMetricValue(value); });
           document.getElementById("th2MetricInput").addEventListener("keydown", async e => { if(e.key === "Enter"){ e.preventDefault(); const value = parseNum(document.getElementById("th2MetricInput").value); await saveMetricValue(value); } });
           return;
         }
         if(metric.type === "score"){
-          wrap.innerHTML = `${renderGoalDisplay(metric)}${insightHtml}<div class="th2-dynamic" data-metric="${activeMetric}"><label>${metric.label}${metric.unit ? ` (${metric.unit})` : ""}</label>${subtleNote}${yesterdayHtml}<div class="th2-score-row" id="th2MetricScores"></div><input id="th2MetricInput" type="hidden"><div class="th2-score-save"><button class="th2-inline-btn" id="th2InlineSave" type="button" ${canPersist ? "" : "disabled"}>+</button></div></div>${renderGoalInput(metric)}`;
+          wrap.innerHTML = `${renderGoalDisplay(metric)}${insightHtml}<div class="th2-dynamic" data-metric="${activeMetric}"><label>${metric.label}${metric.unit ? ` (${metric.unit})` : ""}</label>${subtleNote}${yesterdayHtml}<div class="th2-score-row" id="th2MetricScores"></div><input id="th2MetricInput" type="hidden"><div class="th2-score-save"><button class="th2-inline-btn" id="th2InlineSave" type="button" >+</button></div></div>${renderGoalInput(metric)}`;
           attachGoalHandler(); attachYesterdayHandler();
           renderScoreButtons("th2MetricScores", document.getElementById("th2MetricInput"), metric.values, initialValue);
           document.getElementById("th2InlineSave").addEventListener("click", async () => { const value = parseNum(document.getElementById("th2MetricInput").value); await saveMetricValue(value); });
@@ -1618,7 +1618,7 @@
         }
         if(metric.type === "slider"){
           const sliderValue = initialValue != null ? initialValue : 7.5;
-          wrap.innerHTML = `${renderGoalDisplay(metric)}${insightHtml}<div class="th2-dynamic" data-metric="${activeMetric}"><label>${metric.label}${metric.unit ? ` (${metric.unit})` : ""}</label>${subtleNote}${yesterdayHtml}<div class="th2-slider-wrap"><div class="th2-slider-top"><input id="th2MetricInput" class="th2-slider" type="range" min="${metric.min}" max="${metric.max}" step="${metric.step}" value="${sliderValue}"><div class="th2-slider-value" id="th2SliderValue">${String(sliderValue).replace(".", ",")} t</div></div><div class="th2-slider-labels"><span>0 t</span><span>12 t</span></div></div><div class="th2-score-save"><button class="th2-inline-btn" id="th2InlineSave" type="button" ${canPersist ? "" : "disabled"}>+</button></div></div>${renderGoalInput(metric)}`;
+          wrap.innerHTML = `${renderGoalDisplay(metric)}${insightHtml}<div class="th2-dynamic" data-metric="${activeMetric}"><label>${metric.label}${metric.unit ? ` (${metric.unit})` : ""}</label>${subtleNote}${yesterdayHtml}<div class="th2-slider-wrap"><div class="th2-slider-top"><input id="th2MetricInput" class="th2-slider" type="range" min="${metric.min}" max="${metric.max}" step="${metric.step}" value="${sliderValue}"><div class="th2-slider-value" id="th2SliderValue">${String(sliderValue).replace(".", ",")} t</div></div><div class="th2-slider-labels"><span>0 t</span><span>12 t</span></div></div><div class="th2-score-save"><button class="th2-inline-btn" id="th2InlineSave" type="button" >+</button></div></div>${renderGoalInput(metric)}`;
           attachGoalHandler(); attachYesterdayHandler();
           const slider = document.getElementById("th2MetricInput");
           const sliderValueEl = document.getElementById("th2SliderValue");
@@ -1633,10 +1633,10 @@
             const v = selectedDayMetricValue(k) ?? latestMetricValue(k);
             return `<div class="th2-dynamic" data-metric="${k}"><label for="th2Calc_${k}">${m.label} (${m.unit})</label>${m.how ? `<details class="th2-how"><summary>📏 Slik måler du ${m.label.toLowerCase()}</summary><p>${m.how}</p><p class="th2-how-tips">${HOW_TIPS}</p></details>` : m.hint ? `<p class="th2-subtle-note">${m.hint}</p>` : ""}<div class="th2-inline-save" style="grid-template-columns:1fr;"><input id="th2Calc_${k}" type="number" step="${m.step || "0.1"}" placeholder="${m.placeholder || ""}" value="${v ?? ""}"></div></div>`;
           }).join("");
-          wrap.innerHTML = `${renderReferenceBar(activeMetric)}<p class="th2-subtle-note" style="margin:0 0 8px;">${metric.from} regnes ut automatisk når du lagrer ${metric.needs}.</p>${fields}<div class="th2-score-save"><button class="th2-inline-btn th2-inline-btn-text" id="th2CalcSave" type="button" ${canPersist ? "" : "disabled"}>Lagre</button></div>`;
+          wrap.innerHTML = `${renderReferenceBar(activeMetric)}<p class="th2-subtle-note" style="margin:0 0 8px;">${metric.from} regnes ut automatisk når du lagrer ${metric.needs}.</p>${fields}<div class="th2-score-save"><button class="th2-inline-btn th2-inline-btn-text" id="th2CalcSave" type="button" >Lagre</button></div>`;
           document.getElementById("th2CalcSave").addEventListener("click", async () => {
             if(!selectedDate) return alert("Velg dag.");
-            if(!refreshIdentity()) return showBanner("Kan ikke lagre ennå", "error");
+            refreshIdentity();
             const vals = {};
             metric.inputs.forEach(k => { vals[k] = parseNum(document.getElementById("th2Calc_" + k).value); });
             if(Object.values(vals).every(v => v == null)) return alert("Legg inn en verdi.");
@@ -1651,14 +1651,14 @@
             if(!hasAnyMetricValue(row)) entries = entries.filter(e => e !== row);
             syncLocalCache(); renderCircles(); renderHeroAndStats(); renderChart(); renderHistory(); renderDynamicField();
             const ok = await persistEntryRemoteByDate(selectedDate, { quiet:true });
-            showBanner(ok ? "Lagret" : "Lagret lokalt", ok ? "success" : "info");
+            showBanner("Lagret", "success");
           });
           return;
         }
         if(metric.type === "pain"){
           selectedPainAreas = [...selectedDayPainAreas()];
           const painNoteInitial = selectedDayPainNote();
-          wrap.innerHTML = `<div class="th2-dynamic" data-metric="${activeMetric}"><label>Smerte (0–10)</label>${subtleNote}<div class="th2-score-row" id="th2MetricScores"></div><input id="th2MetricInput" type="hidden"><div class="th2-pain-row"><div class="th2-pain-top"><input id="th2PainNote" class="th2-pain-note" type="text" placeholder="Hvor gjør det vondt?" value="${painNoteInitial}"><button type="button" class="th2-pain-popup-btn" id="th2OpenPainPopup">Vanlige steder</button></div></div><div class="th2-score-save"><button class="th2-inline-btn" id="th2InlineSave" type="button" ${canPersist ? "" : "disabled"}>+</button></div></div>`;
+          wrap.innerHTML = `<div class="th2-dynamic" data-metric="${activeMetric}"><label>Smerte (0–10)</label>${subtleNote}<div class="th2-score-row" id="th2MetricScores"></div><input id="th2MetricInput" type="hidden"><div class="th2-pain-row"><div class="th2-pain-top"><input id="th2PainNote" class="th2-pain-note" type="text" placeholder="Hvor gjør det vondt?" value="${painNoteInitial}"><button type="button" class="th2-pain-popup-btn" id="th2OpenPainPopup">Vanlige steder</button></div></div><div class="th2-score-save"><button class="th2-inline-btn" id="th2InlineSave" type="button" >+</button></div></div>`;
           renderScoreButtons("th2MetricScores", document.getElementById("th2MetricInput"), metric.values, initialValue);
           renderPainOptions();
           document.getElementById("th2OpenPainPopup").addEventListener("click", openPainModal);
@@ -1701,7 +1701,7 @@
       function closeCheckin(){ ids.checkinModal.classList.remove("show"); ids.checkinModal.setAttribute("aria-hidden","true"); }
       async function saveCheckin(){
         if(!selectedDate) return alert("Velg dag.");
-        if(!refreshIdentity()) return showBanner("Kan ikke lagre ennå", "error");
+        refreshIdentity();
         const vals = [];
         document.querySelectorAll("#th2CheckinList input[data-key]").forEach(inp => {
           const v = parseNum(inp.value);
@@ -1717,7 +1717,7 @@
         closeCheckin();
         syncLocalCache(); renderWeekCalendar(); renderCircles(); renderHeroAndStats(); renderChart(); renderHistory(); renderDynamicField();
         const ok = await persistEntryRemoteByDate(selectedDate, { quiet:true });
-        showBanner(ok ? `Lagret ${vals.length} ${vals.length === 1 ? "måling" : "målinger"}` : "Lagret lokalt", ok ? "success" : "info");
+        showBanner(`Lagret ${vals.length} ${vals.length === 1 ? "måling" : "målinger"}`, "success");
         offerTellCoach(vals);
       }
 
@@ -1838,7 +1838,7 @@
       }
 
       async function deleteMetricFromDate(date, metric){
-        if(!refreshIdentity()) return showBanner("Kan ikke lagre ennå", "error");
+        refreshIdentity();
         const row = entries.find(e => e.date === date);
         if(!row) return;
         row[metric] = null;
@@ -1846,7 +1846,7 @@
         if(!hasAnyMetricValue(row)) entries = entries.filter(e => e.date !== date);
         syncLocalCache(); renderCircles(); renderHeroAndStats(); renderChart(); renderHistory(); renderDynamicField();
         const ok = await persistEntryRemoteByDate(date, { quiet:true });
-        showBanner(ok ? "Oppdatert" : "Oppdatert lokalt", ok ? "success" : "info");
+        showBanner("Oppdatert", "success");
       }
 
       function renderHistory(){
@@ -1867,7 +1867,45 @@
         box.querySelectorAll(".th2-chip-delete").forEach(btn => btn.addEventListener("click", async () => { const date = btn.getAttribute("data-date"); const metric = btn.getAttribute("data-metric"); await deleteMetricFromDate(date, metric); }));
       }
 
-      async function persistSettingsRemote({ quiet = false } = {}){
+      // ── Kø: det som ikke kom fram til skyen (dårlig nett, kunden ikke klar ennå)
+      //    huskes på telefonen og sendes på nytt til det lykkes. Skyen får aldri
+      //    overskrive en måling som ligger i køen.
+      const PENDING_KEY = "th2_pending_sync_v1";
+      function pendingList(){ try{ const a = JSON.parse(localStorage.getItem(PENDING_KEY) || "[]"); return Array.isArray(a) ? a : []; }catch(e){ return []; } }
+      function setPending(list){ try{ localStorage.setItem(PENDING_KEY, JSON.stringify([...new Set(list)])); }catch(e){} }
+      function markPending(key){ setPending([...pendingList(), key]); schedulePendingSync(); }
+      function clearPending(key){ setPending(pendingList().filter(k => k !== key)); }
+      let pendingBusy = false, pendingTimer = null;
+      function schedulePendingSync(){ if(pendingTimer) return; pendingTimer = setTimeout(() => { pendingTimer = null; flushPending(); }, 15000); }
+      async function flushPending(){
+        if(pendingBusy || !pendingList().length) return;
+        if(!refreshIdentity()){ schedulePendingSync(); return; }
+        pendingBusy = true;
+        try{
+          for(const key of pendingList()){
+            let ok = false;
+            try{ ok = key === "__settings" ? await persistSettingsRemoteRaw({ quiet:true }) : await persistEntryRemoteByDateRaw(key, { quiet:true }); }catch(e){ ok = false; }
+            if(ok) clearPending(key); else break;
+          }
+        } finally { pendingBusy = false; }
+        if(pendingList().length) schedulePendingSync();
+      }
+      window.addEventListener("online", () => flushPending());
+      document.addEventListener("visibilitychange", () => { if(document.visibilityState === "visible") flushPending(); });
+      async function persistSettingsRemote(opts){
+        let ok = false;
+        try{ ok = await persistSettingsRemoteRaw(opts); }catch(e){ ok = false; }
+        if(ok) clearPending("__settings"); else markPending("__settings");
+        return ok;
+      }
+      async function persistEntryRemoteByDate(date, opts){
+        let ok = false;
+        try{ ok = await persistEntryRemoteByDateRaw(date, opts); }catch(e){ ok = false; }
+        if(ok) clearPending(date); else markPending(date);
+        return ok;
+      }
+
+      async function persistSettingsRemoteRaw({ quiet = false } = {}){
         const supabase = await waitForSupabaseClient();
         if(!memberIdentity?.hasStrongId || !memberIdentity?.customer_key) return false;
         const payload = {
@@ -1895,12 +1933,12 @@
           return true;
         } catch(error){
           console.error("Feil ved lagring av settings:", error);
-          if(!quiet) showBanner("Kun lagret lokalt – skyfeil", "error");
+          
           return false;
         }
       }
 
-      async function persistEntryRemoteByDate(date, { quiet = false } = {}){
+      async function persistEntryRemoteByDateRaw(date, { quiet = false } = {}){
         const supabase = await waitForSupabaseClient();
         if(!memberIdentity?.hasStrongId || !memberIdentity?.customer_key) return false;
         const row = entries.find(e => e.date === date);
@@ -1916,7 +1954,7 @@
             return true;
           } catch(error){
             console.error("Feil ved sletting av rad:", error);
-            if(!quiet) showBanner("Kun oppdatert lokalt – skyfeil", "error");
+            
             return false;
           }
         }
@@ -1943,7 +1981,7 @@
           return true;
         } catch(error){
           console.error("Feil ved lagring av rad:", error);
-          if(!quiet) showBanner("Kun lagret lokalt – skyfeil", "error");
+          
           return false;
         }
       }
@@ -1951,7 +1989,7 @@
       async function saveMetricValue(value){
         if(!selectedDate){ alert("Velg dag."); return; }
         if(value == null){ alert("Legg inn en verdi."); return; }
-        if(!refreshIdentity()) return showBanner("Kan ikke lagre ennå", "error");
+        refreshIdentity();
         const existingIndex = entries.findIndex(e => e.date === selectedDate);
         if(existingIndex >= 0){
           entries[existingIndex][activeMetric] = value;
@@ -1965,8 +2003,7 @@
         syncLocalCache(); renderCircles(); renderHeroAndStats(); renderChart(); renderHistory(); renderDynamicField();
         const entryOk = await persistEntryRemoteByDate(selectedDate, { quiet:true });
         const settingsOk = await persistSettingsRemote({ quiet:true });
-        if(entryOk || settingsOk) showBanner("Lagret", "success");
-        else showBanner("Lagret lokalt", "info");
+        showBanner("Lagret", "success");
         offerTellCoach([{ key: activeMetric, value }]);
       }
 
@@ -2024,8 +2061,14 @@
           }
           const hasRemoteEntries = Array.isArray(remoteEntries) && remoteEntries.length > 0;
           const hasRemoteSettings = !!remoteSettings;
-          if(hasRemoteEntries) entries = remoteEntries.map(mapDbEntryToLocal);
-          if(hasRemoteSettings){
+          const pend = new Set(pendingList());
+          if(hasRemoteEntries){
+            const localByDate = new Map(entries.map(e => [e.date, e]));
+            const merged = remoteEntries.map(mapDbEntryToLocal).filter(e => !pend.has(e.date));
+            pend.forEach(d => { if(d !== "__settings" && localByDate.has(d)) merged.push(localByDate.get(d)); });
+            entries = merged;
+          }
+          if(hasRemoteSettings && !pend.has("__settings")){
             goals = remoteSettings.goals || goals;
             const remoteVisible = Array.isArray(remoteSettings.visible_metrics) ? remoteSettings.visible_metrics.filter(key => metrics[key]) : [];
             if(remoteVisible.length) visibleMetrics = remoteVisible;
@@ -2035,6 +2078,7 @@
           if(!visibleMetrics.includes(activeMetric)) activeMetric = visibleMetrics[0];
           startMetric();
           syncLocalCache(); renderWeekCalendar(); renderMetricPicker(); renderCircles(); renderHeroAndStats(); renderDynamicField(); renderChart(); renderHistory();
+          flushPending();
         } catch(err){
           console.error("Feil ved henting fra Supabase:", err);
           setWarning("Fant ingen helsedata for denne kunden ennå.");
