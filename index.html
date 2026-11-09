@@ -8946,6 +8946,13 @@ var DPP_IMG = [
   };
   const VK_EMPTY_PHOTO = "1585222107521-2438128289fd";
   // Type økt for valg av bilde. Utholdenhetsøkter fra malene lagres som styrke, så malen må sjekkes.
+  // Omtrentlig tid for én øvelse: øvelser på tid teller med sin faktiske tid (f.eks. 50 min gåtur)
+  function vkExSeconds(ex) {
+    const sets = Number(ex.sets) || 1;
+    const work = ex.isHold ? (Number(ex.targetReps) || parseInt(ex.reps, 10) || 30) : 45;
+    const rest = ex.restSeconds != null && ex.restSeconds !== "" ? (Number(ex.restSeconds) || 0) : 60;
+    return sets * (work + rest);
+  }
   function vkWorkoutPhotoKey(w) {
     let t = w && (w.category || w.programType);
     const prog = w && w.id ? findAssignedProgramById(w.id) : null;
@@ -9075,7 +9082,7 @@ var DPP_IMG = [
     let secs = 0;
     exercises.forEach(ex => {
       if (ex.durationSeconds) secs += Number(ex.durationSeconds) || 0;
-      else secs += (Number(ex.sets) || 1) * (45 + (Number(ex.restSeconds) || 60));
+      else secs += vkExSeconds(ex);
     });
     const mins = Math.max(5, Math.round(secs / 300) * 5);
     const card = document.createElement("div");
@@ -22564,7 +22571,7 @@ function getExercisePR(exerciseName) {
     const title = vkStrip(getDisplayTitle(item, viewedDate) || item.title);
     const session = getSessionLabelForViewedDate(item);
     let secs = 0;
-    exercises.forEach(ex => { secs += ex.durationSeconds ? Number(ex.durationSeconds) || 0 : (Number(ex.sets) || 1) * (45 + (Number(ex.restSeconds) || 60)); });
+    exercises.forEach(ex => { secs += ex.durationSeconds ? Number(ex.durationSeconds) || 0 : vkExSeconds(ex); });
     const mins = Math.max(5, Math.round(secs / 300) * 5);
     const note = vkProgramCoachNote(item);
     const rows = exercises.map((ex, i) => {
