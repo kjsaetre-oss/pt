@@ -4039,6 +4039,14 @@
   .vkf-pick b{ font-size:14.5px; font-weight:700; color:#f2f4f7; }
   .vkf-pick small{ display:block; font-size:12px; color:#98a1ad; margin-top:1px; }
   .vkf-pick .em{ width:34px; height:34px; border-radius:10px; background:#0e1116; display:grid; place-items:center; font-size:17px; flex-shrink:0; }
+  .vk-ex-thumb{ background-color:#3a211f !important; background-size:cover !important; background-position:center !important; font-size:0 !important; }
+  .vkf-pick .em.vk-ex-thumb{ width:46px; height:34px; }
+  .dpp-own-hit-name{ display:inline-flex; align-items:center; gap:10px; min-width:0; flex:1 1 auto; overflow-wrap:anywhere; }
+  .dpp-own-hit > span:last-child{ flex:none; white-space:nowrap; }
+  .dpp-own-hit{ min-width:0; max-width:100%; box-sizing:border-box; }
+  .dpp-own-hit-ic{ width:44px; height:32px; min-width:44px; border-radius:9px; display:inline-grid; place-items:center; font-size:16px; background:#0e1116; }
+  .dpp-ex-search-row{ display:flex !important; align-items:center; gap:10px; }
+  .dpp-ex-search-ic{ width:48px; height:34px; min-width:48px; border-radius:9px; display:inline-grid; place-items:center; font-size:17px; background:#0e1116; }
   .vkf-side{ display:inline-block; margin-left:6px; padding:2px 8px; border-radius:999px; background:#3a211f; color:#ff613e; font-size:11.5px; font-weight:800; vertical-align:4px; }
   .exi-figs{ display:grid; grid-template-columns:1fr 1fr; gap:6px; background:#171b22; border-radius:20px; padding:12px 8px 6px; }
   .exi-figs figure{ margin:0; text-align:center; }
@@ -8960,6 +8968,14 @@ var DPP_IMG = [
   };
   const VK_EMPTY_PHOTO = "1585222107521-2438128289fd";
   // Type økt for valg av bilde. Utholdenhetsøkter fra malene lagres som styrke, så malen må sjekkes.
+  // Lite bilde av øvelsen (fra videoen) i lister – emoji bare når øvelsen mangler video
+  function vkExIconHtml(ex, cls) {
+    let yt = "";
+    try { yt = extractYouTubeId(libraryVideoForName(ex.name) || ex.videoUrl || ""); } catch (e) {}
+    return yt
+      ? `<span class="${cls} vk-ex-thumb" style="background-image:url('https://img.youtube.com/vi/${yt}/mqdefault.jpg')" aria-hidden="true"></span>`
+      : `<span class="${cls}" aria-hidden="true">${escapeExHtml(ex.emoji || "💪")}</span>`;
+  }
   const VK_CARDIO_RE = /løp|jogg|tredemølle|gå\b|gåtur|gange|sone 2|intervall|4x4|4×4|sprint|bakke/i;
   // Omtrentlig tid for én øvelse: øvelser på tid teller med sin faktiske tid (f.eks. 50 min gåtur)
   function vkExSeconds(ex) {
@@ -20032,7 +20048,7 @@ var DPP_IMG = [
       row.className = "dpp-ex-search-row";
       const alreadyAdded = currentNames.has(ex.name);
       const bodyPartLabel = EXERCISE_CATEGORY_LABELS[ex.category] || "";
-      row.innerHTML =
+      row.innerHTML = vkExIconHtml(ex, "dpp-ex-search-ic") +
         `<span class="dpp-ex-search-row-text">` +
           `<span class="dpp-ex-search-row-name">${escapeExHtml(ex.name)}${(!isSwap && alreadyAdded) ? " (allerede i økten)" : ""}</span>` +
           (bodyPartLabel ? `<span class="dpp-ex-search-row-bodypart">${escapeExHtml(bodyPartLabel)}</span>` : "") +
@@ -22484,7 +22500,7 @@ function getExercisePR(exerciseName) {
       const picked = new Set(draft.exercises.map(e => e.name));
       const hits = (term ? library.filter(ex => ex.name.toLowerCase().includes(term)) : library).filter(ex => !picked.has(ex.name)).slice(0, term ? 25 : 10);
       resultsEl.innerHTML = (term ? "" : `<div class="dpp-lib-section">Forslag</div>`) +
-        (hits.length ? hits.map(ex => `<button type="button" class="dpp-own-hit" data-own-add="${escapeExHtml(ex.name)}">${escapeExHtml(ex.emoji || "💪")} ${escapeExHtml(ex.name)}<span>+ Legg til</span></button>`).join("")
+        (hits.length ? hits.map(ex => `<button type="button" class="dpp-own-hit" data-own-add="${escapeExHtml(ex.name)}"><span class="dpp-own-hit-name">${vkExIconHtml(ex, "dpp-own-hit-ic")}${escapeExHtml(ex.name)}</span><span>+ Legg til</span></button>`).join("")
           : `<p class="dpp-own-empty">Fant ingen øvelser som passer.</p>`);
     };
     paintList();
@@ -23423,7 +23439,7 @@ function getExercisePR(exerciseName) {
     const meta = lib.find(x => x.name === ex.name) || Object.values(SWAP_LIBRARY).flat().find(x => x.name === ex.name) || {};
     const g = exerciseGuide(ex.name);
     const similar = lib.filter(x => !inSession.has(x.name) && ((meta.category && x.category === meta.category) || (g && exerciseGuide(x.name) && exerciseGuide(x.name).m[0] === g.m[0]))).slice(0, 8);
-    const row = x => `<button type="button" class="vkf-pick" data-pick="${escapeHtmlText(x.name)}"><span class="em">${escapeHtmlText(x.emoji || "💪")}</span><span><b>${escapeHtmlText(x.name)}</b><small>${escapeHtmlText([EXERCISE_CATEGORY_LABELS[x.category] || "", x.isHold ? "måles i tid" : ""].filter(Boolean).join(" · "))}</small></span></button>`;
+    const row = x => `<button type="button" class="vkf-pick" data-pick="${escapeHtmlText(x.name)}">${vkExIconHtml(x, "em")}<span><b>${escapeHtmlText(x.name)}</b><small>${escapeHtmlText([EXERCISE_CATEGORY_LABELS[x.category] || "", x.isHold ? "måles i tid" : ""].filter(Boolean).join(" · "))}</small></span></button>`;
     const el = vkpShow(`<h3>Bytt ut «${escapeHtmlText(ex.name || "")}»</h3>
       <div class="vkp-sub">Den nye øvelsen tar plassen i økta – også neste gang.</div>
       <input class="vkf-pick-search" type="search" placeholder="Søk etter øvelse …" autocomplete="off">
