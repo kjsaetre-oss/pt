@@ -4047,6 +4047,7 @@
   .dpp-own-hit-name{ display:inline-flex; align-items:center; gap:10px; min-width:0; flex:1 1 auto; overflow-wrap:anywhere; }
   .dpp-own-hit > span:last-child{ flex:none; white-space:nowrap; }
   .dpp-own-hit{ min-width:0; max-width:100%; box-sizing:border-box; }
+  .dpp-own-row-name, .dpp-fav-ex-name{ display:flex !important; align-items:center; gap:10px; min-width:0; }
   .dpp-own-hit-ic{ width:44px; height:32px; min-width:44px; border-radius:9px; display:inline-grid; place-items:center; font-size:16px; background:#0e1116; }
   .dpp-ex-search-row{ display:flex !important; align-items:center; gap:10px; }
   .dpp-ex-search-ic{ width:48px; height:34px; min-width:48px; border-radius:9px; display:inline-grid; place-items:center; font-size:17px; background:#0e1116; }
@@ -21845,7 +21846,7 @@ function getExercisePR(exerciseName) {
       const row = document.createElement("div");
       row.className = "dpp-fav-ex";
       const meta = [ex.sets && !ex.durationSeconds ? ex.sets + " sett" : "", displayRepsText(ex), ex.rest ? (/pause/i.test(ex.rest) ? ex.rest : "pause " + ex.rest) : ""].filter(Boolean).join(" · ");
-      row.innerHTML = `<div class="dpp-fav-ex-name">${i + 1}. ${escapeExHtml(ex.name || "")}</div>` +
+      row.innerHTML = `<div class="dpp-fav-ex-name">${vkExIconHtml(ex, "dpp-own-hit-ic")}<span>${i + 1}. ${escapeExHtml(ex.name || "")}</span></div>` +
         (meta ? `<div class="dpp-fav-ex-meta">${escapeExHtml(meta)}</div>` : "") +
         (ex.tip ? `<div class="dpp-fav-ex-tip">${escapeExHtml(ex.tip)}</div>` : "");
       const ytId = extractYouTubeId(libraryVideoForName(ex.name) || ex.videoUrl);
@@ -22504,7 +22505,7 @@ function getExercisePR(exerciseName) {
     const paintList = () => {
       listEl.innerHTML = draft.exercises.length
         ? draft.exercises.map((ex, i) => `<div class="dpp-own-row">
-            <span class="dpp-own-row-name">${i + 1}. ${escapeExHtml(ex.name)}</span>
+            <span class="dpp-own-row-name">${vkExIconHtml(ex, "dpp-own-hit-ic")}<span>${i + 1}. ${escapeExHtml(ex.name)}</span></span>
             <button type="button" class="dpp-own-del" data-own-del="${i}" aria-label="Fjern">✕</button>
             <span class="dpp-own-ctrls">
               <span class="dpp-own-sets"><button type="button" data-own-sets="${i}" data-d="-1" aria-label="Færre sett">−</button><b>${ex.sets || 1} sett</b><button type="button" data-own-sets="${i}" data-d="1" aria-label="Flere sett">+</button></span>
