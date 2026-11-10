@@ -9741,13 +9741,7 @@ var DPP_IMG = [
       sec.appendChild(card);
       list.appendChild(sec);
     }
-    const weekCard = vkWeekCard();
-    if (weekCard) {
-      const isNow = toDateValue(startOfWeek(viewedDate || new Date())) === toDateValue(startOfWeek(new Date()));
-      const sec = vkSection(isNow ? "Denne uka" : "Uke " + weekNumberOf(viewedDate));
-      sec.appendChild(weekCard);
-      list.appendChild(sec);
-    }
+    // Den gamle «Denne uka»-oppsummeringen nederst er fjernet (2026-11-10) – ukesoversikten ligger nå under Trening.
   }
 
   function resetAddForm() {
