@@ -5499,6 +5499,8 @@ var DPP_IMG = [
     normalized.favoriteWorkouts = Array.isArray(raw.favoriteWorkouts) ? raw.favoriteWorkouts : [];
     // Spillerens egne mål (treningssiden) – lagres atomisk via upsert_movement_plan_list_item
     normalized.playerGoals = Array.isArray(raw.playerGoals) ? raw.playerGoals : [];
+    // Hovedmål (kunden og coachen, vises øverst i appen) – lagres bare atomisk
+    normalized.mainGoals = Array.isArray(raw.mainGoals) ? raw.mainGoals : [];
     // Fokusområder fra coachen (treningssiden) – lagres atomisk
     normalized.coachFocus = Array.isArray(raw.coachFocus) ? raw.coachFocus : [];
     normalized.exerciseDoneMap = (raw.exerciseDoneMap && typeof raw.exerciseDoneMap === "object" && !Array.isArray(raw.exerciseDoneMap)) ? raw.exerciseDoneMap : {};
@@ -5748,6 +5750,7 @@ var DPP_IMG = [
       // Kundens favorittøkter (lagres atomisk via upsert_movement_plan_list_item).
       favoriteWorkouts: data.favoriteWorkouts || [],
       playerGoals: data.playerGoals || [],
+      mainGoals: data.mainGoals || [],
       coachFocus: data.coachFocus || [],
       // Samme beskyttelse for avkrysning av enkelt\u00f8velser i en \u00f8kt.
       exerciseDoneMap: data.exerciseDoneMap || {},
@@ -5932,6 +5935,7 @@ var DPP_IMG = [
           if (Array.isArray(raw.favoriteWorkouts)) data.favoriteWorkouts = raw.favoriteWorkouts;
           // Mål skrives bare atomisk (spilleren og coachen) – ta alltid skyens versjon.
           if (Array.isArray(raw.playerGoals)) data.playerGoals = raw.playerGoals;
+          if (Array.isArray(raw.mainGoals)) data.mainGoals = raw.mainGoals;
           if (Array.isArray(raw.coachFocus)) data.coachFocus = raw.coachFocus;
           if (!opts.mutatingTodoNotes) {
             data.todoNotes = (raw.todoNotes && typeof raw.todoNotes === "object" && !Array.isArray(raw.todoNotes)) ? raw.todoNotes : {};
