@@ -4108,6 +4108,41 @@
   .vkf-hero h1{ margin:0; font-size:27px; font-weight:800; letter-spacing:-.03em; }
   .vkf-hero p{ margin:6px 0 0; font-size:14px; color:#98a1ad; }
   .vkf-stats{ display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
+  .vkf-volume{ display:flex; align-items:baseline; justify-content:center; gap:10px; background:linear-gradient(135deg,#ff3305,#ff613e); color:#ffffff; border-radius:20px; padding:16px 18px; box-shadow:0 14px 30px -16px rgba(0,0,0,.7); }
+  .vkf-volume b{ font-size:28px; font-weight:900; letter-spacing:-.02em; }
+  .vkf-volume span{ font-size:14px; font-weight:700; opacity:.8; }
+  .vkf-share{ width:100%; min-height:50px; border-radius:16px; border:1.5px dashed #262b34; background:#3a211f; color:#ff4e26; font:inherit; font-weight:800; font-size:15px; cursor:pointer; }
+  /* Ukesmål og muskelkart */
+  .vk-goalwk{ padding:16px !important; display:grid; gap:14px; }
+  .vk-gw-top{ display:flex; align-items:center; gap:14px; }
+  .vk-gw-ring{ position:relative; width:76px; height:76px; flex:none; }
+  .vk-gw-ring svg{ width:100%; height:100%; transform:rotate(-90deg); }
+  .vk-gw-ring .trk{ fill:none; stroke:#262b34; stroke-width:7; }
+  .vk-gw-ring .bar{ fill:none; stroke:#ff613e; stroke-width:7; stroke-linecap:round; transition:stroke-dashoffset .8s ease; }
+  .vk-gw-ring b{ position:absolute; inset:0; display:grid; place-items:center; font-size:22px; font-weight:900; color:#f2f4f7; }
+  .vk-gw-ring b small{ font-size:13px; color:#98a1ad; font-weight:800; }
+  .vk-gw-ring b{ display:flex; align-items:center; justify-content:center; }
+  .vk-gw-txt{ display:grid; gap:2px; min-width:0; }
+  .vk-gw-txt small{ font-size:11.5px; font-weight:800; letter-spacing:.08em; text-transform:uppercase; color:#98a1ad; }
+  .vk-gw-txt strong{ font-size:19px; font-weight:900; color:#f2f4f7; letter-spacing:-.01em; }
+  .vk-gw-txt span{ font-size:13.5px; color:#98a1ad; font-weight:600; }
+  .vk-gw-txt em{ font-style:normal; font-size:13px; font-weight:800; color:#98a1ad; }
+  .vk-gw-days{ display:grid; grid-template-columns:repeat(7,1fr); gap:6px; }
+  .vk-wk-day{ display:grid; justify-items:center; gap:4px; }
+  .vk-wk-day i{ width:30px; height:30px; border-radius:50%; display:grid; place-items:center; font-style:normal; font-size:14px; font-weight:900; color:#ffffff; background:#0e1116; }
+  .vk-wk-day.done i{ background:linear-gradient(145deg,#ff7657,#ff5d38); }
+  .vk-wk-day.plan i{ background:#171b22; box-shadow:inset 0 0 0 2px #cdbdf0; }
+  .vk-wk-day.missed i{ background:#171b22; box-shadow:inset 0 0 0 2px #e8c9c0; }
+  .vk-wk-day.today small{ color:#ff5d38; font-weight:900; }
+  .vk-wk-day small{ font-size:11px; font-weight:700; color:#98a1ad; }
+  .vk-muscle{ display:flex; align-items:center; gap:12px; padding-top:12px; border-top:1px solid #262b34; }
+  .vk-muscle-figs{ display:flex; gap:2px; flex:none; }
+  .vk-muscle-figs svg{ width:46px; height:auto; }
+  .vk-muscle-txt{ display:grid; gap:4px; min-width:0; font-size:13px; color:#f2f4f7; }
+  .vk-muscle-txt b{ font-size:14px; color:#f2f4f7; }
+  .vk-muscle-txt span{ display:flex; align-items:center; gap:6px; }
+  .vk-muscle-txt i{ width:10px; height:10px; border-radius:3px; background:#0e1116; flex:none; }
+  .vk-muscle-txt i.hi{ background:#ff613e; }
   .vkf-stat{ background:#171b22; border-radius:20px; box-shadow:0 1px 2px rgba(0,0,0,.04), 0 12px 30px -14px rgba(0,0,0,.18); padding:14px 8px 12px; text-align:center; }
   .vkf-stat .ic{ width:34px; height:34px; border-radius:12px; display:grid; place-items:center; margin:0 auto 8px; }
   .vkf-stat .ic svg{ width:18px; height:18px; }
@@ -8307,6 +8342,8 @@ var DPP_IMG = [
       // Mens dataene hentes vises plassholdere – ikke «ingenting planlagt» som så forsvinner
       if (root.classList.contains("dpp-syncing")) return;
       list.appendChild(vkEmptyDay("Ingenting planlagt denne dagen", "Trykk på + hvis du vil legge til noe."));
+      // Ukesmålet og muskelkartet vises også på hviledager
+      try { const wk = vkGoalCard(); if (wk) { const sec = vkSection("Trening"); sec.appendChild(wk); list.appendChild(sec); } } catch (e) {}
       return;
     }
 
@@ -8920,6 +8957,95 @@ var DPP_IMG = [
     return n;
   }
   function vkPop(btn) { btn.classList.remove("pop"); void btn.offsetWidth; btn.classList.add("pop"); }
+  // ── Ukesmål (økter denne uka + uker på rad) og muskelkart for de siste 7 dagene ──
+  function vkWeekStart(d) { const x = new Date(d); x.setHours(12, 0, 0, 0); return addDays(x, -((x.getDay() + 6) % 7)); }
+  function vkIsWorkoutItem(it) { return !!(it && it.isVirtualProgram && it.programType !== "praksis"); }
+  function vkWeekStats(anchor) {
+    const start = vkWeekStart(anchor);
+    const items = (data.items || []).filter(vkIsWorkoutItem);
+    const days = [];
+    let due = 0, done = 0;
+    for (let i = 0; i < 7; i++) {
+      const d = addDays(start, i);
+      let dDue = 0, dDone = 0;
+      items.forEach(it => {
+        let a = false, b = false;
+        try { a = isDueOnDate(it, d); } catch (e) {}
+        try { b = isItemDoneOnDate(it, d); } catch (e) {}
+        if (a) dDue++;
+        if (b) dDone++;
+      });
+      due += dDue; done += dDone;
+      days.push({ d, due: dDue, done: dDone });
+    }
+    return { start, due, done, days };
+  }
+  function vkWeekStreak(anchor) {
+    const start = vkWeekStart(anchor);
+    const cur = vkWeekStats(start);
+    let streak = cur.due > 0 && cur.done >= cur.due ? 1 : 0;
+    for (let w = 1; w <= 26; w++) {
+      const st = vkWeekStats(addDays(start, -7 * w));
+      if (st.due === 0 && st.done === 0) break;
+      if (st.done >= st.due) streak++; else break;
+    }
+    return streak;
+  }
+  // Hvilke muskler er trent de siste 7 dagene (fra det kunden har logget)
+  function vkMuscleWeek(anchor) {
+    const endV = toDateValue(anchor), startV = toDateValue(addDays(anchor, -6));
+    const score = {};
+    Object.entries(data.exercisePRs || {}).forEach(([name, pr]) => {
+      (pr && Array.isArray(pr.history) ? pr.history : []).forEach(h => {
+        if (!h || h.date < startV || h.date > endV) return;
+        let g = null; try { g = exerciseGuide(name); } catch (e) {}
+        if (!g) return;
+        const n = Array.isArray(h.sets) && h.sets.length ? h.sets.length : 1;
+        g.m.forEach(m => { score[m] = (score[m] || 0) + n; });
+        g.s.forEach(m => { score[m] = (score[m] || 0) + n * 0.5; });
+      });
+    });
+    return score;
+  }
+  const VK_MAIN_MUSCLES = [["chest", "Bryst"], ["upperback", "Rygg", ["lats", "upperback", "traps"]], ["shoulders", "Skuldre", ["shoulders", "reardelts"]], ["arms", "Armer", ["biceps", "triceps"]], ["abs", "Mage", ["abs", "obliques"]], ["quads", "Forside lår"], ["hamstrings", "Bakside lår"], ["glutes", "Sete"]];
+  function vkMuscleMapSvg(score) {
+    const lvl = {};
+    Object.entries(score).forEach(([m, v]) => (EX_BODY_MAP[m] || []).forEach(k => { lvl[k] = Math.max(lvl[k] || 0, v); }));
+    const col = v => !v ? "#e6dfd5" : v >= 6 ? "#6438ad" : v >= 3 ? "#9b7ad6" : "#cdbdf0";
+    const fig = side => EX_BODY[side].map(([k, pts]) => pts.map(pt => `<polygon points="${pt}" fill="${k === "head" || k === "neck" || k === "knees" ? "#efe9e1" : col(lvl[k])}"/>`).join("")).join("");
+    return `<svg viewBox="0 0 100 222" aria-hidden="true">${fig("a")}</svg><svg viewBox="0 0 100 222" aria-hidden="true">${fig("p")}</svg>`;
+  }
+  function vkGoalCard() {
+    const anchor = viewedDate || new Date();
+    const st = vkWeekStats(anchor);
+    const score = vkMuscleWeek(anchor);
+    const anyMuscle = Object.keys(score).length > 0;
+    if (!st.due && !st.done && !anyMuscle) return null;
+    const goal = Math.max(st.due, st.done);
+    const pct = goal ? Math.min(1, st.done / goal) : 0;
+    const streak = vkWeekStreak(anchor);
+    const C = 2 * Math.PI * 26;
+    const today = toDateValue(new Date());
+    const dayLetters = ["M", "T", "O", "T", "F", "L", "S"];
+    const days = st.days.map((x, i) => {
+      const cls = x.done ? "done" : x.due ? (toDateValue(x.d) < today ? "missed" : "plan") : "rest";
+      return `<span class="vk-wk-day ${cls}${toDateValue(x.d) === today ? " today" : ""}"><i>${x.done ? "✓" : ""}</i><small>${dayLetters[i]}</small></span>`;
+    }).join("");
+    const val = k => { const g = VK_MAIN_MUSCLES.find(x => x[0] === k); return (g[2] || [k]).reduce((s2, m) => s2 + (score[m] || 0), 0); };
+    const ranked = VK_MAIN_MUSCLES.map(g => [g[1], val(g[0])]);
+    const most = ranked.filter(r => r[1] > 0).sort((a, b) => b[1] - a[1]).slice(0, 3).map(r => r[0]);
+    const least = ranked.filter(r => r[1] === 0).map(r => r[0]).slice(0, 3);
+    const msg = st.done >= goal && goal ? "Ukesmålet er nådd! 🎉" : goal ? `${goal - st.done} ${goal - st.done === 1 ? "økt" : "økter"} igjen denne uka` : "Bra jobbet denne uka!";
+    const card = document.createElement("div");
+    card.className = "vk-card vk-goalwk";
+    card.innerHTML = `<div class="vk-gw-top">
+        <div class="vk-gw-ring"><svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="26" class="trk"/><circle cx="32" cy="32" r="26" class="bar" stroke-dasharray="${C.toFixed(1)}" stroke-dashoffset="${(C * (1 - pct)).toFixed(1)}"/></svg><b>${st.done}<small>/${goal || "–"}</small></b></div>
+        <div class="vk-gw-txt"><small>Denne uka</small><strong>${st.done} av ${goal || 0} økter</strong><span>${escapeHtmlText(msg)}</span>${streak >= 2 ? `<em>🔥 ${streak} uker på rad</em>` : ""}</div>
+      </div>
+      <div class="vk-gw-days">${days}</div>
+      ${anyMuscle ? `<div class="vk-muscle"><div class="vk-muscle-figs">${vkMuscleMapSvg(score)}</div><div class="vk-muscle-txt"><b>Muskler siste 7 dager</b>${most.length ? `<span><i class="hi"></i>Mest: ${escapeHtmlText(most.join(", "))}</span>` : ""}${least.length ? `<span><i></i>Lite: ${escapeHtmlText(least.join(", "))}</span>` : ""}</div></div>` : ""}`;
+    return card;
+  }
   function vkSection(title) {
     const sec = document.createElement("section");
     sec.className = "vk-sec";
@@ -9540,8 +9666,11 @@ var DPP_IMG = [
   }
   function vkFinishDay(vk) {
     const freePhotos = (typeof mealPhotos !== "undefined") ? vkFreePhotoRows() : [];
-    if (vk.training.length) {
+    let vkWeekEl = null;
+    try { vkWeekEl = vkGoalCard(); } catch (e) { console.warn("Ukesmål:", e); }
+    if (vk.training.length || vkWeekEl) {
       const sec = vkSection("Trening");
+      if (vkWeekEl) sec.appendChild(vkWeekEl);
       vk.training.forEach(c => sec.appendChild(c));
       list.appendChild(sec);
     }
@@ -23368,7 +23497,13 @@ function getExercisePR(exerciseName) {
     const prev = prevKey ? log[prevKey] : null;
     let cmp = [];
     try { cmp = vkfCompareRows(); } catch (e) { cmp = []; }
-    vkf.summary = { mins, doneSets, totalSets, prs: vkf.prs.slice(), prev, dv, cmp };
+    let volume = 0;
+    exercises.forEach((ex, i) => {
+      if (!ex.tracksWeight || ex.isHold) return;
+      const dn = vkfSetsDone(i);
+      (vkf.vals[i] || []).forEach((v, k) => { if (dn.has(k)) volume += (Number(v.kg) || 0) * (Number(v.reps) || 0); });
+    });
+    vkf.summary = { mins, doneSets, totalSets, prs: vkf.prs.slice(), prev, dv, cmp, volume: Math.round(volume) };
     if (program) {
       await saveAssignedProgramsChange(() => {
         program.sessionLog = { ...(program.sessionLog || {}), [dv]: { ...(log[dv] || {}), min: mins, sets: doneSets, prs: vkf.prs.length } };
@@ -23426,10 +23561,12 @@ function getExercisePR(exerciseName) {
         <div class="vkf-stat"><div class="ic ic-sets"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l2.8 2.8L16.5 9.5"/></svg></div><b>${s.doneSets}</b><span>Sett</span><em>${setCmp}</em></div>
         <div class="vkf-stat"><div class="ic ic-pr">${VKF_TROPHY}</div><b>${s.prs.length}</b><span>Rekorder</span>${prCmp ? `<em>${prCmp}</em>` : ""}</div>
       </div>
+      ${s.volume > 0 ? `<div class="vkf-volume"><b>${s.volume.toLocaleString("nb-NO")} kg</b><span>løftet totalt i økta</span></div>` : ""}
       ${(s.cmp || []).length ? `<div class="vkf-card"><h3>Sammenlignet med sist</h3>${s.cmp.slice(0, 6).map(r => `<div class="vkf-cmp"><b>${escapeHtmlText(r.name)}</b><span class="${r.up ? "up" : ""}">${escapeHtmlText(r.txt)}${r.up ? " ↑" : r.same ? " =" : ""}</span></div>`).join("")}</div>` : ""}
       ${s.prs.length ? `<div class="vkf-card"><h3>${VKF_TROPHY}Nye rekorder</h3>${s.prs.map(p => `<div class="vkf-pr"><i>${VKF_TROPHY}</i><div><b>${escapeHtmlText(p.name)}</b><span>${escapeHtmlText(p.txt)}</span></div><em>${VKF_UP}${escapeHtmlText(p.diff)}</em></div>`).join("")}</div>` : ""}
       <div class="vkf-card"><h3>Hvordan kjentes økta?</h3><div class="vkf-feel">${VKF_FEELS.map(f => `<button type="button" data-feel="${f[0]}" class="${feel === f[0] ? "on" : ""}">${vkfFace(f)}<small>${f[1]}</small></button>`).join("")}</div></div>
       ${next ? `<div class="vkf-card vkf-next"><div class="d"><small>${escapeHtmlText(wd)}</small><b>${next.d.getDate()}</b></div><div><b>Neste økt${next.label ? ": " + escapeHtmlText(next.label) : ""}</b><span>${escapeHtmlText(next.d.toLocaleDateString("no-NO", { weekday: "long", day: "numeric", month: "long" }))}</span></div></div>` : ""}
+      <button class="vkf-share" type="button" data-act="share">📸 Del økta som bilde</button>
       <div class="vkf-foot"><button class="vkf-btn finish" type="button" data-act="close">Ferdig</button></div>
     </div><div class="vkf-confetti" id="vkfConfetti"></div>`;
     vkfRoot().scrollTop = 0;
@@ -23447,6 +23584,57 @@ function getExercisePR(exerciseName) {
     setTimeout(() => { if (c) c.innerHTML = ""; }, 3800);
     try { playPling(); } catch (e) {}
   }
+  // 📸 Bilde av økta (til Instagram, Messenger osv.): deles direkte der telefonen støtter det,
+  // ellers vises bildet så kunden kan trykke og holde for å lagre det.
+  async function vkfShareImage() {
+    const s = vkf && vkf.summary; if (!s) return;
+    const W = 1080, H = 1350, cv = document.createElement("canvas");
+    cv.width = W; cv.height = H;
+    const g = cv.getContext("2d");
+    const bg = g.createLinearGradient(0, 0, W, H); bg.addColorStop(0, "#241638"); bg.addColorStop(.6, "#4b2a86"); bg.addColorStop(1, "#7a52c4");
+    g.fillStyle = bg; g.fillRect(0, 0, W, H);
+    g.fillStyle = "rgba(255,255,255,.06)"; g.beginPath(); g.arc(W - 120, 140, 320, 0, Math.PI * 2); g.fill();
+    const brand = window.TL_STANDALONE && window.TL_STANDALONE.brand === "pt" ? "PT KJETIL" : window.TL_STANDALONE && window.TL_STANDALONE.brand === "figgjo" ? "FIGGJO BTK" : "TRO & LIVSSTIL";
+    const F = (w, px) => `${w} ${px}px Inter, -apple-system, Helvetica, Arial, sans-serif`;
+    g.fillStyle = "rgba(255,255,255,.7)"; g.font = F(800, 30); g.fillText(brand, 80, 120);
+    g.fillStyle = "#fff"; g.font = F(900, 92); g.fillText("Økt fullført", 80, 250);
+    g.font = F(900, 92); g.fillText("💪", 700, 250);
+    const title = vkStrip(getDisplayTitle(vkf.item, viewedDate) || vkf.item.title || "Treningsøkt");
+    g.fillStyle = "rgba(255,255,255,.85)"; g.font = F(700, 42);
+    g.fillText(title.length > 34 ? title.slice(0, 33) + "…" : title, 80, 320);
+    g.fillStyle = "rgba(255,255,255,.6)"; g.font = F(600, 32);
+    g.fillText(parseDateValue(s.dv).toLocaleDateString("nb-NO", { weekday: "long", day: "numeric", month: "long" }), 80, 372);
+    const tiles = [[s.mins + " min", "Tid"], [String(s.doneSets), "Sett"], [s.volume > 0 ? s.volume.toLocaleString("nb-NO") + " kg" : String(s.prs.length), s.volume > 0 ? "Løftet totalt" : "Rekorder"]];
+    tiles.forEach((t, i) => {
+      const x = 80 + i * 315, y = 450;
+      g.fillStyle = "rgba(255,255,255,.1)"; vkfRoundRect(g, x, y, 290, 210, 36); g.fill();
+      g.fillStyle = "#fff"; g.font = F(900, t[0].length > 8 ? 54 : 70); g.fillText(t[0], x + 32, y + 115);
+      g.fillStyle = "rgba(255,255,255,.65)"; g.font = F(700, 30); g.fillText(t[1], x + 32, y + 170);
+    });
+    let y = 760;
+    if (s.prs.length) {
+      g.fillStyle = "#f6c35b"; g.font = F(900, 40); g.fillText("🏆 Nye rekorder", 80, y); y += 30;
+      s.prs.slice(0, 4).forEach(pr => {
+        y += 74;
+        g.fillStyle = "rgba(255,255,255,.1)"; vkfRoundRect(g, 80, y - 52, W - 160, 64, 20); g.fill();
+        g.fillStyle = "#fff"; g.font = F(800, 32); g.fillText(String(pr.name).slice(0, 30), 108, y - 8);
+        g.fillStyle = "#f6c35b"; g.font = F(800, 32); const t = String(pr.txt || ""); g.fillText(t, W - 108 - g.measureText(t).width, y - 8);
+      });
+    } else {
+      g.fillStyle = "rgba(255,255,255,.85)"; g.font = F(700, 40); g.fillText("Ett steg nærmere målet. 🙌", 80, y + 20);
+    }
+    g.fillStyle = "rgba(255,255,255,.5)"; g.font = F(700, 28); g.fillText("Små steg, uke for uke.", 80, H - 80);
+    const blob = await new Promise(r => cv.toBlob(r, "image/png"));
+    const fileName = "okt-" + s.dv + ".png";
+    try {
+      const file = new File([blob], fileName, { type: "image/png" });
+      if (navigator.canShare && navigator.canShare({ files: [file] })) { await navigator.share({ files: [file], title: "Økt fullført" }); return; }
+    } catch (e) { if (e && e.name === "AbortError") return; }
+    const url = cv.toDataURL("image/png");
+    const el = vkpShow(`<h3>Lagre bildet</h3><div class="vkp-sub">Trykk og hold på bildet for å lagre det eller dele det.</div><img src="${url}" alt="Bilde av økta" style="width:100%;border-radius:18px;display:block;margin-top:10px;">`);
+    void el;
+  }
+  function vkfRoundRect(g, x, y, w, h, r) { g.beginPath(); g.moveTo(x + r, y); g.arcTo(x + w, y, x + w, y + h, r); g.arcTo(x + w, y + h, x, y + h, r); g.arcTo(x, y + h, x, y, r); g.arcTo(x, y, x + w, y, r); g.closePath(); }
   async function vkfSaveFeel(key) {
     const program = findAssignedProgramById(vkf.item.id);
     if (!program) return;
@@ -23606,6 +23794,7 @@ function getExercisePR(exerciseName) {
     if (!act) return;
     const a = act.dataset.act;
     if (a === "close") { closeFocusWorkout(); return; }
+    if (a === "share") { vkfShareImage(); return; }
     if (a === "begin") { vkf.start = Date.now(); vkfRenderWorkout(); vkfRoot().scrollTop = 0; return; }
     if (a === "sound") {
       const on = !vkSoundOn();
