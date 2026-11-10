@@ -4040,6 +4040,9 @@
   .vkf-pick small{ display:block; font-size:12px; color:#98a1ad; margin-top:1px; }
   .vkf-pick .em{ width:34px; height:34px; border-radius:10px; background:#0e1116; display:grid; place-items:center; font-size:17px; flex-shrink:0; }
   .vk-ex-thumb{ background-color:#3a211f !important; background-size:cover !important; background-position:center !important; font-size:0 !important; }
+  .vkf-video{ background-size:150% auto !important; background-position:50% 40% !important; }
+  .dpp-ex-avatar{ overflow:hidden; }
+  .dpp-ex-avatar img{ transform:scale(1.8); transform-origin:50% 42%; }
   .vkf-pick .em.vk-ex-thumb{ width:46px; height:34px; }
   .dpp-own-hit-name{ display:inline-flex; align-items:center; gap:10px; min-width:0; flex:1 1 auto; overflow-wrap:anywhere; }
   .dpp-own-hit > span:last-child{ flex:none; white-space:nowrap; }
@@ -8968,13 +8971,31 @@ var DPP_IMG = [
   };
   const VK_EMPTY_PHOTO = "1585222107521-2438128289fd";
   // Type økt for valg av bilde. Utholdenhetsøkter fra malene lagres som styrke, så malen må sjekkes.
-  // Lite bilde av øvelsen (fra videoen) i lister – emoji bare når øvelsen mangler video
+  // Små øvelsesbilder i lister: gratis bilder (Unsplash) etter muskelgruppe – uten tekst på bildet
+  const VK_EX_CAT_PHOTOS = {
+    legs: "1761839258420-5c3e2f2e2a74",     // knebøy
+    hinge: "1521804906057-1df8fdb718b7",    // markløft
+    push: "1616803689943-5601631c7fec",     // push-up
+    pull: "1677165733273-dcc3724c00e8",     // pull-up
+    core: "1717821681365-36b0da044a75",     // planke
+    cardio: "1648995361141-30676a75fd27",   // løping
+    mobility: "1599447332412-6bc6830c815a"  // tøying
+  };
+  function vkExCatKey(ex) {
+    const name = String((ex && ex.name) || "");
+    const inLib = eq => (typeof SWAP_LIBRARY !== "undefined" && SWAP_LIBRARY[eq] || []).some(x => x.name === name);
+    if (inLib("Kondisjon") || /løp|jogg|tredemølle|gåtur|gange|sykkel|romaskin|ellipse|sone 2|intervall|4x4|4×4/i.test(name)) return "cardio";
+    if (inLib("Mobilitet") || /tøy|mobilitet|stretch|yoga/i.test(name)) return "mobility";
+    let cat = ex && ex.category;
+    if (!cat && typeof SWAP_LIBRARY !== "undefined") { const hit = Object.values(SWAP_LIBRARY).flat().find(x => x.name === name); cat = hit && hit.category; }
+    return VK_EX_CAT_PHOTOS[cat] ? cat : "";
+  }
+  function vkExPhotoUrl(ex, w) {
+    const k = vkExCatKey(ex);
+    return vkPhoto(k ? VK_EX_CAT_PHOTOS[k] : VK_WORKOUT_PHOTOS.styrke, w || 160);
+  }
   function vkExIconHtml(ex, cls) {
-    let yt = "";
-    try { yt = extractYouTubeId(libraryVideoForName(ex.name) || ex.videoUrl || ""); } catch (e) {}
-    return yt
-      ? `<span class="${cls} vk-ex-thumb" style="background-image:url('https://img.youtube.com/vi/${yt}/mqdefault.jpg')" aria-hidden="true"></span>`
-      : `<span class="${cls}" aria-hidden="true">${escapeExHtml(ex.emoji || "💪")}</span>`;
+    return `<span class="${cls} vk-ex-thumb" style="background-image:url('${vkExPhotoUrl(ex, 160)}')" aria-hidden="true"></span>`;
   }
   const VK_CARDIO_RE = /løp|jogg|tredemølle|gå\b|gåtur|gange|sone 2|intervall|4x4|4×4|sprint|bakke/i;
   // Omtrentlig tid for én øvelse: øvelser på tid teller med sin faktiske tid (f.eks. 50 min gåtur)
@@ -19669,7 +19690,7 @@ var DPP_IMG = [
       if (!newId || newId === av.dataset.ytId) return;
       av.dataset.ytId = newId;
       const img = av.querySelector("img");
-      if (img) img.src = `https://img.youtube.com/vi/${newId}/hqdefault.jpg`;
+      if (img) img.src = `https://img.youtube.com/vi/${newId}/hq2.jpg`;
     });
   }
   loadSharedExerciseLibrary(SWAP_LIBRARY, () => { try { refreshExerciseVideosInModal(); } catch (e) {} });
@@ -20864,7 +20885,7 @@ function getExercisePR(exerciseName) {
 
       if (youtubeId) {
         avatar.innerHTML =
-          `<img src="https://img.youtube.com/vi/${youtubeId}/hqdefault.jpg" alt="${escapeExHtml(ex.name)}"/>` +
+          `<img src="https://img.youtube.com/vi/${youtubeId}/hq2.jpg" alt="${escapeExHtml(ex.name)}"/>` +
           `<div class="dpp-ex-play"><span>\u25b6</span></div>`;
         avatar.title = "Spill video";
         // Lagres på knappen, så refreshExerciseVideosInModal() kan bytte til
@@ -22666,7 +22687,7 @@ function getExercisePR(exerciseName) {
   // Bilde av øvelsen: fra videoen hvis den finnes, ellers øktas bilde
   function vkfExThumb(ex, item) {
     const yt = extractYouTubeId(libraryVideoForName(ex.name) || ex.videoUrl);
-    return yt ? `https://img.youtube.com/vi/${yt}/mqdefault.jpg` : vkPhoto(vkWorkoutPhotoId(item), 240);
+    return vkExPhotoUrl(ex, 240); // gratis bilde etter muskelgruppe – uten tekst
   }
   function vkfSetText(ex, v) {
     if (!v) return "";
@@ -23129,7 +23150,7 @@ function getExercisePR(exerciseName) {
       <div class="vkf-bars">${bars}</div>
       <div class="vk-viewswitch" role="group" aria-label="Velg visning" style="margin:0;"><button type="button" class="on" aria-pressed="true">▶ Én og én øvelse</button><button type="button" data-act="list">☰ Alle øvelser</button></div>
       <div class="vkf-ex">
-        ${yt ? `<div class="vkf-video" data-act="video" data-yt="${yt}" style="background-image:url('https://img.youtube.com/vi/${yt}/hqdefault.jpg')"><div class="vkf-play"><svg width="22" height="22" viewBox="0 0 24 24" fill="#ff613e"><path d="M7 4.8v14.4a1 1 0 0 0 1.5.86l11.6-7.2a1 1 0 0 0 0-1.72L8.5 3.94A1 1 0 0 0 7 4.8z"/></svg></div></div>` : `<div class="vkf-ex-photo" aria-hidden="true" style="background-image:url('${vkPhoto(VK_WORKOUT_PHOTOS[/tredemølle|mølle|gåing|gange|løp|jogg|ellipse|sykkel|spinning|ergometer|romaskin|kondisjon|intervall/i.test(ex.name || "") && vkWorkoutPhotoKey(item) !== "utholdenhet" ? "utholdenhet" : ""] || vkWorkoutPhotoId(item), 800)}')"></div>`}
+        ${yt ? `<div class="vkf-video" data-act="video" data-yt="${yt}" style="background-image:url('https://img.youtube.com/vi/${yt}/hq2.jpg')"><div class="vkf-play"><svg width="22" height="22" viewBox="0 0 24 24" fill="#ff613e"><path d="M7 4.8v14.4a1 1 0 0 0 1.5.86l11.6-7.2a1 1 0 0 0 0-1.72L8.5 3.94A1 1 0 0 0 7 4.8z"/></svg></div></div>` : `<div class="vkf-ex-photo" aria-hidden="true" style="background-image:url('${vkPhoto(VK_WORKOUT_PHOTOS[/tredemølle|mølle|gåing|gange|løp|jogg|ellipse|sykkel|spinning|ergometer|romaskin|kondisjon|intervall/i.test(ex.name || "") && vkWorkoutPhotoKey(item) !== "utholdenhet" ? "utholdenhet" : ""] || vkWorkoutPhotoId(item), 800)}')"></div>`}
         <div class="vkf-body">
           <div class="vkf-titlebox"><button type="button" class="vkf-swap" data-act="swap" aria-label="Bytt øvelse" title="Bytt øvelse"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4 3 8l4 4"/><path d="M3 8h13a4 4 0 0 1 4 4"/><path d="m17 20 4-4-4-4"/><path d="M21 16H8a4 4 0 0 1-4-4"/></svg></button><div class="vkf-k"><i></i>Øvelse ${cur + 1} av ${exercises.length}</div><h2>${escapeHtmlText(ex.name || "")}<button type="button" class="vkf-info" data-act="info" aria-label="Om øvelsen: muskler og teknikk">i</button>${exPerSide(ex.name) ? `<span class="vkf-side">per ${exPerSide(ex.name)}</span>` : ""}</h2></div>
           ${coachTipHtml(ex)}
