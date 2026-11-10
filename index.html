@@ -4115,6 +4115,8 @@
   /* Ukesmål og muskelkart */
   .dpp-recipe-sheet .vk-goalwk{ box-shadow:none !important; padding:4px 0 !important; }
   .dpp-recipe-sheet .vk-muscle-figs svg{ width:74px; }
+  .vk-goalinfo{ display:inline-grid; place-items:center; width:22px; height:22px; margin-left:8px; vertical-align:3px; border-radius:50%; border:1.5px solid #ff9178; background:#171b22; color:#ff613e; font:800 13px/1 Georgia, "Times New Roman", serif; font-style:italic; cursor:pointer; padding:0; touch-action:manipulation; }
+  .vk-goalinfo:active{ transform:scale(.92); }
   .vk-goalrow{ display:flex; align-items:center; gap:12px; width:100%; text-align:left; border:0; background:#171b22; border-radius:18px; padding:10px 14px 10px 10px; font:inherit; color:#f2f4f7; cursor:pointer; box-shadow:0 1px 2px rgba(0,0,0,.04), 0 8px 20px -14px rgba(0,0,0,.25); touch-action:manipulation; }
   .vk-goalrow:active{ transform:scale(.985); }
   .vk-goalrow-ring{ width:40px; height:40px; flex:none; }
@@ -8354,8 +8356,6 @@ var DPP_IMG = [
       // Mens dataene hentes vises plassholdere – ikke «ingenting planlagt» som så forsvinner
       if (root.classList.contains("dpp-syncing")) return;
       list.appendChild(vkEmptyDay("Ingenting planlagt denne dagen", "Trykk på + hvis du vil legge til noe."));
-      // Ukesmålet og muskelkartet vises også på hviledager
-      try { const wk = vkGoalCard(); if (wk) { const sec = vkSection("Trening"); sec.appendChild(wk); list.appendChild(sec); } } catch (e) {}
       return;
     }
 
@@ -9027,7 +9027,22 @@ var DPP_IMG = [
     const fig = side => EX_BODY[side].map(([k, pts]) => pts.map(pt => `<polygon points="${pt}" fill="${k === "head" || k === "neck" || k === "knees" ? "#efe9e1" : col(lvl[k])}"/>`).join("")).join("");
     return `<svg viewBox="0 0 100 222" aria-hidden="true">${fig("a")}</svg><svg viewBox="0 0 100 222" aria-hidden="true">${fig("p")}</svg>`;
   }
-  // Smal rad under Trening – trykk for å åpne hele ukesoversikten
+  // Liten ⓘ ved overskriften «Trening» – åpner ukesoversikten (ukesmål og muskelkart) som et vindu
+  function vkAddGoalInfo(sec) {
+    const anchor = viewedDate || new Date();
+    const st = vkWeekStats(anchor);
+    if (!st.due && !st.done && !Object.keys(vkMuscleWeek(anchor)).length) return;
+    const h = sec.querySelector(".vk-sec-head h2");
+    if (!h) return;
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "vk-goalinfo";
+    b.setAttribute("aria-label", "Se denne uka: økter og muskelkart");
+    b.textContent = "i";
+    b.addEventListener("click", () => { const sheet = favSheet("Denne uka"); const full = vkGoalCardFull(); if (full) sheet.appendChild(full); });
+    h.appendChild(b);
+  }
+  // Smal rad under Trening – trykk for å åpne hele ukesoversikten (brukes ikke lenger)
   function vkGoalCard() {
     const anchor = viewedDate || new Date();
     const st = vkWeekStats(anchor);
@@ -9701,11 +9716,9 @@ var DPP_IMG = [
   }
   function vkFinishDay(vk) {
     const freePhotos = (typeof mealPhotos !== "undefined") ? vkFreePhotoRows() : [];
-    let vkWeekEl = null;
-    try { vkWeekEl = vkGoalCard(); } catch (e) { console.warn("Ukesmål:", e); }
-    if (vk.training.length || vkWeekEl) {
+    if (vk.training.length) {
       const sec = vkSection("Trening");
-      if (vkWeekEl) sec.appendChild(vkWeekEl);
+      try { vkAddGoalInfo(sec); } catch (e) { console.warn("Ukesmål:", e); }
       vk.training.forEach(c => sec.appendChild(c));
       list.appendChild(sec);
     }
