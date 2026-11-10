@@ -2338,7 +2338,7 @@
   }
   .dpp-ex-modal.show{ display:flex; }
   .dpp-ex-sheet{
-    width:100%; max-width:480px; max-height:88vh; overflow-y:auto;
+    width:100%; max-width:480px; max-height:88vh; overflow-y:auto; overflow-x:hidden; box-sizing:border-box;
     background:linear-gradient(180deg, #171b22, #171b22);
     border-radius:26px 26px 0 0; padding:16px 16px 22px;
     box-shadow:0 -20px 50px rgba(0,0,0,.3);
@@ -2477,7 +2477,7 @@
     background:linear-gradient(135deg,rgba(31,36,45,.08),rgba(31,36,45,.05));
     border-color:rgba(38,43,52,.35);
   }
-  .dpp-ex-row{ display:flex; gap:11px; align-items:flex-start; width:100%; padding:11px 12px 10px; }
+  .dpp-ex-row{ display:flex; gap:11px; align-items:flex-start; width:100%; box-sizing:border-box; min-width:0; padding:11px 12px 10px; }
 
   /* Thumbnail — fast størrelse uansett hvor lang teksten ved siden av er
      (var tidligere align-items:stretch, som strakk bildet til å matche
