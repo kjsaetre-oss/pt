@@ -2427,6 +2427,15 @@
   .dpp-quick-chip{ border:1.5px solid #262b34; background:#171b22; border-radius:999px; padding:8px 13px; font:inherit; font-weight:800; font-size:.85rem; color:#f2f4f7; cursor:pointer; touch-action:manipulation; }
   .dpp-quick-chip.on{ background:#ff441b; border-color:#ff441b; color:#ffffff; }
   .vk-sport .dpp-quick-chips{ display:flex; flex-wrap:wrap; gap:6px; margin-bottom:10px; }
+  .vk-rep{ margin-top:8px; width:100%; min-width:0; flex:1 1 100%; box-sizing:border-box; }
+  .vk-rep .dpp-weekday-row{ grid-template-columns:repeat(7, minmax(0, 1fr)); gap:4px; }
+  .vk-rep .dpp-weekday{ min-width:0; padding-left:0; padding-right:0; }
+  .vk-rep .dpp-own-input[type=date]{ width:100%; box-sizing:border-box; }
+  .vk-rep .dpp-quick-chips{ align-items:center; }
+  .vk-rep .vk-rep-n{ width:86px; min-height:38px; padding:6px 10px; margin:0; text-align:center; border-radius:999px; }
+  .vk-rep .vk-rep-n.on{ border-color:#ff613e; box-shadow:0 0 0 2px rgba(0,0,0,.18); }
+  .vk-rep-sum{ font-size:.86rem; color:#98a1ad; margin:4px 0 2px; line-height:1.4; }
+  .vk-rep-sum b{ color:#f2f4f7; }
 
   .dpp-meal-extra{ display:table; margin-top:8px; padding:4px 10px; border-radius:999px; background:rgba(0,0,0,.22); color:#ffffff; font-size:.76rem; font-weight:800; }
   .dpp-portion-row{ display:grid; grid-template-columns:repeat(6,1fr); gap:6px; }
@@ -22008,18 +22017,79 @@ function getExercisePR(exerciseName) {
       h.textContent = sec.label;
       box.appendChild(h);
       items.forEach(w => {
-        const b = libraryItemButton(w, async () => {
-          const dayValue = startDateInput.value || toDateValue(new Date());
-          b.disabled = true;
-          const ok = await addFavoriteToDay(w, dayValue);
-          b.disabled = false;
-          if (!ok) return;
-          const d = parseDateValue(dayValue);
-          showAdded("Lagt inn " + (dayValue === toDateValue(new Date()) ? "i dag" : (d ? d.toLocaleDateString("nb-NO", { weekday: "long", day: "numeric", month: "short" }) : dayValue)));
+        const b = libraryItemButton(w, () => {
+          // Åpner økta: der velger kunden i dag, en annen dag eller faste dager i flere uker
+          openFavoriteWorkoutDetail(w.id);
         });
         box.appendChild(b);
       });
     });
+  }
+  // 🔁 Velg dager, startdato og antall uker (2026-11-10) – brukes for all trening kunden legger inn.
+  // onSave(dates) får en sortert liste med datoer og skal returnere true når det er lagret.
+  function vkRepeatPicker(startValue, onSave) {
+    const WD = [["mon", "Ma"], ["tue", "Ti"], ["wed", "On"], ["thu", "To"], ["fri", "Fr"], ["sat", "Lø"], ["sun", "Sø"]];
+    const first = parseDateValue(startValue) || new Date();
+    const st = { from: toDateValue(first), days: [getWeekdayKeyFromDate(first)], weeks: 4 };
+    const box = document.createElement("div");
+    box.className = "dpp-own vk-sport vk-rep";
+    box.innerHTML = `<div class="dpp-own-label">Hvilke dager?</div>
+      <div class="dpp-weekday-row">${WD.map(([d, l]) => `<button type="button" class="dpp-weekday" data-day="${d}">${l}</button>`).join("")}</div>
+      <div class="dpp-own-label">Fra og med</div>
+      <input class="dpp-own-input" type="date" data-rep-from value="${st.from}" />
+      <div class="dpp-own-label">Hvor mange uker?</div>
+      <div class="dpp-quick-chips" data-q="w">${[1, 2, 4, 8, 12].map(n => `<button type="button" class="dpp-quick-chip" data-v="${n}">${n === 1 ? "1 uke" : n + " uker"}</button>`).join("")}<input class="dpp-own-input vk-rep-n" type="text" inputmode="numeric" maxlength="2" placeholder="Antall" aria-label="Antall uker" data-rep-n /></div>
+      <div class="vk-rep-sum" data-rep-sum></div>
+      <button type="button" class="dpp-own-save dpp-fav-use" data-rep-save></button>`;
+    const nEl = box.querySelector("[data-rep-n]");
+    const fromEl = box.querySelector("[data-rep-from]");
+    const dates = () => {
+      const start = parseDateValue(st.from) || new Date(), out = [];
+      for (let i = 0; i < st.weeks * 7; i++) { const dt = addDays(start, i); if (st.days.includes(getWeekdayKeyFromDate(dt))) out.push(toDateValue(dt)); }
+      return out;
+    };
+    const paint = () => {
+      box.querySelectorAll(".dpp-weekday").forEach(b => b.classList.toggle("on", st.days.includes(b.dataset.day)));
+      const custom = ![1, 2, 4, 8, 12].includes(st.weeks);
+      box.querySelectorAll('[data-q="w"] [data-v]').forEach(b => b.classList.toggle("on", Number(b.dataset.v) === st.weeks));
+      nEl.classList.toggle("on", custom);
+      const list = dates();
+      const names = WD.filter(([d]) => st.days.includes(d)).map(([, l]) => l.toLowerCase()).join(", ");
+      const last = list.length ? parseDateValue(list[list.length - 1]) : null;
+      box.querySelector("[data-rep-sum]").innerHTML = list.length
+        ? `<b>${list.length} økt${list.length > 1 ? "er" : ""}</b> · ${escapeExHtml(names)} · ${st.weeks} uke${st.weeks > 1 ? "r" : ""}${last ? " · siste " + escapeExHtml(last.toLocaleDateString("nb-NO", { day: "numeric", month: "short" })) : ""}`
+        : "Velg minst én dag.";
+      const sv = box.querySelector("[data-rep-save]");
+      sv.textContent = list.length ? `Legg inn ${list.length} økt${list.length > 1 ? "er" : ""}` : "Velg minst én dag";
+      sv.disabled = !list.length;
+    };
+    box.addEventListener("click", async (e) => {
+      const d = e.target.closest(".dpp-weekday");
+      if (d) { const k = d.dataset.day; st.days = st.days.includes(k) ? st.days.filter(x => x !== k) : st.days.concat(k); paint(); return; }
+      const w = e.target.closest('[data-q="w"] [data-v]');
+      if (w) { st.weeks = Number(w.dataset.v); nEl.value = ""; paint(); return; }
+      const sv = e.target.closest("[data-rep-save]");
+      if (!sv) return;
+      const list = dates();
+      if (!list.length) return;
+      sv.disabled = true; sv.textContent = "Lagrer …";
+      let ok = false;
+      try { ok = await onSave(list); } catch (err) { ok = false; }
+      if (!ok && box.isConnected) paint();
+    });
+    nEl.addEventListener("input", () => {
+      const n = parseInt(nEl.value, 10);
+      if (n >= 1 && n <= 52) { st.weeks = n; paint(); }
+    });
+    nEl.addEventListener("keydown", (e) => { if (e.key === "Enter") nEl.blur(); });
+    fromEl.addEventListener("change", () => {
+      const v = parseDateValue(fromEl.value);
+      if (!v) { fromEl.value = st.from; return; }
+      st.from = toDateValue(v);
+      paint();
+    });
+    paint();
+    return box;
   }
   function openFavoriteWorkoutDetail(favId) {
     const fav = findLibraryWorkout(favId);
@@ -22125,43 +22195,22 @@ function getExercisePR(exerciseName) {
     });
     actions.appendChild(planBtn);
     actions.appendChild(dayList);
-    // 🔁 Gjenta hver uke: samme økt på faste ukedager i et antall uker
+    // 🔁 Velg dager og antall uker – for alle kunder (2026-11-10)
     const repBtn = document.createElement("button");
     repBtn.type = "button";
     repBtn.className = "dpp-fav-plan";
-    repBtn.textContent = "🔁 Gjenta hver uke";
-    const repBox = document.createElement("div");
-    repBox.className = "dpp-own vk-sport";
-    repBox.hidden = true;
-    const WD2 = [["mon", "Ma"], ["tue", "Ti"], ["wed", "On"], ["thu", "To"], ["fri", "Fr"], ["sat", "Lø"], ["sun", "Sø"]];
-    const rep = { days: [getWeekdayKeyFromDate(parseDateValue(dayValue))], weeks: 8 };
-    repBox.innerHTML = `<div class="dpp-own-label">Hvilke dager?</div>
-      <div class="dpp-weekday-row">${WD2.map(([d, l]) => `<button type="button" class="dpp-weekday" data-day="${d}">${l}</button>`).join("")}</div>
-      <div class="dpp-own-label">Hvor lenge?</div>
-      <div class="dpp-quick-chips" data-q="w">${[4, 8, 12].map(n => `<button type="button" class="dpp-quick-chip${n === 8 ? " on" : ""}" data-v="${n}">${n} uker</button>`).join("")}</div>
-      <button type="button" class="dpp-own-save" data-rep-save></button>`;
-    const repPaint = () => {
-      repBox.querySelectorAll(".dpp-weekday").forEach(b => b.classList.toggle("on", rep.days.includes(b.dataset.day)));
-      repBox.querySelectorAll('[data-q="w"] [data-v]').forEach(b => b.classList.toggle("on", Number(b.dataset.v) === rep.weeks));
-      const n = rep.days.length;
-      repBox.querySelector("[data-rep-save]").textContent = n ? `Legg inn ${n} gang${n > 1 ? "er" : ""} i uka i ${rep.weeks} uker` : "Velg minst én dag";
-    };
-    repBox.addEventListener("click", async (e) => {
-      const d = e.target.closest(".dpp-weekday"); if (d) { const k = d.dataset.day; rep.days = rep.days.includes(k) ? rep.days.filter(x => x !== k) : rep.days.concat(k); repPaint(); return; }
-      const w = e.target.closest('[data-q="w"] [data-v]'); if (w) { rep.weeks = Number(w.dataset.v); repPaint(); return; }
-      const sv = e.target.closest("[data-rep-save]"); if (!sv || !rep.days.length) return;
-      const start = parseDateValue(dayValue), dates = [];
-      for (let i = 0; i < rep.weeks * 7; i++) { const dt = addDays(start, i); if (rep.days.includes(getWeekdayKeyFromDate(dt))) dates.push(toDateValue(dt)); }
-      sv.disabled = true; sv.textContent = "Lagrer …";
+    repBtn.textContent = "🔁 Velg dager og gjenta i flere uker";
+    const repBox = vkRepeatPicker(dayValue, async (dates) => {
       const ok = await addFavoriteToDay(fav, dates);
-      sv.disabled = false;
-      if (!ok) { repPaint(); return; }
+      if (!ok) return false;
       closeFavoriteWorkoutsModal();
-      showProgressToast("🔁 " + String(fav.title || "Økta") + " er lagt inn " + dates.length + " ganger");
+      showProgressToast("🔁 " + String(fav.title || "Økta") + " er lagt inn " + dates.length + " gang" + (dates.length > 1 ? "er" : ""));
+      return true;
     });
-    repBtn.addEventListener("click", () => { repBox.hidden = !repBox.hidden; repPaint(); });
-    // Bare på treningssidene (figgjobtk.no/trening og PT-appen) – Tro & Livsstil-appen er uendret
-    if (window.TL_STANDALONE) { actions.appendChild(repBtn); actions.appendChild(repBox); }
+    repBox.hidden = true;
+    repBtn.addEventListener("click", () => { repBox.hidden = !repBox.hidden; });
+    actions.appendChild(repBtn);
+    actions.appendChild(repBox);
     const back = document.createElement("button");
     back.type = "button";
     back.textContent = "‹ Mine økter";
@@ -22687,6 +22736,7 @@ function getExercisePR(exerciseName) {
       <input class="dpp-own-input" id="dppOwnSearch" type="text" placeholder="Søk – f.eks. knebøy, planke, roing" autocomplete="off" />
       <div class="dpp-own-results"></div>
       <button class="dpp-own-save" type="button">${adjust ? "Legg inn " + escapeExHtml(quickDayText()) : "Lagre økta"}</button>
+      ${adjust ? `<button class="dpp-meal-save-only" type="button" data-own-rep="1">🔁 Legg inn på flere dager</button>` : ""}
       ${adjust ? `<button class="dpp-meal-save-only" type="button" data-own-keep="1">Lagre også som egen økt i Mine økter</button>` : ""}
       <div class="dpp-own-msg" aria-live="polite"></div>`;
     if (adjust) wrap.insertAdjacentHTML("afterbegin", `<p class="dpp-own-empty" style="margin:-4px 0 4px;">Endre sett, repetisjoner og øvelser slik det passer deg. Originalen fra coachen endres ikke.</p>`);
@@ -22798,6 +22848,24 @@ function getExercisePR(exerciseName) {
         const item = (data.items || []).find(it => it.id === favoriteProgramId(copy));
         if (item) openFocusWorkout(item);
       });
+      const repEl = wrap.querySelector("[data-own-rep]");
+      if (repEl) {
+        let picker = null;
+        repEl.addEventListener("click", () => {
+          if (picker) { picker.hidden = !picker.hidden; return; }
+          picker = vkRepeatPicker(quickDayValue(), async (dates) => {
+            if (!draft.exercises.length) { msgEl.textContent = "Økta må ha minst én øvelse."; return false; }
+            const title = nameEl.value.trim() || (existing && existing.title) || "Min økt";
+            const copy = { id: "tilpasset-" + Date.now().toString(36) + Math.random().toString(36).slice(2, 5), title, own: true, programType: (existing && existing.programType) || "styrke", exercises: deepClone(draft.exercises) };
+            const ok = await addFavoriteToDay(copy, dates);
+            if (!ok) return false;
+            closeFavoriteWorkoutsModal();
+            showProgressToast("🔁 «" + title + "» er lagt inn " + dates.length + " gang" + (dates.length > 1 ? "er" : ""));
+            return true;
+          });
+          repEl.insertAdjacentElement("afterend", picker);
+        });
+      }
       if (keepEl) keepEl.addEventListener("click", async () => {
         if (!draft.exercises.length) { msgEl.textContent = "Økta må ha minst én øvelse."; return; }
         const title = nameEl.value.trim() || (existing && existing.title) || "Min økt";
