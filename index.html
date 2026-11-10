@@ -4761,13 +4761,21 @@ var DPP_IMG = [
   getSupabaseClient().catch(() => {});
 
   const root = document.getElementById("dppApp");
+  // Merk innholdet med hvilken kopi som styrer det, så en gammel kopi ikke tar over igjen
+  if (root) root.dataset.dppInstance = String(DPP_INSTANCE);
   const dppWatchdog = setInterval(() => {
     if (!dppIsCurrent()) { clearInterval(dppWatchdog); return; }
     if (root && root.isConnected) return;
     const fresh = document.getElementById("dppApp");
     if (!fresh) return; // kunden er på en annen side – vent til kalenderen vises igjen
+    if (fresh.dataset.dppInstance) { clearInterval(dppWatchdog); return; } // en annen (nyere) kopi har allerede tatt over
+    if (!fresh.__dppSeen) { fresh.__dppSeen = true; return; } // gi det nye innholdets eget skript en sjanse til å starte først
     clearInterval(dppWatchdog);
-    const code = DPP_SELF_SCRIPT && DPP_SELF_SCRIPT.textContent;
+    // Start den NYESTE koden: skriptet som følger med det nye innholdet (f.eks. en nylig limt inn versjon),
+    // og bare vår egen (kanskje gamle) kode hvis det ikke finnes noe der.
+    const host = fresh.closest(".code-block") || fresh.parentElement;
+    const blockScript = host ? [...host.querySelectorAll("script")].find(sc => /__dppVanekalenderInstance/.test(sc.textContent || "")) : null;
+    const code = (blockScript && blockScript.textContent) || (DPP_SELF_SCRIPT && DPP_SELF_SCRIPT.textContent);
     if (!code) return;
     window.__dppVanekalenderInstance++; // denne (gamle) kopien stopper
     console.info("Vanekalender: innholdet ble byttet ut – starter på nytt.");
