@@ -21810,6 +21810,24 @@ function getExercisePR(exerciseName) {
     return coachLibraryWorkouts().concat(favs.filter(f => f.source === "own"), favs.filter(f => f.source === "fav"),
       TRAINING_TEMPLATES.map(t => ({ ...t, source: "tpl", exercises: deepClone(t.exercises) })));
   }
+  // «Legg til økta» fra en Verd å vite-artikkel: artikkelen legger igjen en beskjed og går til forsiden,
+  // og kalenderen åpner økta (f.eks. 4×4-intervaller) slik at kunden kan legge den inn i dag eller en annen dag.
+  function vkHandleOpenRequest() {
+    let id = "";
+    try {
+      const raw = localStorage.getItem("vk_open_workout");
+      if (raw) {
+        localStorage.removeItem("vk_open_workout");
+        const o = JSON.parse(raw);
+        if (o && o.id && Date.now() - Number(o.at || 0) < 10 * 60 * 1000) id = String(o.id);
+      }
+    } catch (e) {}
+    const m = String(location.hash || "").match(/^#okt=([\w-]+)$/);
+    if (!id && m) id = m[1];
+    if (m) { try { history.replaceState(null, "", location.pathname + location.search); } catch (e) {} } // ikke åpne igjen ved neste oppdatering
+    if (!id) return;
+    setTimeout(() => { try { if (findLibraryWorkout(id)) openFavoriteWorkoutDetail(id); } catch (e) {} }, 400);
+  }
   function findLibraryWorkout(id) { return libraryWorkouts().find(w => w.id === id) || null; }
   const LIBRARY_SECTIONS = [
     { source: "coach", label: "Fra coachen" },
@@ -25024,6 +25042,7 @@ function getExercisePR(exerciseName) {
     const onVisible = () => { if (document.visibilityState === "visible") refreshFromCloud(false); };
     document.addEventListener("visibilitychange", onVisible);
     window.addEventListener("pageshow", (e) => { if (e.persisted) refreshFromCloud(true); });
+    vkHandleOpenRequest();
     window.addEventListener("focus", () => refreshFromCloud(false));
     window.addEventListener("online", () => refreshFromCloud(true));
     setInterval(() => { if (document.visibilityState === "visible") refreshFromCloud(false); }, 3 * 60 * 1000);
