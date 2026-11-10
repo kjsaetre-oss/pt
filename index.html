@@ -2843,6 +2843,13 @@
     background:rgba(255,76,36,.14); border-color:rgba(255,76,36,.4); color:#ff4c24;
   }
 
+  /* Fart og stigning */
+  .dpp-cardio-row{ display:flex; flex-wrap:wrap; gap:10px; margin:8px 0 4px; }
+  .dpp-cardio-row label{ display:inline-flex; align-items:center; gap:6px; font-size:.8rem; font-weight:800; color:#f2f4f7; }
+  .dpp-cardio-row input{ width:76px; height:36px; border-radius:10px; border:1px solid #262b34; background:#171b22; font:inherit; font-size:16px; font-weight:800; text-align:center; color:#ff2e00; }
+  .dpp-cardio-row em{ font-style:normal; font-size:.78rem; color:#98a1ad; font-weight:700; }
+  .vkf-cardio{ justify-content:center; margin:4px 0 8px; }
+  .dpp-cardio-saved{ font-size:.74rem; font-weight:700; color:#98a1ad; align-self:center; }
   /* RPE row */
   .dpp-rpe-row {
     margin-top: 6px;
@@ -8953,6 +8960,7 @@ var DPP_IMG = [
   };
   const VK_EMPTY_PHOTO = "1585222107521-2438128289fd";
   // Type økt for valg av bilde. Utholdenhetsøkter fra malene lagres som styrke, så malen må sjekkes.
+  const VK_CARDIO_RE = /løp|jogg|tredemølle|gå\b|gåtur|gange|sone 2|intervall|4x4|4×4|sprint|bakke/i;
   // Omtrentlig tid for én øvelse: øvelser på tid teller med sin faktiske tid (f.eks. 50 min gåtur)
   function vkExSeconds(ex) {
     const sets = Number(ex.sets) || 1;
@@ -20191,7 +20199,10 @@ function getExercisePR(exerciseName) {
     const prevHistory = Array.isArray(existing?.history) ? existing.history.slice() : [];
     const rpeNow = opts.rpe != null ? opts.rpe : null;
     // Lagres øvelsen på nytt samme dag (f.eks. kunden retter et tall), erstattes dagens linje.
-    const history = [...prevHistory.filter(h => h.date !== today), { date: today, sets: validSets, ...(rpeNow != null ? { rpe: rpeNow } : {}) }].slice(-30);
+    const cardioExtra = {};
+    if (Number.isFinite(opts.speed) && opts.speed > 0) cardioExtra.speed = Math.round(opts.speed * 10) / 10;
+    if (Number.isFinite(opts.incline) && opts.incline >= 0) cardioExtra.incline = Math.round(opts.incline * 10) / 10;
+    const history = [...prevHistory.filter(h => h.date !== today), { date: today, sets: validSets, ...(rpeNow != null ? { rpe: rpeNow } : {}), ...cardioExtra }].slice(-30);
 
     // Faglig progresjon: hvis alle serier n\u00e5dde m\u00e5l-reps, foresl\u00e5 litt mer vekt
     // neste gang \u2014 KUN for \u00f8velser der kunden faktisk logger vekt (kg > 0).
@@ -21255,8 +21266,9 @@ function getExercisePR(exerciseName) {
               const setsText = (h.sets || [])
                 .map(s => ex.tracksWeight ? `${s.kg} kg \u00d7 ${s.reps}` : `${s.reps}`)
                 .join(" \u00b7 ");
+              const cTxt = [h.speed != null ? String(h.speed).replace(".", ",") + " km/t" : "", h.incline != null ? String(h.incline).replace(".", ",") + " % stigning" : ""].filter(Boolean).join(" · ");
               return `<div class="dpp-ex-history-row">` +
-                `<span class="dpp-ex-history-row-text"><span>${h.date}</span><span>${setsText}</span></span>` +
+                `<span class="dpp-ex-history-row-text"><span>${h.date}</span><span>${setsText}${cTxt ? " · " + cTxt : ""}</span></span>` +
                 `<button type="button" class="dpp-ex-history-delete" data-date="${h.date}" title="Slett denne loggf\u00f8ringen">\u2715</button>` +
                 `</div>`;
             })
@@ -21284,7 +21296,8 @@ function getExercisePR(exerciseName) {
           saveLogBtn.disabled = true;
           saveLogBtn.textContent = "Lagrer...";
           try {
-            const result = await recordExerciseResult(ex.name, sets, { targetReps: ex.targetReps, isHold: ex.isHold, tracksWeight: ex.tracksWeight, programId: item.id, baseTarget: ex.baseTargetReps || ex.targetReps, plannedSets: setInputs.length });
+            const cardioNum = k => { const el = body.querySelector(`[data-cardio="${k}"]`); if (!el || !String(el.value).trim()) return null; const n = parseFloat(String(el.value).replace(",", ".")); return Number.isFinite(n) ? n : null; };
+            const result = await recordExerciseResult(ex.name, sets, { targetReps: ex.targetReps, isHold: ex.isHold, tracksWeight: ex.tracksWeight, programId: item.id, baseTarget: ex.baseTargetReps || ex.targetReps, plannedSets: setInputs.length, speed: cardioNum("speed"), incline: cardioNum("incline") });
             // VIKTIG: "\u2713 Lagret" skal kun vises n\u00e5r det faktisk lyktes.
             // recordExerciseResult() kaster ALDRI en feil ved lagringssvikt \u2014
             // den returnerer { saved:false } og viser sin egen feil-toast.
@@ -21402,10 +21415,45 @@ function getExercisePR(exerciseName) {
           body.appendChild(rpeRow);
         }
 
+        // Fart og stigning på løping, gange og annen kondisjon (valgfritt)
+        if (isUtholdenhet || (ex.isHold && VK_CARDIO_RE.test(ex.name || ""))) {
+          const lastC = (pr && Array.isArray(pr.history) ? pr.history.slice().reverse().find(h => h.speed != null || h.incline != null) : null) || {};
+          const cw = document.createElement("div");
+          cw.className = "dpp-cardio-row";
+          const fmtC = v => v == null ? "" : String(v).replace(".", ",");
+          cw.innerHTML = `<label><span>Fart</span><input type="text" inputmode="decimal" data-cardio="speed" placeholder="f.eks. 10,5" value="${fmtC(lastC.speed)}" aria-label="Fart i km/t"><em>km/t</em></label>` +
+            `<label><span>Stigning</span><input type="text" inputmode="decimal" data-cardio="incline" placeholder="f.eks. 2" value="${fmtC(lastC.incline)}" aria-label="Stigning i prosent"><em>%</em></label>`;
+          cw.querySelectorAll("input").forEach(inp => inp.addEventListener("change", autoSaveLog));
+          body.appendChild(cw);
+        }
+
         body.appendChild(saveLogBtn);
         body.appendChild(savedNote);
         body.appendChild(prLine);
         body.appendChild(historyBox);
+      }
+
+      // Løpefaser (faste faser med tid): kunden kan logge fart og stigning
+      if (ex.durationSeconds && isUtholdenhet && VK_CARDIO_RE.test((ex.name || "") + " " + (ex.reps || ""))) {
+        const prC = getExercisePR(ex.name);
+        const lastC = (prC && Array.isArray(prC.history) ? prC.history.slice().reverse().find(h => h.speed != null || h.incline != null) : null) || {};
+        const todayC = prC && Array.isArray(prC.history) ? prC.history.find(h => h.date === toDateValue(new Date())) : null;
+        const fmtC = v => v == null ? "" : String(v).replace(".", ",");
+        const cw = document.createElement("div");
+        cw.className = "dpp-cardio-row";
+        cw.innerHTML = `<label><span>Fart</span><input type="text" inputmode="decimal" data-cardio="speed" placeholder="f.eks. 10,5" value="${fmtC((todayC || lastC).speed)}" aria-label="Fart i km/t"><em>km/t</em></label>` +
+          `<label><span>Stigning</span><input type="text" inputmode="decimal" data-cardio="incline" placeholder="f.eks. 2" value="${fmtC((todayC || lastC).incline)}" aria-label="Stigning i prosent"><em>%</em></label>` +
+          `<span class="dpp-cardio-saved" aria-live="polite">${todayC && (todayC.speed != null || todayC.incline != null) ? "✓ Lagret i dag" : (lastC.speed != null || lastC.incline != null ? "Sist: " + [lastC.speed != null ? fmtC(lastC.speed) + " km/t" : "", lastC.incline != null ? fmtC(lastC.incline) + " %" : ""].filter(Boolean).join(" · ") : "")}</span>`;
+        const num = k => { const v = String(cw.querySelector(`[data-cardio="${k}"]`).value).trim(); if (!v) return null; const n = parseFloat(v.replace(",", ".")); return Number.isFinite(n) ? n : null; };
+        const savedEl = cw.querySelector(".dpp-cardio-saved");
+        const saveC = async () => {
+          const speed = num("speed"), incline = num("incline");
+          if (speed == null && incline == null) return;
+          const res = await recordExerciseResult(ex.name, [{ kg: 0, reps: Number(ex.durationSeconds) || 0 }], { isHold: true, tracksWeight: false, speed, incline });
+          if (res && res.saved) savedEl.textContent = "✓ Lagret i dag";
+        };
+        cw.querySelectorAll("input").forEach(inp => inp.addEventListener("change", saveC));
+        body.appendChild(cw);
       }
 
       // Notat per øvelse: til meg selv, til coachen eller begge (felles med øktmodus)
@@ -23053,7 +23101,7 @@ function getExercisePR(exerciseName) {
       tune = `<div class="vkf-tune">
         ${ex.tracksWeight ? `<div class="vkf-step"><span>Kg</span><div class="vkf-step-row"><button type="button" data-tune="kg" data-d="-1" aria-label="Mindre vekt">−</button><input class="vkf-num" data-num="kg" inputmode="decimal" enterkeyhint="done" aria-label="Kg" value="${String(v.kg || 0).replace(".", ",")}"><button type="button" data-tune="kg" data-d="1" aria-label="Mer vekt">+</button></div></div>` : ""}
         <div class="vkf-step"${ex.tracksWeight ? "" : ' style="grid-column:1 / -1"'}><span>${(ex.isHold ? ((Number(v.reps) || 0) >= 60 ? "Tid" : "Sekunder") : "Reps") + (exPerSide(ex.name) ? " per " + exPerSide(ex.name) : "")}</span><div class="vkf-step-row"><button type="button" data-tune="reps" data-d="${ex.isHold ? -5 : -1}" aria-label="Færre">−</button><input class="vkf-num" data-num="reps" inputmode="${ex.isHold ? "text" : "numeric"}" enterkeyhint="done" aria-label="${ex.isHold ? "Tid" : "Reps"}" value="${vkfVal(ex, v.reps)}"><button type="button" data-tune="reps" data-d="${ex.isHold ? 5 : 1}" aria-label="Flere">+</button></div></div>
-      </div>${ex.isHold && Number(v.reps) > 0 ? `<button type="button" class="vkf-timer-start" data-act="timer-start"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.8v14.4a1 1 0 0 0 1.5.86l11.6-7.2a1 1 0 0 0 0-1.72L8.5 3.94A1 1 0 0 0 7 4.8z"/></svg>Start tidtaker</button>` : ""}`;
+      </div>${vkfCardioHtml(ex, cur)}${ex.isHold && Number(v.reps) > 0 ? `<button type="button" class="vkf-timer-start" data-act="timer-start"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.8v14.4a1 1 0 0 0 1.5.86l11.6-7.2a1 1 0 0 0 0-1.72L8.5 3.94A1 1 0 0 0 7 4.8z"/></svg>Start tidtaker</button>` : ""}`;
     }
     const lastEx = cur === exercises.length - 1;
     root.innerHTML = `<div class="vkf-screen">
@@ -23092,6 +23140,13 @@ function getExercisePR(exerciseName) {
     </div></div>`;
     fillCoachTips(root);
     root.querySelectorAll(".vk-notebox").forEach(b => wireNoteBox(b, b.dataset.ex));
+    root.querySelectorAll("[data-vkf-cardio]").forEach(inp => inp.addEventListener("change", () => {
+      const i = Number(inp.dataset.ex), k = inp.dataset.vkfCardio;
+      const n = parseFloat(String(inp.value).replace(",", "."));
+      vkf.cardio = vkf.cardio || {};
+      vkf.cardio[i] = { ...(vkf.cardio[i] || {}), [k]: String(inp.value).trim() && Number.isFinite(n) ? n : null };
+      if (vkf.saved && vkf.saved[i]) vkfSaveLog(i); // allerede lagret – oppdater med fart/stigning
+    }));
     const c = document.getElementById("vkfClock");
     if (c) { const s = Math.floor((Date.now() - vkf.start) / 1000); c.textContent = String(Math.floor(s / 60)).padStart(2, "0") + ":" + String(s % 60).padStart(2, "0"); }
     if (vkf.restT) vkfPaintRest(true);
@@ -23133,6 +23188,19 @@ function getExercisePR(exerciseName) {
       vkfStartRest(Number(ex.restSeconds) || (ex.isHold ? 30 : 60), `<div class="vkf-rn"><span class="vkf-rn-img" style="background-image:url('${vkfExThumb(ex, item)}')"></span><span><small>Neste</small><b>Sett ${nextSet + 1} av ${n} · ${escapeHtmlText(ex.name || "")}</b>${nv ? `<em>${escapeHtmlText(vkfSetText(ex, nv))}</em>` : ""}</span></div>`);
     }
   }
+  // Fart og stigning (valgfritt) på løping, gange og annen kondisjon i øktmodus
+  function vkfCardioHtml(ex, i) {
+    if (!ex || !ex.isHold || !VK_CARDIO_RE.test(ex.name || "")) return "";
+    vkf.cardio = vkf.cardio || {};
+    if (!vkf.cardio[i]) {
+      const pr = getExercisePR(ex.name);
+      const last = (pr && Array.isArray(pr.history) ? pr.history.slice().reverse().find(h => h.speed != null || h.incline != null) : null) || {};
+      vkf.cardio[i] = { speed: last.speed != null ? last.speed : null, incline: last.incline != null ? last.incline : null };
+    }
+    const c = vkf.cardio[i], f = v => v == null ? "" : String(v).replace(".", ",");
+    return `<div class="dpp-cardio-row vkf-cardio"><label><span>Fart</span><input type="text" inputmode="decimal" data-vkf-cardio="speed" data-ex="${i}" placeholder="f.eks. 10,5" value="${f(c.speed)}" aria-label="Fart i km/t"><em>km/t</em></label>` +
+      `<label><span>Stigning</span><input type="text" inputmode="decimal" data-vkf-cardio="incline" data-ex="${i}" placeholder="f.eks. 2" value="${f(c.incline)}" aria-label="Stigning i prosent"><em>%</em></label></div>`;
+  }
   async function vkfSaveLog(i) {
     const ex = vkf.exercises[i];
     const sets = vkf.vals[i].map(v => ({ kg: ex.tracksWeight ? Number(v.kg) || 0 : 0, reps: Number(v.reps) || 0 }));
@@ -23140,7 +23208,8 @@ function getExercisePR(exerciseName) {
     const prevBest = before ? { kg: before.kg, reps: before.reps } : null;
     let result = null;
     try {
-      result = await recordExerciseResult(ex.name, sets, { targetReps: ex.targetReps, isHold: ex.isHold, tracksWeight: ex.tracksWeight, programId: vkf && vkf.item.id, baseTarget: ex.baseTargetReps || ex.targetReps, plannedSets: sets.length });
+      const cz = (vkf && vkf.cardio && vkf.cardio[i]) || {};
+      result = await recordExerciseResult(ex.name, sets, { targetReps: ex.targetReps, isHold: ex.isHold, tracksWeight: ex.tracksWeight, programId: vkf && vkf.item.id, baseTarget: ex.baseTargetReps || ex.targetReps, plannedSets: sets.length, speed: cz.speed, incline: cz.incline });
     } catch (e) { console.warn("Kunne ikke lagre øvelsen:", e); }
     if (!vkf || !result || !result.saved) return;
     vkf.saved[i] = true;
