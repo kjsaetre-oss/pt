@@ -238,7 +238,7 @@
     }
     .tbp-ex-card:hover{ transform:translateY(-1px); box-shadow:0 10px 20px rgba(0,0,0,.10); }
     .tbp-ex-thumb{ width:80px; min-width:80px; height:56px; flex-shrink:0; border-radius:11px; background:#0e1116 center/cover no-repeat; position:relative; overflow:hidden; }
-    .tbp-ex-thumb.has-video{ cursor:pointer; }
+    .tbp-ex-thumb.has-video{ cursor:pointer; background-size:200% auto; background-position:50% 42%; }
     .tbp-ex-play{ position:absolute; inset:0; background:rgba(0,0,0,.38); display:flex; align-items:center; justify-content:center; transition:background .15s; }
     .tbp-ex-thumb.has-video:hover .tbp-ex-play{ background:rgba(0,0,0,.55); }
     .tbp-ex-play svg{ width:28px; height:28px; filter:drop-shadow(0 1px 3px rgba(0,0,0,.5)); }
@@ -1121,12 +1121,15 @@
             <div class="tbp-ex-card">
               ${(function(){
                 const ytId = getYtId(ex.videoUrl);
-                const thumbStyle = ytId ? `background-image:url('https://img.youtube.com/vi/${ytId}/mqdefault.jpg')` : '';
+                // Bilde fra midt i videoen (ikke forsidebildet med tittel), ellers et gratis bilde etter muskelgruppe – uten tekst
+                const CAT = { legs: "1761839258420-5c3e2f2e2a74", hinge: "1521804906057-1df8fdb718b7", push: "1616803689943-5601631c7fec", pull: "1677165733273-dcc3724c00e8", core: "1717821681365-36b0da044a75" };
+                const thumbStyle = ytId ? `background-image:url('https://img.youtube.com/vi/${ytId}/mq2.jpg')`
+                  : `background-image:url('https://images.unsplash.com/photo-${CAT[ex.category] || CAT.legs}?w=200&q=70&fm=jpg&fit=crop'); background-size:cover !important; background-position:center !important`;
                 const dataAttrs = ex.videoUrl ? `data-url="${escapeHtml(ex.videoUrl)}" data-title="${escapeHtml(ex.name)}"` : '';
                 return `<div class="tbp-ex-thumb ${ex.videoUrl ? 'has-video tbp-video-btn' : ''}" style="${thumbStyle}" ${dataAttrs}>
                   ${ex.videoUrl
                     ? `<div class="tbp-ex-play"><svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="18" cy="18" r="18" fill="rgba(0,0,0,0.45)"/><polygon points="14,11 27,18 14,25" fill="white"/></svg></div>`
-                    : `<div class="tbp-ex-noimg">${ex.emoji}</div>`}
+                    : ''}
                 </div>`;
               })()}
               <div class="tbp-ex-info">
