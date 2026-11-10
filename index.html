@@ -4113,6 +4113,18 @@
   .vkf-volume span{ font-size:14px; font-weight:700; opacity:.8; }
   .vkf-share{ width:100%; min-height:50px; border-radius:16px; border:1.5px dashed #262b34; background:#171b22; color:#ff4e26; font:inherit; font-weight:800; font-size:15px; cursor:pointer; }
   /* Ukesmål og muskelkart */
+  .dpp-recipe-sheet .vk-goalwk{ box-shadow:none !important; padding:4px 0 !important; }
+  .dpp-recipe-sheet .vk-muscle-figs svg{ width:74px; }
+  .vk-goalrow{ display:flex; align-items:center; gap:12px; width:100%; text-align:left; border:0; background:#171b22; border-radius:18px; padding:10px 14px 10px 10px; font:inherit; color:#f2f4f7; cursor:pointer; box-shadow:0 1px 2px rgba(0,0,0,.04), 0 8px 20px -14px rgba(0,0,0,.25); touch-action:manipulation; }
+  .vk-goalrow:active{ transform:scale(.985); }
+  .vk-goalrow-ring{ width:40px; height:40px; flex:none; }
+  .vk-goalrow-ring svg{ width:100%; height:100%; transform:rotate(-90deg); }
+  .vk-goalrow-ring .trk{ fill:none; stroke:#262b34; stroke-width:5; }
+  .vk-goalrow-ring .bar{ fill:none; stroke:#ff613e; stroke-width:5; stroke-linecap:round; }
+  .vk-goalrow-txt{ display:grid; gap:1px; min-width:0; flex:1; }
+  .vk-goalrow-txt b{ font-size:14.5px; font-weight:800; }
+  .vk-goalrow-txt small{ font-size:12px; color:#98a1ad; font-weight:600; }
+  .vk-goalrow-chev{ font-size:22px; color:#98a1ad; flex:none; }
   .vk-goalwk{ padding:16px !important; display:grid; gap:14px; }
   .vk-gw-top{ display:flex; align-items:center; gap:14px; }
   .vk-gw-ring{ position:relative; width:76px; height:76px; flex:none; }
@@ -9015,7 +9027,30 @@ var DPP_IMG = [
     const fig = side => EX_BODY[side].map(([k, pts]) => pts.map(pt => `<polygon points="${pt}" fill="${k === "head" || k === "neck" || k === "knees" ? "#efe9e1" : col(lvl[k])}"/>`).join("")).join("");
     return `<svg viewBox="0 0 100 222" aria-hidden="true">${fig("a")}</svg><svg viewBox="0 0 100 222" aria-hidden="true">${fig("p")}</svg>`;
   }
+  // Smal rad under Trening – trykk for å åpne hele ukesoversikten
   function vkGoalCard() {
+    const anchor = viewedDate || new Date();
+    const st = vkWeekStats(anchor);
+    const anyMuscle = Object.keys(vkMuscleWeek(anchor)).length > 0;
+    if (!st.due && !st.done && !anyMuscle) return null;
+    const goal = Math.max(st.due, st.done);
+    const pct = goal ? Math.min(1, st.done / goal) : 0;
+    const streak = vkWeekStreak(anchor);
+    const C = 2 * Math.PI * 15;
+    const row = document.createElement("button");
+    row.type = "button";
+    row.className = "vk-goalrow";
+    row.innerHTML = `<span class="vk-goalrow-ring"><svg viewBox="0 0 36 36" aria-hidden="true"><circle cx="18" cy="18" r="15" class="trk"/><circle cx="18" cy="18" r="15" class="bar" stroke-dasharray="${C.toFixed(1)}" stroke-dashoffset="${(C * (1 - pct)).toFixed(1)}"/></svg></span>
+      <span class="vk-goalrow-txt"><b>Denne uka: ${st.done} av ${goal || 0} økter</b><small>${streak >= 2 ? `🔥 ${streak} uker på rad · ` : ""}Se uka og muskelkartet</small></span>
+      <span class="vk-goalrow-chev" aria-hidden="true">›</span>`;
+    row.addEventListener("click", () => {
+      const sheet = favSheet("Denne uka");
+      const full = vkGoalCardFull();
+      if (full) sheet.appendChild(full);
+    });
+    return row;
+  }
+  function vkGoalCardFull() {
     const anchor = viewedDate || new Date();
     const st = vkWeekStats(anchor);
     const score = vkMuscleWeek(anchor);
