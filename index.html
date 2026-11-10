@@ -23101,7 +23101,7 @@ function getExercisePR(exerciseName) {
       tune = `<div class="vkf-tune">
         ${ex.tracksWeight ? `<div class="vkf-step"><span>Kg</span><div class="vkf-step-row"><button type="button" data-tune="kg" data-d="-1" aria-label="Mindre vekt">−</button><input class="vkf-num" data-num="kg" inputmode="decimal" enterkeyhint="done" aria-label="Kg" value="${String(v.kg || 0).replace(".", ",")}"><button type="button" data-tune="kg" data-d="1" aria-label="Mer vekt">+</button></div></div>` : ""}
         <div class="vkf-step"${ex.tracksWeight ? "" : ' style="grid-column:1 / -1"'}><span>${(ex.isHold ? ((Number(v.reps) || 0) >= 60 ? "Tid" : "Sekunder") : "Reps") + (exPerSide(ex.name) ? " per " + exPerSide(ex.name) : "")}</span><div class="vkf-step-row"><button type="button" data-tune="reps" data-d="${ex.isHold ? -5 : -1}" aria-label="Færre">−</button><input class="vkf-num" data-num="reps" inputmode="${ex.isHold ? "text" : "numeric"}" enterkeyhint="done" aria-label="${ex.isHold ? "Tid" : "Reps"}" value="${vkfVal(ex, v.reps)}"><button type="button" data-tune="reps" data-d="${ex.isHold ? 5 : 1}" aria-label="Flere">+</button></div></div>
-      </div>${vkfCardioHtml(ex, cur)}${ex.isHold && Number(v.reps) > 0 ? `<button type="button" class="vkf-timer-start" data-act="timer-start"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.8v14.4a1 1 0 0 0 1.5.86l11.6-7.2a1 1 0 0 0 0-1.72L8.5 3.94A1 1 0 0 0 7 4.8z"/></svg>Start tidtaker</button>` : ""}`;
+      </div>${ex.isHold && Number(v.reps) > 0 ? `<button type="button" class="vkf-timer-start" data-act="timer-start"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.8v14.4a1 1 0 0 0 1.5.86l11.6-7.2a1 1 0 0 0 0-1.72L8.5 3.94A1 1 0 0 0 7 4.8z"/></svg>Start tidtaker</button>` : ""}`;
     }
     const lastEx = cur === exercises.length - 1;
     root.innerHTML = `<div class="vkf-screen">
@@ -23122,6 +23122,7 @@ function getExercisePR(exerciseName) {
             ${rows}
           </div>
           ${tune}
+          ${vkfCardioHtml(ex, cur)}
           ${vkNoteBoxHtml(ex.name, true)}
           <div class="vkf-setlinks"><button class="vkf-add" type="button" data-act="addset">+ Legg til sett</button>${vkf.active >= 0 && vals.length > 1 && !done.has(vkf.active) ? `<button class="vkf-dellink" type="button" data-delset="${vkf.active}" aria-label="Fjern sett ${vkf.active + 1}"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12M9 7V4h6v3"/></svg>Fjern sett ${vkf.active + 1}</button>` : ""}</div>
         </div>
@@ -23140,13 +23141,18 @@ function getExercisePR(exerciseName) {
     </div></div>`;
     fillCoachTips(root);
     root.querySelectorAll(".vk-notebox").forEach(b => wireNoteBox(b, b.dataset.ex));
-    root.querySelectorAll("[data-vkf-cardio]").forEach(inp => inp.addEventListener("change", () => {
-      const i = Number(inp.dataset.ex), k = inp.dataset.vkfCardio;
-      const n = parseFloat(String(inp.value).replace(",", "."));
-      vkf.cardio = vkf.cardio || {};
-      vkf.cardio[i] = { ...(vkf.cardio[i] || {}), [k]: String(inp.value).trim() && Number.isFinite(n) ? n : null };
-      if (vkf.saved && vkf.saved[i]) vkfSaveLog(i); // allerede lagret – oppdater med fart/stigning
-    }));
+    root.querySelectorAll("[data-vkf-cardio]").forEach(inp => {
+      // Husk verdien mens kunden skriver (skjermen kan tegnes på nytt når tidtakeren er ferdig)
+      const keep = () => {
+        const i = Number(inp.dataset.ex), k = inp.dataset.vkfCardio;
+        const n = parseFloat(String(inp.value).replace(",", "."));
+        vkf.cardio = vkf.cardio || {};
+        vkf.cardio[i] = { ...(vkf.cardio[i] || {}), [k]: String(inp.value).trim() && Number.isFinite(n) ? n : null };
+        return i;
+      };
+      inp.addEventListener("input", keep);
+      inp.addEventListener("change", () => { const i = keep(); if (vkf.saved && vkf.saved[i]) vkfSaveLog(i); }); // allerede lagret – oppdater
+    });
     const c = document.getElementById("vkfClock");
     if (c) { const s = Math.floor((Date.now() - vkf.start) / 1000); c.textContent = String(Math.floor(s / 60)).padStart(2, "0") + ":" + String(s % 60).padStart(2, "0"); }
     if (vkf.restT) vkfPaintRest(true);
