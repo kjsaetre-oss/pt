@@ -4127,6 +4127,14 @@
   .vkf-nextcard b{ display:block; font-size:15px; color:#f2f4f7; line-height:1.25; }
   .vkf-nextcard em{ font-style:normal; font-size:12.5px; color:#98a1ad; font-weight:600; }
   .vkf-mag > .vkf-nav{ margin-top:4px; }
+  /* Video som før, resten nytt (2026-11-11) */
+  .vkf-mag2 .vkf-ex-photo{ height:170px; background-position:center 35%; }
+  .vkf-mag2 .vkf-k{ font-weight:800; font-size:11.5px; letter-spacing:.08em; text-transform:uppercase; }
+  .vkf-mag2 .vkf-body h2{ font-family:Georgia,"Times New Roman",serif; font-size:clamp(25px, 7.4vw, 30px); font-weight:600; letter-spacing:-.01em; line-height:1.12; }
+  .vkf-mag2 .vkf-body h2 .vkf-info{ font-family:Georgia,serif; }
+  .vkf-mag2 .vkf-set{ padding:9px 6px; }
+  .vkf-mag2 .vkf-chk{ width:34px; height:34px; border-radius:50%; }
+  .vkf-mag2 .vkf-set.done .vkf-chk, .vkf-mag2 .vkf-set.done .n{ background:#ff613e; }
   .vkf-nextup b{ color:#f2f4f7; }
   .vkf-rest{ position:fixed; left:0; right:0; bottom:0; z-index:2; display:flex; justify-content:center; padding:0 12px calc(12px + env(safe-area-inset-bottom)); transform:translateY(110%); transition:transform .35s cubic-bezier(.2,.9,.3,1); }
   .vkf-rest.show{ transform:none; }
@@ -23448,36 +23456,24 @@ function getExercisePR(exerciseName) {
     }
     const lastEx = cur === exercises.length - 1;
     // Magasin-visning (2026-11-11): stort bilde/video øverst med navnet, settene i et kort, «Neste øvelse» nederst
-    const doneEx = exercises.filter((e, i) => vkfSetsDone(i).size >= vkf.vals[i].length).length;
-    const ringPct = Math.round(100 * doneEx / Math.max(1, exercises.length));
     const VKF_CAT_LABEL = { legs: "Bein", hinge: "Bakside", push: "Press", pull: "Trekk", core: "Kjerne", cardio: "Kondisjon", mobility: "Bevegelighet" };
     const catLabel = VKF_CAT_LABEL[vkExCatKey(ex)] || "";
     const nextEx = lastEx ? null : exercises[cur + 1];
     const nv = nextEx ? (vkf.vals[cur + 1] || []) : [];
     const nextMeta = !nextEx || !nv[0] ? "" : (nv.length > 1 ? nv.length + " × " : "") + vkfVal(nextEx, nv[0].reps) + (nextEx.isHold ? "" : " reps");
     const heroBg = yt ? "" : `background-image:url('${vkPhoto(VK_WORKOUT_PHOTOS[/tredemølle|mølle|gåing|gange|løp|jogg|ellipse|sykkel|spinning|ergometer|romaskin|kondisjon|intervall/i.test(ex.name || "") && vkWorkoutPhotoKey(item) !== "utholdenhet" ? "utholdenhet" : ""] || vkWorkoutPhotoId(item), 800)}')`;
-    root.innerHTML = `<div class="vkf-screen vkf-mag">
-      <div class="vkf-mhero" style="${heroBg}">
-        ${yt ? `<div class="vkf-video" data-act="video" data-yt="${yt}" style="background-image:url('https://img.youtube.com/vi/${yt}/hq2.jpg')"></div>` : ""}
-        <div class="vkf-mhero-top">
-          <button class="vkf-icon" type="button" data-act="close" aria-label="Lukk"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
-          <div class="vkf-top-mid"><b>${escapeHtmlText(title)}${session ? " · " + escapeHtmlText(session) : ""}</b><span id="vkfClock">00:00</span></div>
-          <button class="vkf-icon vkf-sound" type="button" data-act="sound" aria-label="${vkSoundOn() ? "Skru av lyd" : "Skru på lyd"}" title="${vkSoundOn() ? "Lyd på – trykk for å skru av" : "Lyd av – trykk for å skru på"}">${vkSoundOn() ? "🔔" : "🔕"}</button>
-        </div>
-        ${yt ? `<button type="button" class="vkf-play" data-act="video" data-yt="${yt}" aria-label="Spill av video"><svg width="22" height="22" viewBox="0 0 24 24" fill="#ff613e"><path d="M7 4.8v14.4a1 1 0 0 0 1.5.86l11.6-7.2a1 1 0 0 0 0-1.72L8.5 3.94A1 1 0 0 0 7 4.8z"/></svg></button>` : ""}
-        <div class="vkf-mhero-name">
-          <div><div class="vkf-k">Øvelse ${cur + 1} av ${exercises.length}${catLabel ? " · " + catLabel : ""}</div>
-          <h2>${escapeHtmlText(ex.name || "")}${exPerSide(ex.name) ? `<span class="vkf-side">per ${exPerSide(ex.name)}</span>` : ""}</h2></div>
-          <span class="vkf-ring2" style="--p:${ringPct}%" aria-label="${doneEx} av ${exercises.length} øvelser ferdig"><span>${doneEx}/${exercises.length}</span></span>
-        </div>
+    root.innerHTML = `<div class="vkf-screen vkf-mag2">
+      <div class="vkf-top">
+        <button class="vkf-icon" type="button" data-act="close" aria-label="Lukk"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+        <div class="vkf-top-mid"><b>${escapeHtmlText(title)}${session ? " · " + escapeHtmlText(session) : ""}</b><span id="vkfClock">00:00</span></div>
+        <button class="vkf-icon vkf-sound" type="button" data-act="sound" aria-label="${vkSoundOn() ? "Skru av lyd" : "Skru på lyd"}" title="${vkSoundOn() ? "Lyd på – trykk for å skru av" : "Lyd av – trykk for å skru på"}">${vkSoundOn() ? "🔔" : "🔕"}</button>
       </div>
+      <div class="vkf-bars">${bars}</div>
+      <div class="vk-viewswitch" role="group" aria-label="Velg visning" style="margin:0;"><button type="button" class="on" aria-pressed="true">▶ Én og én øvelse</button><button type="button" data-act="list">☰ Alle øvelser</button></div>
       <div class="vkf-ex">
+        ${yt ? `<div class="vkf-video" data-act="video" data-yt="${yt}" style="background-image:url('https://img.youtube.com/vi/${yt}/hq2.jpg')"><div class="vkf-play"><svg width="22" height="22" viewBox="0 0 24 24" fill="#ff613e"><path d="M7 4.8v14.4a1 1 0 0 0 1.5.86l11.6-7.2a1 1 0 0 0 0-1.72L8.5 3.94A1 1 0 0 0 7 4.8z"/></svg></div></div>` : `<div class="vkf-ex-photo" aria-hidden="true" style="${heroBg}"></div>`}
         <div class="vkf-body">
-          <div class="vkf-tools">
-            <div class="vk-viewswitch" role="group" aria-label="Velg visning" style="margin:0;"><button type="button" class="on" aria-pressed="true">▶ Én og én</button><button type="button" data-act="list">☰ Alle</button></div>
-            <button type="button" class="vkf-info" data-act="info" aria-label="Om øvelsen: muskler og teknikk">i</button>
-            <button type="button" class="vkf-swap" data-act="swap" aria-label="Bytt øvelse" title="Bytt øvelse"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4 3 8l4 4"/><path d="M3 8h13a4 4 0 0 1 4 4"/><path d="m17 20 4-4-4-4"/><path d="M21 16H8a4 4 0 0 1-4-4"/></svg></button>
-          </div>
+          <div class="vkf-titlebox"><button type="button" class="vkf-swap" data-act="swap" aria-label="Bytt øvelse" title="Bytt øvelse"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4 3 8l4 4"/><path d="M3 8h13a4 4 0 0 1 4 4"/><path d="m17 20 4-4-4-4"/><path d="M21 16H8a4 4 0 0 1-4-4"/></svg></button><div class="vkf-k"><i></i>Øvelse ${cur + 1} av ${exercises.length}${catLabel ? " · " + catLabel : ""}</div><h2>${escapeHtmlText(ex.name || "")}<button type="button" class="vkf-info" data-act="info" aria-label="Om øvelsen: muskler og teknikk">i</button>${exPerSide(ex.name) ? `<span class="vkf-side">per ${exPerSide(ex.name)}</span>` : ""}</h2></div>
           ${coachTipHtml(ex)}
           <div>
             <div class="vkf-head"><span>Sett</span><span>Forrige</span><span${ex.tracksWeight ? "" : ' style="visibility:hidden"'}>Kg</span><span>${(ex.isHold ? "Tid" : "Reps") + (exPerSide(ex.name) ? "/" + exPerSide(ex.name) : "")}</span><span></span></div>
