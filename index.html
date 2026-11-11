@@ -4087,6 +4087,46 @@
   .vkf-btn.primary{ background:linear-gradient(145deg,#ff7657,#ff613e); box-shadow:0 12px 24px -12px rgba(0,0,0,.85), inset 0 1px 0 rgba(0,0,0,.2); }
   .vkf-btn.finish{ background:linear-gradient(145deg,#1b2028,#1b2028); box-shadow:0 12px 24px -12px rgba(0,0,0,.85); }
   .vkf-nextup{ font-size:12.5px; color:#98a1ad; text-align:center; margin-top:-4px; }
+  /* Magasin-visning (2026-11-11) */
+  .vkf-screen.vkf-mag{ padding-top:0; padding-left:0; padding-right:0; gap:12px; }
+  .vkf-mag > .vkf-ex, .vkf-mag > .vkf-nextcard, .vkf-mag > .vkf-nav{ margin-left:14px; margin-right:14px; }
+  .vkf-mhero{ position:relative; min-height:clamp(270px, 46vh, 360px); background:#ff2e00 center 35%/cover no-repeat; color:#ffffff; display:flex; flex-direction:column; padding:calc(12px + env(safe-area-inset-top)) 16px 50px; overflow:hidden; }
+  .vkf-mhero::before{ content:""; position:absolute; inset:0; z-index:1; pointer-events:none; background:linear-gradient(180deg, rgba(18,10,32,.5) 0%, rgba(18,10,32,0) 28%, rgba(18,10,32,0) 50%, rgba(18,10,32,.88) 100%); transition:opacity .3s; }
+  .vkf-mhero > .vkf-video{ position:absolute; inset:0; aspect-ratio:auto; z-index:0; background-size:auto 135% !important; background-position:50% 42% !important; }
+  .vkf-mhero > .vkf-video::after{ display:none; }
+  .vkf-mhero > .vkf-video.vkf-video-on{ z-index:3; background:#000000; }
+  .vkf-mhero-top{ position:relative; z-index:4; display:flex; align-items:center; gap:10px; }
+  .vkf-mhero .vkf-icon{ background:rgba(255,255,255,.2); color:#ffffff; box-shadow:none; -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px); }
+  .vkf-mhero .vkf-top-mid b{ color:#ffffff; text-shadow:0 1px 6px rgba(0,0,0,.35); }
+  .vkf-mhero .vkf-top-mid span{ color:rgba(255,255,255,.8); }
+  .vkf-mhero > .vkf-play{ position:absolute; z-index:2; left:50%; top:47%; transform:translate(-50%,-50%); border:0; padding:0; cursor:pointer; }
+  .vkf-mhero-name{ position:relative; z-index:2; margin-top:auto; display:flex; align-items:flex-end; gap:12px; transition:opacity .3s; }
+  .vkf-mhero-name > div{ flex:1; min-width:0; }
+  .vkf-mhero .vkf-k{ color:#cab3f2; font-weight:800; font-size:11.5px; letter-spacing:.1em; text-transform:uppercase; }
+  .vkf-mhero .vkf-k i{ display:none; }
+  .vkf-mhero h2{ margin:4px 0 0; font-family:Georgia,"Times New Roman",serif; font-size:clamp(26px, 8vw, 32px); font-weight:600; letter-spacing:-.01em; line-height:1.1; color:#ffffff; text-shadow:0 2px 12px rgba(0,0,0,.3); }
+  .vkf-mhero .vkf-side{ font-family:Inter,Arial,sans-serif; font-size:12px; font-weight:700; margin-left:8px; padding:3px 8px; border-radius:999px; background:rgba(255,255,255,.2); vertical-align:middle; }
+  .vkf-ring2{ flex:none; width:46px; height:46px; border-radius:50%; background:conic-gradient(#1f242d 0 var(--p), rgba(255,255,255,.22) var(--p)); display:grid; place-items:center; position:relative; font-size:11.5px; font-weight:900; margin-bottom:4px; }
+  .vkf-ring2::before{ content:""; position:absolute; inset:4px; border-radius:50%; background:rgba(18,10,32,.6); }
+  .vkf-ring2 span{ position:relative; }
+  .vkf-mhero:has(.vkf-video-on)::before, .vkf-mhero:has(.vkf-video-on) .vkf-mhero-name, .vkf-mhero:has(.vkf-video-on) .vkf-top-mid{ opacity:0; pointer-events:none; }
+  .vkf-mhero > .vkf-video.vkf-video-on{ bottom:30px; }
+  .vkf-mag > .vkf-ex{ margin-top:-30px; position:relative; z-index:2; border-radius:26px; }
+  .vkf-mag .vkf-body{ padding:14px; }
+  .vkf-tools{ display:flex; align-items:center; gap:8px; }
+  .vkf-tools .vk-viewswitch{ flex:1; }
+  .vkf-tools .vkf-info{ margin:0; width:36px; height:36px; flex:none; vertical-align:0; font-size:16px; }
+  .vkf-tools .vkf-swap{ position:static; flex:none; }
+  .vkf-mag .vkf-set{ padding:9px 6px; }
+  .vkf-mag .vkf-chk{ width:34px; height:34px; border-radius:50%; }
+  .vkf-mag .vkf-set.done .vkf-chk{ background:#ff613e; }
+  .vkf-mag .vkf-set.done .n{ background:#ff613e; }
+  .vkf-nextcard{ display:flex; align-items:center; gap:12px; background:#171b22; border-radius:18px; padding:9px; box-shadow:0 1px 2px rgba(0,0,0,.04), 0 10px 24px -16px rgba(0,0,0,.25); }
+  .vkf-nextcard-img{ flex:none; width:58px; height:48px; border-radius:12px; background:#0e1116 center/cover no-repeat; display:grid; place-items:center; font-size:22px; }
+  .vkf-nextcard small{ display:block; font-size:11.5px; font-weight:700; color:#98a1ad; }
+  .vkf-nextcard b{ display:block; font-size:15px; color:#f2f4f7; line-height:1.25; }
+  .vkf-nextcard em{ font-style:normal; font-size:12.5px; color:#98a1ad; font-weight:600; }
+  .vkf-mag > .vkf-nav{ margin-top:4px; }
   .vkf-nextup b{ color:#f2f4f7; }
   .vkf-rest{ position:fixed; left:0; right:0; bottom:0; z-index:2; display:flex; justify-content:center; padding:0 12px calc(12px + env(safe-area-inset-bottom)); transform:translateY(110%); transition:transform .35s cubic-bezier(.2,.9,.3,1); }
   .vkf-rest.show{ transform:none; }
@@ -23407,18 +23447,37 @@ function getExercisePR(exerciseName) {
       </div>${ex.isHold && Number(v.reps) > 0 ? `<button type="button" class="vkf-timer-start" data-act="timer-start"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.8v14.4a1 1 0 0 0 1.5.86l11.6-7.2a1 1 0 0 0 0-1.72L8.5 3.94A1 1 0 0 0 7 4.8z"/></svg>Start tidtaker</button>` : ""}`;
     }
     const lastEx = cur === exercises.length - 1;
-    root.innerHTML = `<div class="vkf-screen">
-      <div class="vkf-top">
-        <button class="vkf-icon" type="button" data-act="close" aria-label="Lukk"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
-        <div class="vkf-top-mid"><b>${escapeHtmlText(title)}${session ? " · " + escapeHtmlText(session) : ""}</b><span id="vkfClock">00:00</span></div>
-        <button class="vkf-icon vkf-sound" type="button" data-act="sound" aria-label="${vkSoundOn() ? "Skru av lyd" : "Skru på lyd"}" title="${vkSoundOn() ? "Lyd på – trykk for å skru av" : "Lyd av – trykk for å skru på"}">${vkSoundOn() ? "🔔" : "🔕"}</button>
+    // Magasin-visning (2026-11-11): stort bilde/video øverst med navnet, settene i et kort, «Neste øvelse» nederst
+    const doneEx = exercises.filter((e, i) => vkfSetsDone(i).size >= vkf.vals[i].length).length;
+    const ringPct = Math.round(100 * doneEx / Math.max(1, exercises.length));
+    const VKF_CAT_LABEL = { legs: "Bein", hinge: "Bakside", push: "Press", pull: "Trekk", core: "Kjerne", cardio: "Kondisjon", mobility: "Bevegelighet" };
+    const catLabel = VKF_CAT_LABEL[vkExCatKey(ex)] || "";
+    const nextEx = lastEx ? null : exercises[cur + 1];
+    const nv = nextEx ? (vkf.vals[cur + 1] || []) : [];
+    const nextMeta = !nextEx || !nv[0] ? "" : (nv.length > 1 ? nv.length + " × " : "") + vkfVal(nextEx, nv[0].reps) + (nextEx.isHold ? "" : " reps");
+    const heroBg = yt ? "" : `background-image:url('${vkPhoto(VK_WORKOUT_PHOTOS[/tredemølle|mølle|gåing|gange|løp|jogg|ellipse|sykkel|spinning|ergometer|romaskin|kondisjon|intervall/i.test(ex.name || "") && vkWorkoutPhotoKey(item) !== "utholdenhet" ? "utholdenhet" : ""] || vkWorkoutPhotoId(item), 800)}')`;
+    root.innerHTML = `<div class="vkf-screen vkf-mag">
+      <div class="vkf-mhero" style="${heroBg}">
+        ${yt ? `<div class="vkf-video" data-act="video" data-yt="${yt}" style="background-image:url('https://img.youtube.com/vi/${yt}/hq2.jpg')"></div>` : ""}
+        <div class="vkf-mhero-top">
+          <button class="vkf-icon" type="button" data-act="close" aria-label="Lukk"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+          <div class="vkf-top-mid"><b>${escapeHtmlText(title)}${session ? " · " + escapeHtmlText(session) : ""}</b><span id="vkfClock">00:00</span></div>
+          <button class="vkf-icon vkf-sound" type="button" data-act="sound" aria-label="${vkSoundOn() ? "Skru av lyd" : "Skru på lyd"}" title="${vkSoundOn() ? "Lyd på – trykk for å skru av" : "Lyd av – trykk for å skru på"}">${vkSoundOn() ? "🔔" : "🔕"}</button>
+        </div>
+        ${yt ? `<button type="button" class="vkf-play" data-act="video" data-yt="${yt}" aria-label="Spill av video"><svg width="22" height="22" viewBox="0 0 24 24" fill="#ff613e"><path d="M7 4.8v14.4a1 1 0 0 0 1.5.86l11.6-7.2a1 1 0 0 0 0-1.72L8.5 3.94A1 1 0 0 0 7 4.8z"/></svg></button>` : ""}
+        <div class="vkf-mhero-name">
+          <div><div class="vkf-k">Øvelse ${cur + 1} av ${exercises.length}${catLabel ? " · " + catLabel : ""}</div>
+          <h2>${escapeHtmlText(ex.name || "")}${exPerSide(ex.name) ? `<span class="vkf-side">per ${exPerSide(ex.name)}</span>` : ""}</h2></div>
+          <span class="vkf-ring2" style="--p:${ringPct}%" aria-label="${doneEx} av ${exercises.length} øvelser ferdig"><span>${doneEx}/${exercises.length}</span></span>
+        </div>
       </div>
-      <div class="vkf-bars">${bars}</div>
-      <div class="vk-viewswitch" role="group" aria-label="Velg visning" style="margin:0;"><button type="button" class="on" aria-pressed="true">▶ Én og én øvelse</button><button type="button" data-act="list">☰ Alle øvelser</button></div>
       <div class="vkf-ex">
-        ${yt ? `<div class="vkf-video" data-act="video" data-yt="${yt}" style="background-image:url('https://img.youtube.com/vi/${yt}/hq2.jpg')"><div class="vkf-play"><svg width="22" height="22" viewBox="0 0 24 24" fill="#ff613e"><path d="M7 4.8v14.4a1 1 0 0 0 1.5.86l11.6-7.2a1 1 0 0 0 0-1.72L8.5 3.94A1 1 0 0 0 7 4.8z"/></svg></div></div>` : `<div class="vkf-ex-photo" aria-hidden="true" style="background-image:url('${vkPhoto(VK_WORKOUT_PHOTOS[/tredemølle|mølle|gåing|gange|løp|jogg|ellipse|sykkel|spinning|ergometer|romaskin|kondisjon|intervall/i.test(ex.name || "") && vkWorkoutPhotoKey(item) !== "utholdenhet" ? "utholdenhet" : ""] || vkWorkoutPhotoId(item), 800)}')"></div>`}
         <div class="vkf-body">
-          <div class="vkf-titlebox"><button type="button" class="vkf-swap" data-act="swap" aria-label="Bytt øvelse" title="Bytt øvelse"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4 3 8l4 4"/><path d="M3 8h13a4 4 0 0 1 4 4"/><path d="m17 20 4-4-4-4"/><path d="M21 16H8a4 4 0 0 1-4-4"/></svg></button><div class="vkf-k"><i></i>Øvelse ${cur + 1} av ${exercises.length}</div><h2>${escapeHtmlText(ex.name || "")}<button type="button" class="vkf-info" data-act="info" aria-label="Om øvelsen: muskler og teknikk">i</button>${exPerSide(ex.name) ? `<span class="vkf-side">per ${exPerSide(ex.name)}</span>` : ""}</h2></div>
+          <div class="vkf-tools">
+            <div class="vk-viewswitch" role="group" aria-label="Velg visning" style="margin:0;"><button type="button" class="on" aria-pressed="true">▶ Én og én</button><button type="button" data-act="list">☰ Alle</button></div>
+            <button type="button" class="vkf-info" data-act="info" aria-label="Om øvelsen: muskler og teknikk">i</button>
+            <button type="button" class="vkf-swap" data-act="swap" aria-label="Bytt øvelse" title="Bytt øvelse"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4 3 8l4 4"/><path d="M3 8h13a4 4 0 0 1 4 4"/><path d="m17 20 4-4-4-4"/><path d="M21 16H8a4 4 0 0 1-4-4"/></svg></button>
+          </div>
           ${coachTipHtml(ex)}
           <div>
             <div class="vkf-head"><span>Sett</span><span>Forrige</span><span${ex.tracksWeight ? "" : ' style="visibility:hidden"'}>Kg</span><span>${(ex.isHold ? "Tid" : "Reps") + (exPerSide(ex.name) ? "/" + exPerSide(ex.name) : "")}</span><span></span></div>
@@ -23430,11 +23489,11 @@ function getExercisePR(exerciseName) {
           <div class="vkf-setlinks"><button class="vkf-add" type="button" data-act="addset">+ Legg til sett</button>${vkf.active >= 0 && vals.length > 1 && !done.has(vkf.active) ? `<button class="vkf-dellink" type="button" data-delset="${vkf.active}" aria-label="Fjern sett ${vkf.active + 1}"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-12M9 7V4h6v3"/></svg>Fjern sett ${vkf.active + 1}</button>` : ""}</div>
         </div>
       </div>
+      ${nextEx ? `<div class="vkf-nextcard"><span class="vkf-nextcard-img" style="background-image:url('${vkExPhotoUrl(nextEx, 200)}')"></span><span><small>Neste øvelse</small><b>${escapeHtmlText(nextEx.name || "")}</b>${nextMeta ? `<em>${escapeHtmlText(nextMeta)}</em>` : ""}</span></div>` : `<div class="vkf-nextcard last"><span class="vkf-nextcard-img">🏁</span><span><small>Siste øvelse</small><b>Snart i mål 💪</b></span></div>`}
       <div class="vkf-nav">
         ${cur ? `<button class="vkf-btn ghost" type="button" data-act="prev" aria-label="Forrige øvelse"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></button>` : ""}
         <button class="vkf-btn ${lastEx ? "finish" : "primary"}" type="button" data-act="next">${lastEx ? "Fullfør økta" : "Neste øvelse"}</button>
       </div>
-      <div class="vkf-nextup">${lastEx ? "Siste øvelse – snart i mål 💪" : "Neste: <b>" + escapeHtmlText(exercises[cur + 1].name || "") + "</b>"}</div>
     </div>
     <div class="vkf-rest" id="vkfRest"><div class="vkf-rest-card">
       <b>Pause</b>
