@@ -4532,6 +4532,7 @@
   <div class="dpp-sheet-panel">
     <div class="dpp-sheet-title" id="dppProgramSheetTitle">Treningsprogram</div>
     <button class="dpp-sheet-btn" id="dppProgramMoveTomorrowBtn" type="button">&#x1f4c5; Flytt &#xf8;kta til en annen dag</button>
+    <button class="dpp-sheet-btn" id="dppProgramCopyBtn" type="button">&#x1f4cb; Kopier &#xf8;kta til en annen dag</button>
     <button class="dpp-sheet-btn" id="dppProgramDaysBtn" type="button">&#x1f501; Endre faste treningsdager</button>
     <button class="dpp-sheet-btn danger" id="dppProgramSkipTodayBtn" type="button">Hopp over denne &#xf8;kta</button>
     <button class="dpp-sheet-btn danger" id="dppProgramDeleteAllBtn" type="button">Slett hele programmet</button>
@@ -19575,6 +19576,7 @@ var DPP_IMG = [
     backdrop: document.getElementById("dppProgramSheetBackdrop"),
     title: document.getElementById("dppProgramSheetTitle"),
     moveTomorrowBtn: document.getElementById("dppProgramMoveTomorrowBtn"),
+    copyBtn: document.getElementById("dppProgramCopyBtn"),
     daysBtn: document.getElementById("dppProgramDaysBtn"),
     skipTodayBtn: document.getElementById("dppProgramSkipTodayBtn"),
     deleteAllBtn: document.getElementById("dppProgramDeleteAllBtn")
@@ -19588,6 +19590,7 @@ var DPP_IMG = [
     const isTraining = item && item.programType !== "praksis";
     programSheetRefs.title.textContent = (item ? item.title.replace(/^\S+\s/, "") : "Treningsprogram") + " · " + dayLabel(activeProgramSheetDate).replace(/^(I dag|I morgen) – /, "").toLowerCase();
     if (programSheetRefs.moveTomorrowBtn) programSheetRefs.moveTomorrowBtn.style.display = isTraining ? "" : "none";
+    if (programSheetRefs.copyBtn) programSheetRefs.copyBtn.style.display = isTraining ? "" : "none";
     if (programSheetRefs.daysBtn) programSheetRefs.daysBtn.style.display = isTraining && canChangeProgramWeekdays(programId) ? "" : "none";
     programSheetRefs.sheet.classList.add("show");
   }
@@ -19604,6 +19607,21 @@ var DPP_IMG = [
       const id = activeProgramSheetId, from = activeProgramSheetDate;
       closeProgramSheet();
       if (id) openMoveDaySheet(id, from);
+    });
+  }
+  // 📋 Kopier økta (2026-11-11): åpner øktbyggeren med en kopi av dagens øvelser – kunden kan endre før den
+  // legges inn på en annen dag. Originalen (programmet fra coachen) endres ikke.
+  if (programSheetRefs.copyBtn) {
+    programSheetRefs.copyBtn.addEventListener("click", () => {
+      const id = activeProgramSheetId;
+      closeProgramSheet();
+      const item = id && data.items.find(x => x.id === id);
+      if (!item) return;
+      const exercises = deepClone(getModalExercises(item) || []);
+      if (!exercises.length) { showProgressToast("Fant ingen øvelser å kopiere"); return; }
+      const session = getSessionLabelForViewedDate(item);
+      const title = vkStrip(getDisplayTitle(item, viewedDate) || item.title) + (session ? " – " + session : "");
+      openOwnWorkoutBuilder({ title, programType: item.programType || "styrke", exercises }, { adjust: true, copy: true });
     });
   }
   if (programSheetRefs.daysBtn) {
@@ -22758,7 +22776,8 @@ function getExercisePR(exerciseName) {
     const draft = existing && !adjust
       ? { id: existing.id, title: existing.title || "", savedAt: existing.savedAt, exercises: deepClone(existing.exercises || []) }
       : { id: "own-" + Date.now().toString(36) + Math.random().toString(36).slice(2, 5), title: existing ? String(existing.title || "") : "", exercises: existing ? deepClone(existing.exercises || []) : [] };
-    const sheet = favSheet(adjust ? "Tilpass økta" : (existing ? "Endre økta" : "Lag din egen økt"));
+    const isCopy = !!opts.copy;
+    const sheet = favSheet(isCopy ? "Kopier økta" : adjust ? "Tilpass økta" : (existing ? "Endre økta" : "Lag din egen økt"));
     const wrap = document.createElement("div");
     wrap.className = "dpp-own";
     wrap.innerHTML = `
@@ -22769,11 +22788,12 @@ function getExercisePR(exerciseName) {
       <label class="dpp-own-label" for="dppOwnSearch">Legg til øvelser</label>
       <input class="dpp-own-input" id="dppOwnSearch" type="text" placeholder="Søk – f.eks. knebøy, planke, roing" autocomplete="off" />
       <div class="dpp-own-results"></div>
-      <button class="dpp-own-save" type="button">${adjust ? "Legg inn " + escapeExHtml(quickDayText()) : "Lagre økta"}</button>
+      ${isCopy ? `<label class="dpp-own-label" for="dppOwnCopyDate">Hvilken dag skal kopien ligge på?</label><input class="dpp-own-input" id="dppOwnCopyDate" type="date" value="${toDateValue(addDays(viewedDate || new Date(), 1))}" />` : ""}
+      <button class="dpp-own-save" type="button">${isCopy ? "📋 Kopier til valgt dag" : adjust ? "Legg inn " + escapeExHtml(quickDayText()) : "Lagre økta"}</button>
       ${adjust ? `<button class="dpp-meal-save-only" type="button" data-own-rep="1">🔁 Legg inn på flere dager</button>` : ""}
       ${adjust ? `<button class="dpp-meal-save-only" type="button" data-own-keep="1">Lagre også som egen økt i Mine økter</button>` : ""}
       <div class="dpp-own-msg" aria-live="polite"></div>`;
-    if (adjust) wrap.insertAdjacentHTML("afterbegin", `<p class="dpp-own-empty" style="margin:-4px 0 4px;">Endre sett, repetisjoner og øvelser slik det passer deg. Originalen fra coachen endres ikke.</p>`);
+    if (adjust) wrap.insertAdjacentHTML("afterbegin", `<p class="dpp-own-empty" style="margin:-4px 0 4px;">${isCopy ? "Dette er en kopi av økta. Endre gjerne sett, repetisjoner og øvelser før du velger dag – originalen endres ikke." : "Endre sett, repetisjoner og øvelser slik det passer deg. Originalen fra coachen endres ikke."}</p>`);
     sheet.appendChild(wrap);
     const nameEl = wrap.querySelector("#dppOwnName");
     const listEl = wrap.querySelector(".dpp-own-list");
@@ -22872,12 +22892,14 @@ function getExercisePR(exerciseName) {
         if (!draft.exercises.length) { msgEl.textContent = "Økta må ha minst én øvelse."; return; }
         const title = nameEl.value.trim() || (existing && existing.title) || "Min økt";
         saveEl.disabled = true;
-        const day = quickDayValue();
+        const copyDateEl = wrap.querySelector("#dppOwnCopyDate");
+        const day = (isCopy && copyDateEl && parseDateValue(copyDateEl.value)) ? copyDateEl.value : quickDayValue();
         // Egen kopi for denne gangen (originalen røres ikke)
         const copy = { id: "tilpasset-" + Date.now().toString(36) + Math.random().toString(36).slice(2, 5), title, own: true, programType: (existing && existing.programType) || "styrke", exercises: deepClone(draft.exercises) };
         const ok = await addFavoriteToDay(copy, day);
         if (!ok) { saveEl.disabled = false; saveEl.textContent = "Prøv igjen"; return; }
         closeFavoriteWorkoutsModal();
+        if (isCopy) { showProgressToast("📋 «" + title + "» er kopiert til " + dayLabel(day).replace(/^(I dag|I morgen) – /, "").toLowerCase()); return; }
         showProgressToast("🏋️ «" + title + "» er lagt inn " + quickDayText());
         const item = (data.items || []).find(it => it.id === favoriteProgramId(copy));
         if (item) openFocusWorkout(item);
