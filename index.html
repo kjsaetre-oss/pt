@@ -3944,6 +3944,8 @@
   .vkf-intro-hero small{ font-size:12px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; opacity:.85; }
   .vkf-intro-hero h1{ margin:4px 0 6px; font-size:26px; font-weight:800; letter-spacing:-.02em; line-height:1.15; }
   .vkf-intro-hero p{ margin:0; font-size:14px; opacity:.9; }
+  /* movement.os gjør h1/p mørke som standard – sett hvit tekst direkte (2026-11-11) */
+  .vkf-intro-hero h1, .vkf-intro-hero p, .vkf-intro-hero small{ color:#ffffff !important; }
   .vkf-intro-list{ list-style:none; margin:0; padding:0; display:grid; gap:8px; }
   .vkf-intro-list li{ display:flex; align-items:center; gap:12px; padding:8px; border-radius:16px; background:#171b22; box-shadow:0 1px 2px rgba(0,0,0,.04), 0 8px 20px -14px rgba(0,0,0,.25); }
   .vkf-intro-list .th{ width:58px; height:44px; min-width:58px; border-radius:11px; background:#3a211f center/cover no-repeat; }
@@ -5857,6 +5859,10 @@ var DPP_IMG = [
   // strengt i rekkefølge (én om gangen), slik at hvert kall alltid bygger
   // sin candidate-state fra "data" ETTER at alle tidligere kall er ferdig
   // lagret.
+  // Øvelser med kg/reps/notat som venter på å bli lagret (2026-11-11). En lagring som
+  // kjører samtidig (f.eks. avkrysning av et sett) skal hente skyens rekorder, men
+  // ALDRI overskrive disse – ellers forsvant historikken av og til (Brystpress, Dead bug).
+  const vkPendingPRs = new Set();
   let saveChain = Promise.resolve();
   let savesInFlight = 0;
   function save(options) {
@@ -6007,7 +6013,15 @@ var DPP_IMG = [
           // skrive sin utdaterte PR-historikk over den ferske loggingen når
           // kunden selv bare krysser av en vane eller åpner en annen økt.
           if (!opts.mutatingExercisePRs) {
-            data.exercisePRs = (raw.exercisePRs && typeof raw.exercisePRs === "object" && !Array.isArray(raw.exercisePRs)) ? raw.exercisePRs : {};
+            const cloudPRs = (raw.exercisePRs && typeof raw.exercisePRs === "object" && !Array.isArray(raw.exercisePRs)) ? raw.exercisePRs : {};
+            if (vkPendingPRs.size) {
+              const localPRs = data.exercisePRs || {};
+              const merged = { ...cloudPRs };
+              vkPendingPRs.forEach(n => { if (localPRs[n]) merged[n] = localPRs[n]; else delete merged[n]; });
+              data.exercisePRs = merged;
+            } else {
+              data.exercisePRs = cloudPRs;
+            }
           }
           // Samme friske-før-lagring-fiks som exercisePRs over, men for
           // kundens egne notater på to-do-oppgaver — uten denne kunne en
@@ -20560,7 +20574,10 @@ function getExercisePR(exerciseName) {
     // synkroniseringen mot skyen f\u00e5 lov til \u00e5 kj\u00f8re som normalt.
     // Feir med en gang – ikke vent på at lagringen i skyen er ferdig (kan ta flere sekunder på mobil).
     if (isNewRecord) showPrCelebration();
-    if (!(await save({ mutatingPrograms: !!(prevProgramsBackup || progressProgramsBackup), mutatingExercisePRs: true }))) {
+    vkPendingPRs.add(exerciseName);
+    let vkPrOk = false;
+    try { vkPrOk = await save({ mutatingPrograms: !!(prevProgramsBackup || progressProgramsBackup), mutatingExercisePRs: true }); } finally { vkPendingPRs.delete(exerciseName); }
+    if (!vkPrOk) {
       data.exercisePRs = prevBackup;
       if (prevProgramsBackup) data.assignedPrograms = prevProgramsBackup;
       else if (progressProgramsBackup) data.assignedPrograms = progressProgramsBackup;
@@ -20612,7 +20629,10 @@ function getExercisePR(exerciseName) {
       };
     }
 
-    if (!(await save({ mutatingExercisePRs: true }))) {
+    vkPendingPRs.add(exerciseName);
+    let vkDelOk = false;
+    try { vkDelOk = await save({ mutatingExercisePRs: true }); } finally { vkPendingPRs.delete(exerciseName); }
+    if (!vkDelOk) {
       data.exercisePRs = prevBackup;
       showSaveError("\u26a0\ufe0f Kunne ikke slette historikken \u2014 sjekk internett og pr\u00f8v igjen");
       return false;
@@ -23239,7 +23259,9 @@ function getExercisePR(exerciseName) {
     if (toMe) { if (txt) { pr.myNote = txt; pr.myNoteDate = today; } else { delete pr.myNote; delete pr.myNoteDate; } }
     if (toCoach) { if (txt) { pr.note = txt; pr.noteDate = today; } else { delete pr.note; delete pr.noteDate; } }
     if (btn) { btn.disabled = true; btn.textContent = "Lagrer …"; }
-    const ok = await save({ mutatingExercisePRs: true });
+    vkPendingPRs.add(name);
+    let ok = false;
+    try { ok = await save({ mutatingExercisePRs: true }); } finally { vkPendingPRs.delete(name); }
     if (ok && toCoach && txt && txt !== coachBefore) sendToCoach("note", "notat om " + name, txt, name);
     if (!ok) { if (btn) { btn.disabled = false; btn.textContent = "Prøv igjen"; } return; }
     d.text = ""; d.open = false;
