@@ -20530,7 +20530,9 @@ function getExercisePR(exerciseName) {
       const allHit = validSets.length >= plannedSets && minDone >= cur.target;
       const daysSinceRaise = cur.raisedAt ? Math.floor((parseDateValue(today) - parseDateValue(cur.raisedAt)) / 864e5) : 999;
       let next = cur.target;
-      if (minDone > cur.target) next = minDone; // kunden valgte mer – husk det
+      // Kunden valgte mer – husk det. Men ALDRI både flere reps og mer vekt samtidig (Kjetil 2026-11-13):
+      // foreslås mer vekt neste gang, står reps-målet stille.
+      if (minDone > cur.target && (mode === "auto" || nextSuggestedKg == null)) next = minDone;
       if (mode === "auto") {
         // Dobbel progresjon styrer vekten selv (ikke +2 kg hver gang)
         // Et forslag gjelder bare økta rett etter at det ble gitt; ellers vises det kunden faktisk løftet
@@ -20599,6 +20601,8 @@ function getExercisePR(exerciseName) {
 
         const currentTarget = ex.targetReps || targetReps || (ex.isHold ? 20 : 8);
         if (bestRepsThisSession === currentTarget) return;
+        // Ikke både reps og vekt opp på en gang: foreslås mer vekt, holdes reps-målet der det er.
+        if (nextSuggestedKg != null && bestRepsThisSession > currentTarget) return;
 
         if (!prevProgramsBackup) prevProgramsBackup = deepClone(data.assignedPrograms);
         ex.targetReps = bestRepsThisSession;
