@@ -21171,7 +21171,7 @@ function getExercisePR(exerciseName) {
             videoWrap.classList.remove("show");
             videoWrap.innerHTML = "";
           } else {
-            videoWrap.innerHTML = `<iframe src="https://www.youtube-nocookie.com/embed/${currentYtId}?autoplay=1&mute=1&playsinline=1&controls=0&rel=0&modestbranding=1&iv_load_policy=3&disablekb=1" title="${escapeExHtml(ex.name)}" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+            videoWrap.innerHTML = `<iframe referrerpolicy="strict-origin-when-cross-origin" src="https://www.youtube-nocookie.com/embed/${currentYtId}?autoplay=1&mute=1&playsinline=1&controls=0&rel=0&modestbranding=1&iv_load_policy=3&disablekb=1" title="${escapeExHtml(ex.name)}" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
             videoWrap.classList.add("show");
           }
         });
@@ -21887,6 +21887,9 @@ function getExercisePR(exerciseName) {
   // 🎬 Følg en video (2026-11-11): hele tøye- og mobilitetsvideoer fra FLEXFORM by Shan – de samme som
   // «En myk kropp» hadde før. Kunden legger dem inn under + → Trening → Bevegelighet. Hver video er én
   // «øvelse» på tid, så økta viser videoen og tidtakeren. Sjekket: kan spilles av i appen, lengde fra YouTube.
+  // Bevegelighet = bare FLEXFORM-filmer kunden følger (Kjetils ønske 2026-11-13) – øktene med tidtaker er tatt ut.
+  // Programmer kunden allerede har lagt inn fra dem, er kopier og fungerer som før.
+  for (let i = TRAINING_TEMPLATES.length - 1; i >= 0; i--) if (TRAINING_TEMPLATES[i].category === "bevegelighet") TRAINING_TEMPLATES.splice(i, 1);
   const TRAINING_VIDEO_SESSIONS = [
     ["tpl-v-hofter", "Hofter & hamstrings", "YZM3s5rvywQ", 666, "Styrke og aktivering for stramme hofter og hamstrings – fungerer ofte bedre enn bare tøying."],
     ["tpl-v-nybegynner", "Nybegynner – hele kroppen", "bVY0xsnkDyA", 903, "Skånsom tøying for deg som ikke er fleksibel fra før, i rolig tempo gjennom hele kroppen."],
@@ -22220,7 +22223,11 @@ function getExercisePR(exerciseName) {
           if (open) { open.remove(); vb.textContent = "▶ Se video"; return; }
           const wrap = document.createElement("div");
           wrap.className = "dpp-fav-video";
-          wrap.innerHTML = `<iframe src="https://www.youtube-nocookie.com/embed/${ytId}?autoplay=1&mute=1&playsinline=1&controls=0&rel=0&modestbranding=1&iv_load_policy=3&disablekb=1" title="${escapeExHtml(ex.name || "")}" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+          // Følg-med-video (Bevegelighet): med lyd og kontroller. Vanlige øvelsesvideoer: stum løkke.
+          const follow = !!fav.isVideo;
+          wrap.innerHTML = follow
+            ? `<iframe src="https://www.youtube-nocookie.com/embed/${ytId}?autoplay=1&playsinline=1&rel=0&modestbranding=1" title="${escapeExHtml(ex.name || "")}" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>`
+            : `<iframe src="https://www.youtube-nocookie.com/embed/${ytId}?autoplay=1&mute=1&playsinline=1&controls=0&rel=0&modestbranding=1&iv_load_policy=3&disablekb=1" title="${escapeExHtml(ex.name || "")}" allow="autoplay; encrypted-media" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe>`;
           row.appendChild(wrap);
           vb.textContent = "Skjul video";
         });
@@ -22599,7 +22606,7 @@ function getExercisePR(exerciseName) {
     const sheet = favSheet(c.icon + " " + c.label + " " + quickDayText());
     const hint = document.createElement("p");
     hint.className = "dpp-macro-modal-goal";
-    hint.textContent = "Ferdige enkeltøkter. Trykk på en for å se øvelsene, tilpasse og legge den inn.";
+    hint.textContent = key === "bevegelighet" ? "Følg en hel video fra FLEXFORM på YouTube – med lyd. Trykk på en for å se den og legge den inn." : "Ferdige enkeltøkter. Trykk på en for å se øvelsene, tilpasse og legge den inn.";
     sheet.appendChild(hint);
     const tpls = libraryWorkouts().filter(w => w.source === "tpl" && w.category === key);
     const groups = tpls.some(w => w.isVideo) ? [["Følg en video", tpls.filter(w => w.isVideo)], ["Øvelser du gjør selv", tpls.filter(w => !w.isVideo)]] : [["", tpls]];
@@ -23468,7 +23475,7 @@ function getExercisePR(exerciseName) {
     wireExerciseProgress(el, ex);
     const vb = el.querySelector(".exi-video");
     if (vb) vb.addEventListener("click", () => {
-      vb.outerHTML = `<div class="exi-yt"><iframe src="https://www.youtube-nocookie.com/embed/${yt}?autoplay=1&mute=1&playsinline=1&controls=0&rel=0&modestbranding=1&iv_load_policy=3&disablekb=1" allow="autoplay; encrypted-media" title="Video"></iframe></div>`;
+      vb.outerHTML = `<div class="exi-yt"><iframe referrerpolicy="strict-origin-when-cross-origin" src="https://www.youtube-nocookie.com/embed/${yt}?autoplay=1&mute=1&playsinline=1&controls=0&rel=0&modestbranding=1&iv_load_policy=3&disablekb=1" allow="autoplay; encrypted-media" title="Video"></iframe></div>`;
     });
   }
 
@@ -24024,7 +24031,7 @@ function getExercisePR(exerciseName) {
     const vp = t.closest("[data-vidplay]");
     if (vp) {
       const id = extractYouTubeId((vkf.exercises[0] || {}).videoUrl || "");
-      if (id) vp.outerHTML = `<div class="vkf-vid-box on"><iframe src="https://www.youtube-nocookie.com/embed/${id}?autoplay=1&playsinline=1&rel=0&modestbranding=1" title="Video" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe></div>`;
+      if (id) vp.outerHTML = `<div class="vkf-vid-box on"><iframe referrerpolicy="strict-origin-when-cross-origin" src="https://www.youtube-nocookie.com/embed/${id}?autoplay=1&playsinline=1&rel=0&modestbranding=1" title="Video" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe></div>`;
       return;
     }
     const del = t.closest("[data-delset]");
@@ -24097,7 +24104,7 @@ function getExercisePR(exerciseName) {
       return;
     }
     if (a === "video") {
-      act.outerHTML = `<div class="vkf-video vkf-video-on"><iframe src="https://www.youtube-nocookie.com/embed/${act.dataset.yt}?autoplay=1&mute=1&playsinline=1&controls=0&rel=0&modestbranding=1&iv_load_policy=3&disablekb=1" allow="autoplay; encrypted-media" allowfullscreen title="Video"></iframe></div>`;
+      act.outerHTML = `<div class="vkf-video vkf-video-on"><iframe referrerpolicy="strict-origin-when-cross-origin" src="https://www.youtube-nocookie.com/embed/${act.dataset.yt}?autoplay=1&mute=1&playsinline=1&controls=0&rel=0&modestbranding=1&iv_load_policy=3&disablekb=1" allow="autoplay; encrypted-media" allowfullscreen title="Video"></iframe></div>`;
       return;
     }
     if (a === "addset") { const vals = vkf.vals[vkf.cur]; const l = vals[vals.length - 1]; vals.push({ kg: l ? l.kg : 0, reps: l ? l.reps : 10 }); vkf.active = vals.length - 1; vkfRenderWorkout(); return; }
