@@ -5131,6 +5131,7 @@ var DPP_IMG = [
     vkRawStash = null;
     return st && Date.now() - st.at < 6000 ? st.raw : null;
   }
+  let vkFastPlanTried = false;
   async function cloudLoadState() {
     const member = getMovementMember();
     // VIKTIG (funnet 2026-09-16, se retryPendingSaveIfAny()-fiksen samme dag
@@ -5146,6 +5147,32 @@ var DPP_IMG = [
     // gir samme trygge oppførsel som en reell nettverksfeil: vis det som
     // finnes lokalt, men lås lagring til en ny, vellykket sideinnlasting.
     if (!member.id) return { state: null, failed: true };
+
+    // RASK VEI (2026-11-13): hent planen direkte med samme tl_plan_get, uten å vente på at
+    // Supabase-biblioteket er lastet fra CDN (siden har mange andre nettverkskall samtidig).
+    // Brukes bare når svaret er en ekte plan – alt annet (feil, tomt, tidsavbrudd) går den vanlige veien.
+    if (!vkFastPlanTried && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(String(member.id))) {
+      vkFastPlanTried = true;
+      try {
+        const ctl = typeof AbortController === "function" ? new AbortController() : null;
+        const to = ctl ? setTimeout(() => ctl.abort(), 7000) : null;
+        const r = await fetch(SUPABASE_URL + "/rest/v1/rpc/tl_plan_get", {
+          method: "POST",
+          headers: { apikey: SUPABASE_ANON_KEY, Authorization: "Bearer " + SUPABASE_ANON_KEY, "Content-Type": "application/json" },
+          body: JSON.stringify({ p_member_id: String(member.id) }),
+          signal: ctl ? ctl.signal : undefined
+        });
+        if (to) clearTimeout(to);
+        if (r.ok) {
+          const j = await r.json();
+          const row = Array.isArray(j) ? j[0] : j;
+          if (row && row.state_json && typeof row.state_json === "object") {
+            vkStashRaw(row.state_json);
+            return { state: normalizeLoadedState(row.state_json), failed: false };
+          }
+        }
+      } catch (e) { /* faller tilbake til den vanlige veien under */ }
+    }
 
     try {
       const client = await getSupabaseClient();
