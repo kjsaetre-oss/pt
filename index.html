@@ -24466,7 +24466,7 @@ function getExercisePR(exerciseName) {
     });
     // Personlig hilsen fra coachen (dashbordet: «💌 Send hilsen»)
     let greeting = null;
-    (data.assignedTasks || []).filter(t => t.kind === "greeting" && t.coachUpdatedAt).forEach(t => {
+    (data.assignedTasks || []).filter(t => t.kind === "greeting" && t.coachUpdatedAt && !t.reply).forEach(t => {
       const tt = Date.parse(t.coachUpdatedAt);
       if (!tt || tt < cutoff || seen["g:" + t.id] === t.coachUpdatedAt) return;
       if (tt > Date.now()) return; // planlagt popup – vises først når tidspunktet er nådd
