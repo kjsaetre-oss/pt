@@ -983,7 +983,7 @@
   .dpp-coach-avatar.has-img{ background:transparent; }
   .dpp-ex-coach-reply .dpp-coach-avatar{ margin-right:6px; }
   /* Tidlig visning fra lokal kopi mens skyen hentes */
-  .dpp-syncing #dppList{ opacity:.75; transition:opacity .25s; }
+  /* Ikke nedtonet mens skyen hentes (2026-11-14): kryss satt da blir husket og lagt inn etterpå */
   #dppList{ transition:opacity .25s; }
   /* Første gang (ingen lokal kopi): rolige plassholdere i stedet for tom side som så hopper */
   .dpp-syncing #dppList:empty{ display:grid; gap:12px; opacity:1; }
@@ -6975,6 +6975,10 @@ var DPP_IMG = [
   }
 
   function isItemDoneOnDate(item, date) {
+    if (vkPendingTicks && vkPendingTicks.size && item) {
+      const pk = item.id + "|" + toDateValue(date);
+      if (vkPendingTicks.has(pk)) return vkPendingTicks.get(pk);
+    }
     if (item?.isVirtualDevotional) {
       return isDevotionalDayWatched(item);
     }
@@ -7170,6 +7174,7 @@ var DPP_IMG = [
   }
 
   function playPling() {
+    if (vkQuietTicks) return;
     try {
       if (!vkSoundOn()) return;
       const ctx = vkAudioCtx();
@@ -7203,6 +7208,7 @@ var DPP_IMG = [
   }
 
   function burstStars(x, y, count = 14) {
+    if (vkQuietTicks) return;
     const symbols = ["\u2728","\u2b50","\ud83d\udcab","\ud83c\udf1f"];
     for (let i = 0; i < count; i++) {
       const star = document.createElement("div");
@@ -7218,6 +7224,7 @@ var DPP_IMG = [
   }
 
   function burstConfetti(x, y, count = 46) {
+    if (vkQuietTicks) return;
     for (let i = 0; i < count; i++) {
       const piece = document.createElement("div");
       piece.className = "dpp-confetti";
@@ -7235,6 +7242,7 @@ var DPP_IMG = [
   }
 
   function burstBonusCelebration(x, y) {
+    if (vkQuietTicks) return;
     burstStars(x, y, 24);
     burstConfetti(x, y, 75);
     setTimeout(() => {
@@ -8565,6 +8573,7 @@ var DPP_IMG = [
       btn.textContent = isDone ? "\u2713" : "\u25cb";
       btn.addEventListener("click", async (e) => {
         e.stopPropagation();
+        if (vkQueueTickIfLoading(item, e)) return;
         if (item.isVirtualDevotional) { await toggleDevotionalDayWatched(item, e); return; }
         if (item.isVirtualStretch) { await toggleStretchDayWatched(item, e); return; }
         if (mealCfg) { await mealCfg.toggleFn(item, e); return; }
@@ -9423,7 +9432,7 @@ var DPP_IMG = [
         }
         return;
       }
-      if (e.target.closest(".vk-cta")) { e.stopPropagation(); await toggleTaskDayDone(item, e); }
+      if (e.target.closest(".vk-cta")) { e.stopPropagation(); if (vkQueueTickIfLoading(item, e)) return; await toggleTaskDayDone(item, e); }
     });
     return card;
   }
@@ -24244,6 +24253,59 @@ function getExercisePR(exerciseName) {
      Slutt treningsprogram-integrasjon
   ============================================================ */
 
+  // ---- Kryss før skyen er lastet (2026-11-14) ----
+  // Mens skyen hentes vises en nedtonet lokal kopi. Kryss satt der forsvant før når
+  // skyen kom (data ble byttet ut). Nå huskes de og legges inn igjen etter lastingen.
+  // var (ikke let/const): isItemDoneOnDate og feiringen kan kalles før denne linja er nådd.
+  var vkStateReady = false;
+  var vkPendingTicks = new Map(); // "id|dato" → ønsket status
+  var vkQuietTicks = false;
+  function vkDispatchToggle(item, e) {
+    if (item.isVirtualDevotional) return toggleDevotionalDayWatched(item, e);
+    if (item.isVirtualStretch) return toggleStretchDayWatched(item, e);
+    const mk = item.isVirtualMeal ? "middag" : item.isVirtualBreakfast ? "frokost" : item.isVirtualLunch ? "lunsj" : item.isVirtualEvening ? "kveldsmat" : null;
+    if (mk && MEAL_KIND_CONFIG[mk]) return MEAL_KIND_CONFIG[mk].toggleFn(item, e);
+    if (item.isVirtualTask) return toggleTaskDayDone(item, e);
+    return toggleForDate(item.id, e);
+  }
+  function vkQueueTickIfLoading(item, e) {
+    if (vkStateReady || !item || item.type === "birthday") return false;
+    const want = !isItemDoneOnDate(item, viewedDate);
+    vkPendingTicks.set(item.id + "|" + toDateValue(viewedDate), want);
+    renderWeekBar(); renderList();
+    if (want) {
+      try {
+        const r = e && e.target ? e.target.getBoundingClientRect() : { left: innerWidth / 2, top: innerHeight / 2, width: 0, height: 0 };
+        burstStars(r.left + r.width / 2, r.top + r.height / 2 + 10, 14); burstConfetti(r.left + r.width / 2, r.top + r.height / 2 + 10, 46); playPling();
+      } catch (err) {}
+    }
+    return true;
+  }
+  async function vkReplayPendingTicks() {
+    vkStateReady = true;
+    if (!vkPendingTicks.size) return;
+    const ticks = Array.from(vkPendingTicks.entries());
+    vkPendingTicks.clear();
+    const keepDate = viewedDate;
+    vkQuietTicks = true;
+    try {
+      for (const [pk, want] of ticks) {
+        const i = pk.lastIndexOf("|"), id = pk.slice(0, i), dv = pk.slice(i + 1);
+        const item = (data.items || []).find(x => x.id === id);
+        if (!item) continue;
+        viewedDate = parseDateValue(dv);
+        if (isItemDoneOnDate(item, viewedDate) !== want) {
+          try { await vkDispatchToggle(item, null); } catch (err) { console.warn("Kunne ikke legge inn kryss fra lastingen:", err); }
+        }
+      }
+    } finally {
+      viewedDate = keepDate;
+      vkQuietTicks = false;
+    }
+    renderWeekBar(); renderList();
+    try { renderPlanList(); renderHabitStats(); } catch (e) {}
+  }
+
   function renderEarlyFromLocalCache() {
     try {
       const early = loadInitialState();
@@ -24278,6 +24340,7 @@ function getExercisePR(exerciseName) {
     } catch (e) {
       clearTimeout(syncFailsafe);
       root.classList.remove("dpp-syncing");
+      vkStateReady = true;
       throw e;
     }
     // Vis det ferske fra skyen med en gang (programmer, mat og oppgaver bygges rett fra skydataene),
@@ -24354,6 +24417,7 @@ function getExercisePR(exerciseName) {
     await injectAssignedLunches(extrasByField.lunches); // Legg inn valgt lunsjmeny i kalenderen
     await injectAssignedEvenings(extrasByField.evenings); // Legg inn kveldsmat tildelt av coachen
     await injectAssignedTasks(extrasByField.tasks || null); // Legg inn oppgaver og vaner fra coachen
+    await vkReplayPendingTicks(); // kryss satt mens kalenderen lastet
 
     // Andre tegne-runde (samme render-kall som over) — nå med
     // program/andakt/meny/frokost/lunsj faktisk lagt inn i data.items.
