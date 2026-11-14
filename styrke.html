@@ -84,6 +84,39 @@
   .pt-hero h1 { margin: 0; font: 800 26px/1.1 "Outfit", -apple-system, sans-serif; } .pt-hero p { margin: 4px 0 0; font-size: 13px; color: #98a1ad; }
   /* Fokus og mål (samme kode som bordtennis, lilla farger) */
 
+  /* ---------- Chat (som Messenger) ---------- */
+  .pt-nav a#ptChat { position: relative; }
+  .pt-nav a#ptChat .dot { position: absolute; top: 2px; left: calc(50% + 8px); width: 10px; height: 10px; border-radius: 50%; background: #ff6340; border: 2px solid #262b34; display: none; }
+  .pt-nav a#ptChat.unread .dot { display: block; }
+  .ptc { position: fixed; left: 0; right: 0; top: 0; height: 100%; z-index: 99995; display: flex; flex-direction: column; background: #0e1116; font-family: Inter, -apple-system, sans-serif; color: #f2f4f7;
+    transform: translateY(100%); transition: transform .28s cubic-bezier(.2,.9,.3,1); }
+  .ptc.show { transform: none; }
+  .ptc-head { display: flex; align-items: center; gap: 10px; padding: calc(env(safe-area-inset-top) + 8px) 12px 9px; background: #171b22; border-bottom: 1px solid #262b34; flex: none; }
+  .ptc-back { width: 36px; height: 36px; border: 0; background: transparent; color: #ff6340; font: 400 34px/1 -apple-system, sans-serif; display: grid; place-items: center; padding: 0 0 4px; flex: none; }
+  .ptc-av { width: 38px; height: 38px; border-radius: 50%; background: #0e1116 center/cover; flex: none; position: relative; }
+  .ptc-av::after { content: ""; position: absolute; right: 0; bottom: 0; width: 10px; height: 10px; border-radius: 50%; background: #1f242d; border: 2px solid #262b34; }
+  .ptc-who b { display: block; font: 700 16px/1.15 Inter, -apple-system, sans-serif; } .ptc-who small { display: block; font-size: 12px; color: #98a1ad; margin-top: 1px; }
+  .ptc-list { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 14px 12px 8px; display: flex; flex-direction: column; gap: 2px; overscroll-behavior: contain; }
+  .ptc-empty { margin: auto; text-align: center; max-width: 270px; color: #98a1ad; font-size: 14px; line-height: 1.45; display: grid; justify-items: center; gap: 8px; }
+  .ptc-empty .ptc-av { width: 76px; height: 76px; } .ptc-empty .ptc-av::after { display: none; } .ptc-empty b { color: #f2f4f7; font-size: 17px; }
+  .ptc-day { align-self: center; margin: 12px 0 8px; font: 600 11.5px Inter, sans-serif; color: #98a1ad; }
+  .ptc-row { display: flex; align-items: flex-end; gap: 7px; max-width: 100%; }
+  .ptc-row.me { justify-content: flex-end; }
+  .ptc-row .ptc-mini { width: 28px; height: 28px; border-radius: 50%; background: #0e1116 center/cover; flex: none; visibility: hidden; }
+  .ptc-row.last .ptc-mini { visibility: visible; }
+  .ptc-b { max-width: 76%; padding: 8px 13px; border-radius: 19px; font-size: 15.5px; line-height: 1.38; white-space: pre-wrap; overflow-wrap: anywhere; background: #1f242d; color: #f2f4f7; }
+  .ptc-row.me .ptc-b { background: #ff6340; color: #ffffff; }
+  .ptc-row:not(.me):not(.first) .ptc-b { border-top-left-radius: 6px; } .ptc-row:not(.me):not(.last) .ptc-b { border-bottom-left-radius: 6px; }
+  .ptc-row.me:not(.first) .ptc-b { border-top-right-radius: 6px; } .ptc-row.me:not(.last) .ptc-b { border-bottom-right-radius: 6px; }
+  .ptc-row.last { margin-bottom: 6px; }
+  .ptc-row.pending .ptc-b { opacity: .55; }
+  .ptc-st { align-self: flex-end; font-size: 11px; color: #98a1ad; margin: -2px 4px 6px; }
+  .ptc-bar { flex: none; display: flex; align-items: flex-end; gap: 8px; padding: 8px 10px calc(8px + env(safe-area-inset-bottom)); background: #171b22; border-top: 1px solid #262b34; }
+  .ptc-in { flex: 1; min-height: 40px; max-height: 128px; resize: none; border: 1px solid #262b34; border-radius: 20px; background: #0e1116; color: #f2f4f7; padding: 9px 15px; font: 16px/1.35 Inter, -apple-system, sans-serif; outline: none; }
+  .ptc-send { width: 40px; height: 40px; border-radius: 50%; border: 0; background: #ff6340; color: #ffffff; display: grid; place-items: center; flex: none; padding: 0; transition: opacity .15s, transform .15s; }
+  .ptc-send:disabled { opacity: .35; } .ptc-send:not(:disabled):active { transform: scale(.92); }
+  .ptc-send svg { width: 19px; height: 19px; fill: currentColor; margin-left: 2px; }
+
 </style>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -1439,7 +1472,7 @@
   }, 700);
 })();
 </script>
-<nav class="pt-nav" aria-label="Meny"><a href="index.html" data-nav class=""><span class="ic"><svg viewBox="0 0 24 24"><path d="M3.5 10.5 12 4l8.5 6.5"/><path d="M5.5 9v10.5h13V9"/><path d="M10 19.5v-5h4v5"/></svg></span>Hjem</a><a href="trening.html" data-nav class="on"><span class="ic"><svg viewBox="0 0 24 24"><path d="M6.5 7v10M3.5 9.5v5M17.5 7v10M20.5 9.5v5M6.5 12h11"/></svg></span>Trening</a><a href="mat.html" data-nav class=""><span class="ic"><svg viewBox="0 0 24 24"><path d="M7 3v8M5 3v5a2 2 0 0 0 4 0V3M7 11v10"/><path d="M17 21V3c-2.2 1.2-3.5 3.6-3.5 7v3H17"/></svg></span>Mat</a><a href="helse.html" data-nav class=""><span class="ic"><svg viewBox="0 0 24 24"><path d="M12 20s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7.2a4.3 4.3 0 0 1 7.5 2.6C19.5 15.4 12 20 12 20Z"/><path d="M4.8 12.5h3.4l1.6-2.6 2.4 4.6 1.6-2h5.4"/></svg></span>Helse</a><a href="index.html?chat=1" id="ptChat" aria-label="Skriv til Kjetil"><span class="ic"><svg viewBox="0 0 24 24"><path d="M20 11.5c0 4.1-3.6 7.4-8 7.4-1.2 0-2.4-.2-3.4-.7L4 19.5l1.3-3.7c-.8-1.2-1.3-2.7-1.3-4.3C4 7.4 7.6 4 12 4s8 3.4 8 7.5Z"/><path d="M8.5 10.5h7M8.5 13.5h4.5"/></svg></span>Chat</a></nav>
+<nav class="pt-nav" aria-label="Meny"><a href="index.html" data-nav class=""><span class="ic"><svg viewBox="0 0 24 24"><path d="M3.5 10.5 12 4l8.5 6.5"/><path d="M5.5 9v10.5h13V9"/><path d="M10 19.5v-5h4v5"/></svg></span>Hjem</a><a href="trening.html" data-nav class="on"><span class="ic"><svg viewBox="0 0 24 24"><path d="M6.5 7v10M3.5 9.5v5M17.5 7v10M20.5 9.5v5M6.5 12h11"/></svg></span>Trening</a><a href="mat.html" data-nav class=""><span class="ic"><svg viewBox="0 0 24 24"><path d="M7 3v8M5 3v5a2 2 0 0 0 4 0V3M7 11v10"/><path d="M17 21V3c-2.2 1.2-3.5 3.6-3.5 7v3H17"/></svg></span>Mat</a><a href="helse.html" data-nav class=""><span class="ic"><svg viewBox="0 0 24 24"><path d="M12 20s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7.2a4.3 4.3 0 0 1 7.5 2.6C19.5 15.4 12 20 12 20Z"/><path d="M4.8 12.5h3.4l1.6-2.6 2.4 4.6 1.6-2h5.4"/></svg></span>Helse</a><a href="#chat" id="ptChat" aria-label="Skriv til Kjetil"><span class="ic"><svg viewBox="0 0 24 24"><path d="M20 11.5c0 4.1-3.6 7.4-8 7.4-1.2 0-2.4-.2-3.4-.7L4 19.5l1.3-3.7c-.8-1.2-1.3-2.7-1.3-4.3C4 7.4 7.6 4 12 4s8 3.4 8 7.5Z"/><path d="M8.5 10.5h7M8.5 13.5h4.5"/></svg></span>Chat</a></nav>
 <script>
 (function () {
   // Menyen tar med den personlige koden mellom sidene, med en kort overgang
@@ -1450,20 +1483,6 @@
   window.addEventListener("pageshow", function () { document.body.classList.remove("pt-leaving"); });
   // Rask lasting: sidene huskes på telefonen etter første besøk (oppdateres i bakgrunnen)
   if ("serviceWorker" in navigator && location.protocol === "https:") { try { navigator.serviceWorker.register("sw.js"); } catch (e) {} }
-  // 💬 Chat: meldingen havner i Kjetils vanekalender (send_to_coach), svaret kommer som popup her
-  var chat = document.getElementById("ptChat");
-  if (chat) {
-    try { var cl = JSON.parse(localStorage.getItem("tl_coach_link_v1") || "null"); if (cl && (cl.is_coach || !cl.can_write)) chat.hidden = true; } catch (e) {}
-    chat.addEventListener("click", function (e) {
-      e.preventDefault();
-      if (window.ptOpenChat) window.ptOpenChat();
-      else { document.body.classList.add("pt-leaving"); location.href = "index.html?chat=1" + (window.TL_PT_HASH || ""); }
-    });
-    if (/[?&]chat=1/.test(location.search)) {
-      try { history.replaceState(null, "", location.pathname + location.hash); } catch (e) {}
-      var tries = 0; (function openWhenReady() { if (window.ptOpenChat) window.ptOpenChat(); else if (++tries < 40) setTimeout(openWhenReady, 150); })();
-    }
-  }
   var r = document.getElementById("ptRefresh");
   function refresh() { if (r) r.classList.add("spin"); location.replace(location.pathname + "?r=" + Date.now() + (location.search.indexOf("vis=") >= 0 ? "&vis=trening" : "") + location.hash); }
   if (r) r.addEventListener("click", refresh);
@@ -1477,6 +1496,130 @@
       m.name = n; try { localStorage.setItem("tl_pt_name:" + m.id, n); } catch (e) {}
       var h = document.getElementById("ptHello"); if (h) h.textContent = "Hei, " + n.trim().split(/\s+/)[0] + "!";
     }).catch(function () {});
+})();
+</script><script>
+(function () {
+  var btn = document.getElementById("ptChat");
+  var m = window.MVT_memberData;
+  if (!btn || !m || !m.id) { if (btn) btn.hidden = true; return; }
+  try { var cl = JSON.parse(localStorage.getItem("tl_coach_link_v1") || "null"); if (cl && (cl.is_coach || !cl.can_write)) { btn.hidden = true; return; } } catch (e) {}
+  btn.insertAdjacentHTML("beforeend", '<span class="dot"></span>');
+  var URL = "https://cpqbdorxilssxylkqdkt.supabase.co", KEY = "sb_publishable_37LxJJHdYNa8HpqDOVKpVw_0fJlfDmd", PHOTO = "bilder/kjetil-lindefjell-saetre.jpg", ID = m.id;
+  var K_CACHE = "tl_pt_chat_cache:" + ID, K_PEND = "tl_pt_chat_pending:" + ID, K_LOCAL = "tl_pt_chat_local:" + ID, K_SEEN = "tl_pt_chat_seen:" + ID;
+  function get(k, d) { try { var v = JSON.parse(localStorage.getItem(k) || "null"); return v == null ? d : v; } catch (e) { return d; } }
+  function put(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+  function rpc(name, body) {
+    return fetch(URL + "/rest/v1/rpc/" + name, { method: "POST", headers: { apikey: KEY, Authorization: "Bearer " + KEY, "Content-Type": "application/json" }, body: JSON.stringify(body) })
+      .then(function (r) { return r.json().catch(function () { return null; }).then(function (j) { return { ok: r.ok, status: r.status, data: j }; }); });
+  }
+  var server = get(K_CACHE, []), hasThread = true, wrap = null, list = null, poll = null;
+  function all() {
+    var mine = hasThread ? [] : get(K_LOCAL, []);
+    var pend = get(K_PEND, []).map(function (p) { return { id: p.cid, me: true, text: p.text, at: p.at, pending: true }; });
+    return server.concat(mine, pend).sort(function (a, b) { return new Date(a.at) - new Date(b.at); });
+  }
+  function lastCoachAt() { var t = 0; server.forEach(function (x) { if (!x.me) t = Math.max(t, new Date(x.at).getTime()); }); return t; }
+  function markSeen() { put(K_SEEN, Date.now()); btn.classList.remove("unread"); }
+  function checkUnread() { if (lastCoachAt() > get(K_SEEN, 0) && !wrap) btn.classList.add("unread"); }
+  function load() {
+    return rpc("tl_chat_list", { p_member_id: ID }).then(function (r) {
+      if (r.status === 404) { hasThread = false; return; }
+      if (r.ok && Array.isArray(r.data)) { hasThread = true; server = r.data; put(K_CACHE, server); }
+    }).catch(function () {}).then(function () { if (wrap) { render(); markSeen(); } else checkUnread(); });
+  }
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+  function dayLabel(d) {
+    var t = new Date(); t.setHours(0, 0, 0, 0); var x = new Date(d); x.setHours(0, 0, 0, 0);
+    var diff = Math.round((t - x) / 864e5);
+    if (diff === 0) return "I dag"; if (diff === 1) return "I går";
+    return d.toLocaleDateString("no-NO", diff < 7 ? { weekday: "long" } : { day: "numeric", month: "long" }).replace(/^./, function (c) { return c.toUpperCase(); });
+  }
+  function hm(d) { return d.toLocaleTimeString("no-NO", { hour: "2-digit", minute: "2-digit" }); }
+  function render() {
+    if (!list) return;
+    var msgs = all(), h = "", prevDay = "", first = (m.name || "").trim().split(/\s+/)[0];
+    if (!msgs.length) {
+      list.innerHTML = '<div class="ptc-empty"><span class="ptc-av" style="background-image:url(' + PHOTO + ')"></span><b>Kjetil</b>Skriv et spørsmål, hvordan det går, eller noe du lurer på. Svaret kommer her.</div>';
+      return;
+    }
+    msgs.forEach(function (x, i) {
+      var d = new Date(x.at), day = d.toDateString();
+      var prev = msgs[i - 1], next = msgs[i + 1];
+      var newDay = day !== prevDay;
+      if (newDay) { h += '<div class="ptc-day">' + dayLabel(d) + " " + hm(d) + "</div>"; prevDay = day; }
+      var gap = function (a, b) { return !a || !b || a.me !== b.me || new Date(b.at) - new Date(a.at) > 10 * 60 * 1000 || new Date(a.at).toDateString() !== new Date(b.at).toDateString(); };
+      var isFirst = newDay || gap(prev, x), isLast = gap(x, next);
+      h += '<div class="ptc-row' + (x.me ? " me" : "") + (isFirst ? " first" : "") + (isLast ? " last" : "") + (x.pending ? " pending" : "") + '">' +
+        (x.me ? "" : '<span class="ptc-mini" style="background-image:url(' + PHOTO + ')"></span>') + '<div class="ptc-b">' + esc(x.text) + "</div></div>";
+    });
+    var last = msgs[msgs.length - 1];
+    if (last.me) h += '<div class="ptc-st">' + (last.pending ? "Sender …" : "Sendt " + hm(new Date(last.at))) + "</div>";
+    var atBottom = list.scrollHeight - list.scrollTop - list.clientHeight < 80;
+    list.innerHTML = h;
+    if (atBottom || list.dataset.first !== "1") { list.scrollTop = list.scrollHeight; list.dataset.first = "1"; }
+  }
+  var sending = false;
+  function flush() {
+    if (sending) return; var pend = get(K_PEND, []); if (!pend.length) return;
+    sending = true; var p = pend[0];
+    var done = function (ok) {
+      sending = false;
+      if (!ok) { setTimeout(flush, 8000); return; }
+      put(K_PEND, get(K_PEND, []).filter(function (x) { return x.cid !== p.cid; }));
+      if (!hasThread) { var loc = get(K_LOCAL, []); loc.push({ id: p.cid, me: true, text: p.text, at: p.at }); put(K_LOCAL, loc.slice(-200)); render(); flush(); }
+      else load().then(flush);
+    };
+    rpc("tl_chat_send", { p_member_id: ID, p_member_name: m.name || "", p_text: p.text, p_client_id: p.cid }).then(function (r) {
+      if (r.status !== 404) return done(r.ok);
+      hasThread = false;   // pt-chat.sql er ikke kjørt ennå – send rett til vanekalenderen
+      return rpc("send_to_coach", { p_member_id: ID, p_member_name: m.name || "", p_kind: "message", p_title: "", p_text: p.text, p_ref: "chat-" + p.cid }).then(function (r2) { done(r2.ok); });
+    }).catch(function () { done(false); });
+  }
+  function fit() {
+    if (!wrap) return; var vv = window.visualViewport;
+    if (vv) { wrap.style.height = vv.height + "px"; wrap.style.top = vv.offsetTop + "px"; }
+    if (list) list.scrollTop = list.scrollHeight;
+  }
+  function open() {
+    if (wrap) return;
+    wrap = document.createElement("div"); wrap.className = "ptc"; wrap.setAttribute("role", "dialog"); wrap.setAttribute("aria-label", "Chat med Kjetil");
+    wrap.innerHTML = '<div class="ptc-head"><button type="button" class="ptc-back" aria-label="Lukk">‹</button><span class="ptc-av" style="background-image:url(' + PHOTO + ')"></span>' +
+      '<span class="ptc-who"><b>Kjetil Lindefjell Sætre</b><small>PT · svarer så snart han kan</small></span></div>' +
+      '<div class="ptc-list" aria-live="polite"></div>' +
+      '<div class="ptc-bar"><textarea class="ptc-in" rows="1" maxlength="2000" placeholder="Skriv en melding …" aria-label="Melding"></textarea>' +
+      '<button type="button" class="ptc-send" aria-label="Send" disabled><svg viewBox="0 0 24 24"><path d="M3.4 20.4 21 12 3.4 3.6 3.4 10l12.6 2-12.6 2z"/></svg></button></div>';
+    document.body.appendChild(wrap);
+    list = wrap.querySelector(".ptc-list");
+    var input = wrap.querySelector(".ptc-in"), send = wrap.querySelector(".ptc-send");
+    var grow = function () { input.style.height = "auto"; input.style.height = Math.min(128, input.scrollHeight + 2) + "px"; send.disabled = !input.value.trim(); };
+    input.addEventListener("input", grow);
+    var go = function () {
+      var t = input.value.trim(); if (!t) return;
+      var pend = get(K_PEND, []); pend.push({ cid: Date.now().toString(36) + Math.random().toString(36).slice(2, 8), text: t, at: new Date().toISOString() }); put(K_PEND, pend);
+      input.value = ""; grow(); list.dataset.first = ""; render(); flush(); input.focus();
+    };
+    send.addEventListener("click", go);
+    input.addEventListener("keydown", function (e) { if (e.key === "Enter" && !e.shiftKey && !("ontouchstart" in window)) { e.preventDefault(); go(); } });
+    wrap.querySelector(".ptc-back").addEventListener("click", close);
+    document.documentElement.style.overflow = "hidden";
+    if (window.visualViewport) { visualViewport.addEventListener("resize", fit); visualViewport.addEventListener("scroll", fit); }
+    render(); markSeen();
+    requestAnimationFrame(function () { wrap.classList.add("show"); fit(); });
+    load(); flush();
+    poll = setInterval(function () { if (!document.hidden) load(); }, 8000);
+    try { history.pushState({ ptChat: 1 }, ""); } catch (e) {}
+  }
+  function close(fromPop) {
+    if (!wrap) return; var w = wrap; wrap = null; list = null; clearInterval(poll);
+    if (window.visualViewport) { visualViewport.removeEventListener("resize", fit); visualViewport.removeEventListener("scroll", fit); }
+    document.documentElement.style.overflow = "";
+    w.classList.remove("show"); setTimeout(function () { w.remove(); }, 300);
+    if (fromPop !== true) { try { if (history.state && history.state.ptChat) history.back(); } catch (e) {} }
+  }
+  window.addEventListener("popstate", function () { if (wrap) close(true); });
+  btn.addEventListener("click", function (e) { e.preventDefault(); open(); });
+  window.ptOpenChat = open;
+  load(); flush();
 })();
 </script>
 </body>
