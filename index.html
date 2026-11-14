@@ -9786,6 +9786,7 @@ var DPP_IMG = [
       menu.appendChild(b);
     };
     addMenu("✎ Bytt rett for denne dagen", () => openSwapModal(item, kind));
+    addMenu("📋 Kopier til flere dager", () => openCopyMealDays(item, kind));
     addMenu("⚖️ Endre mengde eller innhold", () => openMealEditSheet(item));
     if (item.recipeId && getMovementMember().id) addMenu(isRecipeFavorite(item.recipeId) ? "♥ Fjern fra favoritter" : "♡ Lagre retten som favoritt", () => toggleRecipeFavorite(item.recipeId).then(ok => { if (ok) renderList(); }));
     addMenu(cfg.removeLabel, async () => { if (confirm(cfg.removeConfirm)) await cfg.deleteFn(item.mealId); }, true);
@@ -22713,20 +22714,27 @@ function getExercisePR(exerciseName) {
     }) || null;
   }
   async function addMealToDay(kind, dayValue, entry) {
+    return copyMealToDays(kind, entry, [dayValue]);
+  }
+  // Legger samme rett inn på flere dager (én lagring). Står det en rett der fra før, byttes den ut.
+  async function copyMealToDays(kind, entry, dayValues) {
     const cfg = MEAL_KIND_CONFIG[kind];
     const prev = deepClone(data[cfg.dataField] || []);
     data[cfg.dataField] = Array.isArray(data[cfg.dataField]) ? data[cfg.dataField] : [];
-    const plan = mealPlanCovering(kind, dayValue);
-    if (plan) {
-      const idx = Math.round((parseDateValue(dayValue) - parseDateValue(plan.startDate)) / 864e5);
-      plan.dayMeals = Array.isArray(plan.dayMeals) ? plan.dayMeals : [];
-      plan.dayMeals[idx] = entry;
-    } else {
-      data[cfg.dataField].push({
-        id: "egen-" + kind + "-" + dayValue + "-" + Math.random().toString(36).slice(2, 6),
-        startDate: dayValue, totalDays: 1, servings: 1, dayMeals: [entry], eatenDates: [], byCustomer: true
-      });
-    }
+    dayValues.forEach(dayValue => {
+      const e = deepClone(entry);
+      const plan = mealPlanCovering(kind, dayValue);
+      if (plan) {
+        const idx = Math.round((parseDateValue(dayValue) - parseDateValue(plan.startDate)) / 864e5);
+        plan.dayMeals = Array.isArray(plan.dayMeals) ? plan.dayMeals : [];
+        plan.dayMeals[idx] = e;
+      } else {
+        data[cfg.dataField].push({
+          id: "egen-" + kind + "-" + dayValue + "-" + Math.random().toString(36).slice(2, 6),
+          startDate: dayValue, totalDays: 1, servings: 1, dayMeals: [e], eatenDates: [], byCustomer: true
+        });
+      }
+    });
     cfg.rebuildFn();
     if (!(await save({ [cfg.mutatingFlag]: true }))) {
       data[cfg.dataField] = prev;
@@ -22737,6 +22745,54 @@ function getExercisePR(exerciseName) {
     renderList();
     renderPlanList();
     return true;
+  }
+  function mealOnDay(kind, dv) {
+    const p = mealPlanCovering(kind, dv);
+    if (!p) return false;
+    const i = Math.round((parseDateValue(dv) - parseDateValue(p.startDate)) / 864e5);
+    return !!(p.dayMeals || [])[i];
+  }
+  // «📋 Kopier til flere dager» på en rett: velg blant de neste 14 dagene (2026-11-14)
+  function openCopyMealDays(item, kind) {
+    const found = mealDayEntry(item);
+    if (!found) return;
+    const name = item.recipeId ? mealTitleWithoutMacros(item.recipeTitle) : vkMealName(item.recipeTitle);
+    const sheet = favSheet("📋 Kopier til flere dager");
+    const days = Array.from({ length: 14 }, (_, i) => toDateValue(addDays(viewedDate, i + 1)));
+    const chosen = new Set();
+    const box = document.createElement("div");
+    box.className = "dpp-own vk-copy-meal";
+    box.innerHTML = `<div class="dpp-own-label">«${escapeExHtml(name)}» – hvilke dager?</div>
+      <div class="dpp-quick-chips">${days.map(dv => {
+        const d = parseDateValue(dv);
+        const wd = d.toLocaleDateString("no-NO", { weekday: "short" }).replace(".", "");
+        const has = mealOnDay(kind, dv) ? " ·" : "";
+        return `<button type="button" class="dpp-quick-chip" data-dv="${dv}">${escapeExHtml(wd.charAt(0).toUpperCase() + wd.slice(1))} ${d.getDate()}.${d.getMonth() + 1}${has}</button>`;
+      }).join("")}</div>
+      <div class="vk-rep-sum" data-sum></div>
+      <button type="button" class="dpp-own-save dpp-fav-use" data-go></button>`;
+    const sum = box.querySelector("[data-sum]"), go = box.querySelector("[data-go]");
+    const paint = () => {
+      box.querySelectorAll("[data-dv]").forEach(b => b.classList.toggle("on", chosen.has(b.dataset.dv)));
+      const n = chosen.size;
+      const replaces = Array.from(chosen).some(dv => mealOnDay(kind, dv));
+      sum.textContent = n ? (replaces ? "Dager med · har en rett fra før – den byttes ut." : "") : "Trykk på dagene retten skal ligge på.";
+      go.textContent = n ? `Kopier til ${n} dag${n > 1 ? "er" : ""}` : "Velg minst én dag";
+      go.disabled = !n;
+    };
+    box.addEventListener("click", async (e) => {
+      const b = e.target.closest("[data-dv]");
+      if (b) { const dv = b.dataset.dv; chosen.has(dv) ? chosen.delete(dv) : chosen.add(dv); paint(); return; }
+      if (!e.target.closest("[data-go]") || !chosen.size) return;
+      go.disabled = true; go.textContent = "Lagrer …";
+      const list = Array.from(chosen).sort();
+      const ok = await copyMealToDays(kind, found.entry, list);
+      if (!ok) { paint(); return; }
+      closeFavoriteWorkoutsModal();
+      showProgressToast("📋 «" + name + "» er kopiert til " + list.length + " dag" + (list.length > 1 ? "er" : ""));
+    });
+    sheet.appendChild(box);
+    paint();
   }
   // ── Kosthold: hvilke dietter en oppskrift passer for, regnet ut fra ingrediensene ──
   // L=lavkarbo, G=glutenfri, M=melkefri, V=vegetar, F=uten fisk/skalldyr, N=nøttefri, E=eggfri.
