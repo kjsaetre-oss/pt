@@ -85,7 +85,7 @@
 
   /* ---------- Chat (som Messenger) ---------- */
   .pt-nav a#ptChat { position: relative; }
-  .pt-nav a#ptChat .dot { position: absolute; top: 2px; left: calc(50% + 8px); width: 10px; height: 10px; border-radius: 50%; background: #ff6340; border: 2px solid #262b34; display: none; }
+  .pt-nav a#ptChat .dot { position: absolute; top: -1px; left: calc(50% + 6px); min-width: 18px; height: 18px; padding: 0 5px; box-sizing: border-box; border-radius: 9px; background: #ff7152; color: #ffffff; font: 800 11px/18px Inter, -apple-system, sans-serif; text-align: center; border: 2px solid #262b34; display: none; }
   .pt-nav a#ptChat.unread .dot { display: block; }
   .ptc { position: fixed; left: 0; right: 0; top: 0; height: 100%; z-index: 99995; display: flex; flex-direction: column; background: #0e1116; font-family: Inter, -apple-system, sans-serif; color: #f2f4f7;
     transform: translateY(100%); transition: transform .28s cubic-bezier(.2,.9,.3,1); }
@@ -1030,11 +1030,20 @@
   }
   function lastCoachAt() { var t = 0; server.forEach(function (x) { if (!x.me) t = Math.max(t, new Date(x.at).getTime()); }); return t; }
   function markSeen() { put(K_SEEN, Date.now()); btn.classList.remove("unread"); }
-  function checkUnread() { if (lastCoachAt() > get(K_SEEN, 0) && !wrap) btn.classList.add("unread"); }
+  function checkUnread() {
+    var seen = get(K_SEEN, 0), n = server.filter(function (x) { return !x.me && new Date(x.at).getTime() > seen; }).length;
+    var dot = btn.querySelector(".dot"); if (dot) dot.textContent = n > 9 ? "9+" : String(n || "");
+    btn.classList.toggle("unread", n > 0 && !wrap);
+    if (n > 0) btn.setAttribute("aria-label", "Chat – " + n + " nytt svar fra Kjetil"); else btn.setAttribute("aria-label", "Skriv til Kjetil");
+  }
   function load() {
     return rpc("tl_chat_list", { p_member_id: ID }).then(function (r) {
       if (r.status === 404) { hasThread = false; return; }
-      if (r.ok && Array.isArray(r.data)) { hasThread = true; server = r.data; put(K_CACHE, server); }
+      if (r.ok && Array.isArray(r.data)) {
+        hasThread = true; server = r.data; put(K_CACHE, server);
+        // Første gang: gamle popuper er allerede sett i kalenderen – tell bare nye svar herfra
+        if (get(K_SEEN, null) === null) put(K_SEEN, Date.now());
+      }
     }).catch(function () {}).then(function () { if (wrap) { render(); markSeen(); } else checkUnread(); });
   }
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
@@ -1130,6 +1139,8 @@
   btn.addEventListener("click", function (e) { e.preventDefault(); open(); });
   window.ptOpenChat = open;
   load(); flush();
+  setInterval(function () { if (!document.hidden && !wrap) load(); }, 60000);
+  document.addEventListener("visibilitychange", function () { if (!document.hidden && !wrap) load(); });
 })();
 </script>
 </body>
